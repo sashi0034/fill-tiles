@@ -6,7 +6,7 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 #include "GameKernel.h"
-#include "MainScene.h"
+#include "mainScene/MainScene.h"
 
 int GameKernel::StartGame() {
     SDL_Window *window = NULL;
@@ -33,7 +33,7 @@ int GameKernel::StartGame() {
 
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, 255);
 
-    MainScene::Loop(window, renderer);
+    mainScene::MainScene::Loop(window, renderer);
 
     IMG_Quit();
     SDL_DestroyRenderer(renderer);

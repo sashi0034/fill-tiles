@@ -6,7 +6,7 @@
 #include <iostream>
 #include "MoveTest.h"
 
-MoveTest::MoveTest(SDL_Renderer* renderer) {
+mainScene::MoveTest::MoveTest(SDL_Renderer* renderer) {
     m_Renderer = renderer;
 
     m_Image = IMG_Load("assets/dango_wolf_24x24.png");
@@ -19,11 +19,11 @@ MoveTest::MoveTest(SDL_Renderer* renderer) {
     }
 }
 
-void MoveTest::Test() {
+void mainScene::MoveTest::Test() {
     std::cout << "Nemui Nemui." << std::endl;
 }
 
-void MoveTest::Update(int deltaTime, const Uint8* state) {
+void mainScene::MoveTest::Update(int deltaTime, const Uint8* state) {
     const int speed = 1 * deltaTime;
 
     if (state[SDL_Scancode::SDL_SCANCODE_A])
@@ -46,7 +46,7 @@ void MoveTest::Update(int deltaTime, const Uint8* state) {
     changeFrame(deltaTime);
 }
 
-void MoveTest::changeFrame(int deltaTime) {
+void mainScene::MoveTest::changeFrame(int deltaTime) {
 
     m_Frame += deltaTime;
 
@@ -56,7 +56,7 @@ void MoveTest::changeFrame(int deltaTime) {
 }
 
 
-void MoveTest::Render() {
+void mainScene::MoveTest::Render() {
 
     const int x = ((m_Frame / animeCycle) % 4) * 24;
     const int pixelPerUnit = 3;
@@ -71,7 +71,7 @@ void MoveTest::Render() {
     SDL_RenderCopyEx(m_Renderer, m_ImageTexture, &imageRect, &drawRect, angle, &centerPoint, SDL_FLIP_VERTICAL);
 }
 
-MoveTest::~MoveTest() {
+mainScene::MoveTest::~MoveTest() {
     SDL_FreeSurface(m_Image);
     SDL_DestroyTexture(m_ImageTexture);
 }

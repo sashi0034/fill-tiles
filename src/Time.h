@@ -5,8 +5,8 @@
 #include <chrono>
 #include <memory>
 
-#ifndef SDL2_IMAGE_SAMPLE_TIME_H
-#define SDL2_IMAGE_SAMPLE_TIME_H
+#ifndef FILL_TILES_TIME_H
+#define FILL_TILES_TIME_H
 
 struct Fps
 {
@@ -33,4 +33,4 @@ public:
 };
 
 
-#endif //SDL2_IMAGE_SAMPLE_TIME_H
+#endif //FILL_TILES_TIME_H

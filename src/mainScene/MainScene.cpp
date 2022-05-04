@@ -6,15 +6,15 @@
 #include <SDL_ttf.h>
 #include "MainScene.h"
 #include "MoveTest.h"
-#include "Time.h"
+#include "../Time.h"
 #include "FontTest.h"
 
 
-void MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
+void mainScene::MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
     (void) window;
 
     MoveTest moveTest(renderer);
-    FontTest fontTest(renderer);
+    mainScene::FontTest fontTest(renderer);
     Time time{};
 
     while (1) {

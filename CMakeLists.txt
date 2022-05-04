@@ -13,7 +13,7 @@ cmake_minimum_required(VERSION 3.5.1)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
 # Add all cpp source files under the src directory
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add all headers files under the include directory

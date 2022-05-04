@@ -3,7 +3,7 @@
 #include "FontTest.h"
 
 
-FontTest::FontTest(SDL_Renderer* renderer) {
+mainScene::FontTest::FontTest(SDL_Renderer* renderer) {
     const char* fontPath = "assets/Mplus2-Regular.ttf";
 
     TTF_Font* font = TTF_OpenFont(fontPath, 20);
@@ -15,7 +15,7 @@ FontTest::FontTest(SDL_Renderer* renderer) {
     m_Renderer = renderer;
 }
 
-void FontTest::Render() {
+void mainScene::FontTest::Render() {
     // 文字を描写したTextureのサイズを取得する
     int iw, ih;
     SDL_QueryTexture(m_Texture, NULL, NULL, &iw, &ih);
