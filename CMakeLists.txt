@@ -13,15 +13,12 @@ cmake_minimum_required(VERSION 3.5.1)
 # Add SDL2 CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
+# Set Boost Cmake modules
 set(Boost_NO_BOOST_CMAKE ON)
 set(BOOST_ROOT "/home/sashi/boost_1_79_0")
-#include_directories("$HOME/boost_1_79_0/include")
-SET(liblist boost_context)
 set(Boost_INCLUDE_DIR ${BOOST_ROOT}/include)
 set(Boost_LIBRARY_DIR ${BOOST_ROOT}/lib)
-find_package(Boost COMPONENTS context thread REQUIRED)
-#include_directories(${Boost_INCLUDE_DIR})
-#link_directories(${Boost_LIBRARY_DIR})
+find_package(Boost COMPONENTS context REQUIRED)
 
 # Add all cpp source files under the src directory
 file(GLOB_RECURSE SOURCES "src/*.cpp")
@@ -60,8 +57,8 @@ target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 #find_package(SDL2_gfx REQUIRED)
 #target_link_libraries(${PROJECT_NAME} SDL2::GFX)
 
-#find_package(Boost COMPONENTS context thread REQUIRED)
-target_link_libraries(${PROJECT_NAME} Boost::boost Boost::context Boost::thread)
+# Add Boost library
+target_link_libraries(${PROJECT_NAME} Boost::boost Boost::context)
 
 # Copy assets
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
