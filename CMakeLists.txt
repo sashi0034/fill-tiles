@@ -13,12 +13,16 @@ cmake_minimum_required(VERSION 3.5.1)
 # Add SDL2 CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
-# Set Boost Cmake modules
+# Set Cmake modules
 set(Boost_NO_BOOST_CMAKE ON)
 set(BOOST_ROOT "/home/sashi/boost_1_79_0")
 set(Boost_INCLUDE_DIR ${BOOST_ROOT}/include)
 set(Boost_LIBRARY_DIR ${BOOST_ROOT}/lib)
 find_package(Boost COMPONENTS context REQUIRED)
+
+set(cpplinq_INCLUDE_DIR "/home/sashi/RxCpp-4.1.1/Ix/CPP/src")
+set(RxCpp_INCLUDE_DIR "/home/sashi/RxCpp-4.1.1/Rx/v2/src")
+
 
 # Add all cpp source files under the src directory
 file(GLOB_RECURSE SOURCES "src/*.cpp")
@@ -26,7 +30,11 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add all headers files under the include directory
 #target_include_directories(${PROJECT_NAME} PRIVATE include)
-include_directories(${PROJECT_NAME} ${Boost_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE
+        ${Boost_INCLUDE_DIRS}
+        ${RxCpp_INCLUDE_DIR}
+        ${cpplinq_INCLUDE_DIR}
+        include)
 
 # Add compiler errors/warnings flags
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
