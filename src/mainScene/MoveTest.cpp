@@ -5,6 +5,8 @@
 #include <SDL_image.h>
 #include <iostream>
 #include "MoveTest.h"
+#include "boost/date_time/gregorian/gregorian.hpp"
+
 
 mainScene::MoveTest::MoveTest(SDL_Renderer* renderer) {
     m_Renderer = renderer;
@@ -17,6 +19,11 @@ mainScene::MoveTest::MoveTest(SDL_Renderer* renderer) {
     if (!m_Image) {
         std::cerr << "IMG_Load: %s\n", IMG_GetError();
     }
+
+    using namespace boost::gregorian;
+
+    const int day = gregorian_calendar::end_of_month_day(2011, 2);
+    std::cout << day << std::endl;
 }
 
 void mainScene::MoveTest::Test() {

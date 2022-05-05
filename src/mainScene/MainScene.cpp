@@ -8,6 +8,7 @@
 #include "MoveTest.h"
 #include "../Time.h"
 #include "FontTest.h"
+#include "BoostTest.h"
 
 
 void mainScene::MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
@@ -16,6 +17,7 @@ void mainScene::MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
     MoveTest moveTest(renderer);
     mainScene::FontTest fontTest(renderer);
     Time time{};
+    BoostTest boostTest{};
 
     while (1) {
 
@@ -44,6 +46,7 @@ void mainScene::MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
         const Uint8 *state = SDL_GetKeyboardState(NULL);
 
         moveTest.Update(time.GetDeltaMilli(), state);
+        boostTest.Update();
         time.update();
     }
 }
