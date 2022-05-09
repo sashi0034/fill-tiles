@@ -4,6 +4,7 @@
 
 #include "Graph.h"
 #include <SDL_image.h>
+#include "log.h"
 
 namespace gameEngine
 {
@@ -19,9 +20,9 @@ namespace gameEngine
         if (m_Texture != nullptr) SDL_DestroyTexture(m_Texture.get());
     }
 
-    std::unique_ptr<SDL_Texture> Graph::GetTexture()
+    const SDL_Texture& Graph::GetTexture() const
     {
-        return std::move(m_Texture);
+        return *m_Texture;
     }
 
     void Graph::DrawGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,

@@ -6,38 +6,37 @@
 #define FILL_TILES_SINGLETON_H
 
 #include "log.h"
+#include <memory>
+
+using std::unique_ptr;
 
 namespace gameEngine
 {
     template <typename T>
-    class ISingleton
-    {
-    public:
-        static T* Instance;
-    };
-    template <typename T> T* ISingleton<T>::Instance = nullptr;
-
-
-    template <typename T>
     class Singleton
     {
+    private:
+        static unique_ptr<T> instance;
     public:
         Singleton()
         {
-            if (Instance != nullptr)
+            if (instance != nullptr)
             {
-                LOG_CERR << "Singleton object is already exit." << std::endl;
+                LOG_CERR << "Singleton Object Is Already Exit." << std::endl;
                 return;
             }
-            Instance = static_cast<T*>(this);
+            instance = unique_ptr(static_cast<T*>(this));
         }
         virtual ~Singleton()
         {
-            Instance = nullptr;
+            instance = nullptr;
         }
-        static T* Instance;
+        const T& GetInstance() const
+        {
+            return *instance;
+        }
     };
-    template <typename T> T* Singleton<T>::Instance = nullptr;
+    template <typename T> unique_ptr<T> Singleton<T>::instance = nullptr;
 }
 
 #endif //FILL_TILES_SINGLETON_H
