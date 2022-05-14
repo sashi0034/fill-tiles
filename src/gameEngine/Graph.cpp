@@ -25,22 +25,22 @@ namespace gameEngine
         return *m_Texture;
     }
 
-    void Graph::DrawGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
-                                      const Rect<int> *srcRect, double scale)
+    void Graph::RenderGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
+                            const Rect<int> *srcRect, double scale)
     {
-        DrawGraph(renderer, startPoint, srcRect, scale, 0, false);
+        RenderGraph(renderer, startPoint, srcRect, scale, 0, false);
     }
 
-    void Graph::DrawGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
-                                      const Rect<int> *srcRect, double scale,
-                                      double rotationDeg)
+    void Graph::RenderGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
+                            const Rect<int> *srcRect, double scale,
+                            double rotationDeg)
     {
-        DrawGraph(renderer, startPoint, srcRect, scale, rotationDeg, false);
+        RenderGraph(renderer, startPoint, srcRect, scale, rotationDeg, false);
     }
 
-    void Graph::DrawGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
-                                      const Rect<int> *srcRect, double scale,
-                                      double rotationDeg, bool isFlip)
+    void Graph::RenderGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
+                            const Rect<int> *srcRect, double scale,
+                            double rotationDeg, bool isFlip)
     {
         auto screenSize = const_cast<Rect<int> *>(srcRect)->GetSize() * scale;
         SDL_Rect drawingToScreenRect = SDL_Rect{startPoint->X, startPoint->Y, screenSize.X, screenSize.Y};

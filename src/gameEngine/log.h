@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+#define DEBUG_BUILD
+
 #define LOG_COUT std::cout << std::endl << " [OUT] " << __FILE__  << " ** " << __FUNCTION__ << " ** " << __LINE__ << std::endl
 #define LOG_CERR std::cerr << std::endl << " [ERR] " << __FILE__  << " ** " << __FUNCTION__ << " ** " << __LINE__ << std::endl
 

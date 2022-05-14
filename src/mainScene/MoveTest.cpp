@@ -15,6 +15,8 @@ mainScene::MoveTest::MoveTest(SDL_Renderer* renderer) {
 
     m_ImageTexture = SDL_CreateTextureFromSurface(renderer, m_Image);
     SDL_SetTextureAlphaMod(m_ImageTexture, 200);
+    
+//    SDL_SetTextureBlendMode(m_ImageTexture, SDL_BLENDMODE_ADD);
 
     if (!m_Image) {
         std::cerr << "IMG_Load: %s\n", IMG_GetError();

@@ -11,6 +11,7 @@
 #include <vector>
 #include <functional>
 #include "Graph.h"
+#include "GraphBlend.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -24,19 +25,49 @@ namespace gameEngine
 
         Vec2<double> m_Position{0, 0};
         double m_Z;
-        weak_ptr<Graph> m_Graph{};
+        Graph* m_Graph;
         Rect<int> m_SrcRect{0, 0, 0, 0};
         double m_Scale = 1.0;
         bool m_IsFlip = false;
-        const weak_ptr<SpriteTexture> m_ParentPosition{};
+        weak_ptr<SpriteTexture> m_PositionParent{};
         double m_RotationDeg = 0;
-        int m_BlendMode = SDL_BLENDMODE_BLEND;
-        int m_BlendPal = 255;
+        GraphBlend m_Blend{};
 
         std::function<void()> m_RenderingProcess = [](){};
     public:
-        SpriteTexture(shared_ptr<Graph> graph);
-        SpriteTexture(shared_ptr<Graph> graph, Rect<int>& srcRect);
+        explicit SpriteTexture(Graph* graph);
+        SpriteTexture(Graph* graph, Rect<int>& srcRect);
+
+        void SetPosition(const Vec2<double>& pos);
+        [[nodiscard]] Vec2<double> GetPosition() const;
+
+        void SetZ(double z);
+        [[nodiscard]] double GetZ() const;
+
+        void SetGraph(Graph* graph);
+        [[nodiscard]] Graph* GetGraph() const;
+
+        void SetSrcRect(const Rect<int>& srcRect);
+        void SetSrcRect(const Vec2<int>& startingPoint);
+        [[nodiscard]] Rect<int> GetSrcRect() const;
+
+        void SetScale(double scale);
+        [[nodiscard]] double GetScale(double scale) const;
+
+        void SetFlip(bool isFlip);
+        [[nodiscard]] bool GetFlip() const;
+
+        void SetPositionParent(const weak_ptr<SpriteTexture>& parent);
+        [[nodiscard]] const weak_ptr<SpriteTexture> GetPositionParent() const;
+
+        void SetRotationDeg(double deg);
+        [[nodiscard]] double GetRotationDeg() const;
+
+        void SetBlend(GraphBlend& blend);
+        [[nodiscard]] GraphBlend GetBlend() const;
+
+        void SetRenderingProcess(const std::function<void()>& process);
+
     };
 }
 
