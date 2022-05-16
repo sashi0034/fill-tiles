@@ -12,6 +12,7 @@
 #include <functional>
 #include "Graph.h"
 #include "GraphBlend.h"
+#include "AppState.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -33,10 +34,12 @@ namespace gameEngine
         double m_RotationDeg = 0;
         GraphBlend m_Blend{};
 
-        std::function<void()> m_RenderingProcess = [](){};
-    public:
-        explicit SpriteTexture(Graph* graph);
+        std::function<void(AppState&)> m_RenderingProcess = [](AppState&){};
+
         SpriteTexture(Graph* graph, Rect<int>& srcRect);
+    public:
+        shared_ptr<SpriteTexture> Create(Graph* graph);
+        shared_ptr<SpriteTexture> Create(Graph* graph, Rect<int>& srcRect);
 
         void SetPosition(const Vec2<double>& pos);
         [[nodiscard]] Vec2<double> GetPosition() const;
@@ -66,8 +69,9 @@ namespace gameEngine
         void SetBlend(GraphBlend& blend);
         [[nodiscard]] GraphBlend GetBlend() const;
 
-        void SetRenderingProcess(const std::function<void()>& process);
+        void SetRenderingProcess(const std::function<void(AppState&)>& process);
 
+        static void RenderAll(AppState& appState);
     };
 }
 

@@ -7,15 +7,29 @@
 #include <utility>
 namespace gameEngine
 {
-    SpriteTexture::SpriteTexture(Graph* graph) : m_Graph(graph)
-    {
-        m_Graph = graph;
-    }
     SpriteTexture::SpriteTexture(Graph* graph, Rect<int> &srcRect)
     {
         m_Graph = graph;
         m_SrcRect = srcRect;
     }
+
+
+    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph)
+    {
+        auto srcRect = Rect<int>{0, 0, 0, 0};
+
+        return Create(graph, srcRect);
+    }
+
+    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph, Rect<int> &srcRect)
+    {
+        auto product = shared_ptr<SpriteTexture>(new SpriteTexture(graph, srcRect));
+
+        spriteTexturePool.push_back(product);
+
+        return shared_ptr<SpriteTexture>(product);
+    }
+
 
     void SpriteTexture::SetPosition(const Vec2<double> &pos)
     {
@@ -113,8 +127,15 @@ namespace gameEngine
         return m_Blend;
     }
 
-    void SpriteTexture::SetRenderingProcess(const std::function<void()>& process)
+    void SpriteTexture::SetRenderingProcess(const std::function<void(AppState&)>& process)
     {
         m_RenderingProcess = process;
     }
+
+    void SpriteTexture::RenderAll(AppState &appState)
+    {
+
+    }
+
+
 }
