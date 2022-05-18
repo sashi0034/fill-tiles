@@ -5,7 +5,7 @@
 #ifndef FILL_TILES_APPSTATE_H
 #define FILL_TILES_APPSTATE_H
 
-
+#include <SDL_image.h>
 #include "Time.h"
 #include "Vec2.h"
 
@@ -22,6 +22,7 @@ namespace gameEngine
         [[nodiscard]] virtual const Vec2<int>& GetScreenSize() const = 0;
         [[nodiscard]] virtual int GetPixelPerUnit() const = 0;
         [[nodiscard]] virtual const Time& GetTime() const = 0;
+        [[nodiscard]] virtual const SDL_Renderer& GetRenderer() const = 0;
     };
 
 
@@ -30,11 +31,13 @@ namespace gameEngine
         const Vec2<int> m_ScreenSize;
         const int m_PixelPerUnit;
         unique_ptr<Time> m_Time;
+        unique_ptr<SDL_Renderer> m_Renderer;
     public:
         AppState(Vec2<int> screenSize, int pixelPerUnit);
         [[nodiscard]] int GetPixelPerUnit() const override;
         [[nodiscard]] const Vec2<int> & GetScreenSize() const override;
         [[nodiscard]] const Time & GetTime() const override;
+        [[nodiscard]] const SDL_Renderer & GetRenderer() const override;
     };
 }
 

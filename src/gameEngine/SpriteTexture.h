@@ -55,13 +55,13 @@ namespace gameEngine
         [[nodiscard]] Rect<int> GetSrcRect() const;
 
         void SetScale(double scale);
-        [[nodiscard]] double GetScale(double scale) const;
+        [[nodiscard]] double GetScale() const;
 
         void SetFlip(bool isFlip);
         [[nodiscard]] bool GetFlip() const;
 
-        void SetPositionParent(const weak_ptr<SpriteTexture>& parent);
-        [[nodiscard]] const weak_ptr<SpriteTexture> GetPositionParent() const;
+        void SetPositionParent(const shared_ptr<SpriteTexture>& parent);
+        [[nodiscard]] weak_ptr<SpriteTexture> GetPositionParent() const;
 
         void SetRotationDeg(double deg);
         [[nodiscard]] double GetRotationDeg() const;
@@ -70,6 +70,8 @@ namespace gameEngine
         [[nodiscard]] GraphBlend GetBlend() const;
 
         void SetRenderingProcess(const std::function<void(AppState&)>& process);
+
+        Vec2<double> GetParentalGlobalPosition();
 
         static void RenderAll(AppState& appState);
     };

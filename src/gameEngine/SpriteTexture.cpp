@@ -82,7 +82,7 @@ namespace gameEngine
         m_Scale = scale;
     }
 
-    double SpriteTexture::GetScale(double scale) const
+    double SpriteTexture::GetScale() const
     {
         return m_Scale;
     }
@@ -97,12 +97,12 @@ namespace gameEngine
         return m_IsFlip;
     }
 
-    void SpriteTexture::SetPositionParent(const weak_ptr<SpriteTexture>& parent)
+    void SpriteTexture::SetPositionParent(const shared_ptr<SpriteTexture>& parent)
     {
         m_PositionParent = parent;
     }
 
-    const weak_ptr<SpriteTexture> SpriteTexture::GetPositionParent() const
+    weak_ptr<SpriteTexture> SpriteTexture::GetPositionParent() const
     {
         return m_PositionParent;
     }
@@ -132,8 +132,31 @@ namespace gameEngine
         m_RenderingProcess = process;
     }
 
+    Vec2<double> SpriteTexture::GetParentalGlobalPosition()
+    {
+        if (auto parent = m_PositionParent.lock())
+        {
+            auto parentPosition = parent->GetParentalGlobalPosition();
+            return parent->m_Position + parentPosition;
+        }
+        else
+        {
+            return Vec2<double>{0,0};
+        }
+    }
+
     void SpriteTexture::RenderAll(AppState &appState)
     {
+        std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(),
+                         [](shared_ptr<SpriteTexture> &left, shared_ptr<SpriteTexture> &right) -> bool { return left->GetZ() > right->GetZ(); });
+
+        for (auto& renderingSpr : spriteTexturePool)
+        {
+            if (renderingSpr == nullptr) continue;
+            if (renderingSpr->m_Graph == nullptr) continue;
+
+            renderingSpr->m_RenderingProcess(appState);
+        }
 
     }
 
