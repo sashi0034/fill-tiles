@@ -5,11 +5,12 @@
 #include "AppState.h"
 namespace gameEngine
 {
-    AppState::AppState(Vec2<int> screenSize, int pixelPerUnit, unique_ptr<SDL_Renderer>& renderer)
+    AppState::AppState(Vec2<int> screenSize, int pixelPerUnit, SDL_Window* window)
             : m_ScreenSize(screenSize), m_PixelPerUnit(pixelPerUnit)
     {
         m_Time=unique_ptr<Time>(new Time());
-        m_Renderer = std::move(renderer);
+        m_Window = unique_ptr<SDL_Window>(window);
+        m_Renderer = unique_ptr<SDL_Renderer>(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
     }
 
     int AppState::GetPixelPerUnit() const

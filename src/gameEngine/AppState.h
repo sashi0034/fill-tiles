@@ -31,9 +31,10 @@ namespace gameEngine
         const Vec2<int> m_ScreenSize;
         const int m_PixelPerUnit;
         unique_ptr<Time> m_Time;
+        unique_ptr<SDL_Window> m_Window;
         unique_ptr<SDL_Renderer> m_Renderer;
     public:
-        AppState(Vec2<int> screenSize, int pixelPerUnit);
+        AppState(Vec2<int> screenSize, int pixelPerUnit, SDL_Window* window);
         [[nodiscard]] int GetPixelPerUnit() const override;
         [[nodiscard]] const Vec2<int> & GetScreenSize() const override;
         [[nodiscard]] const Time & GetTime() const override;

@@ -13,6 +13,8 @@
 #include "Graph.h"
 #include "GraphBlend.h"
 #include "AppState.h"
+#include "renderingProcess.h"
+#include "Sprite.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -20,10 +22,13 @@ using std::weak_ptr;
 
 namespace gameEngine
 {
+    class Sprite;
+
     class SpriteTexture
     {
-        static std::vector<shared_ptr<SpriteTexture>> spriteTexturePool;
+        static std::vector<weak_ptr<SpriteTexture>> spriteTexturePool;
 
+        weak_ptr<Sprite> m_OwnerSprite{};
         Vec2<double> m_Position{0, 0};
         double m_Z;
         Graph* m_Graph;
@@ -34,12 +39,15 @@ namespace gameEngine
         double m_RotationDeg = 0;
         GraphBlend m_Blend{};
 
-        std::function<void(AppState&)> m_RenderingProcess = [](AppState&){};
+        std::function<void(AppState&)> m_RenderingProcess;
 
-        SpriteTexture(Graph* graph, Rect<int>& srcRect);
+        static void collectGarbageInSpriteTexturePool(std::vector<int> &garbageIndexes);
+
+        SpriteTexture();
+        SpriteTexture(shared_ptr<Sprite>& ownerSpr, Graph* graph, Rect<int>& srcRect);
     public:
-        shared_ptr<SpriteTexture> Create(Graph* graph);
-        shared_ptr<SpriteTexture> Create(Graph* graph, Rect<int>& srcRect);
+        static shared_ptr<SpriteTexture> Create(shared_ptr<Sprite>& ownerSpr, Graph* graph);
+        static shared_ptr<SpriteTexture> Create(shared_ptr<Sprite>& ownerSpr, Graph* graph, Rect<int>& srcRect);
 
         void SetPosition(const Vec2<double>& pos);
         [[nodiscard]] Vec2<double> GetPosition() const;

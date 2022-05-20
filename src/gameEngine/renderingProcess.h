@@ -10,7 +10,10 @@
 
 namespace gameEngine::renderingProcess
 {
-    void RenderSprite(AppState& appState, SpriteTexture* renderingSpr, int scale);
+    void RenderSprite(AppState& appState, SpriteTexture* renderingSpr, double scale);
+    void RenderSpriteAlignToUnit(AppState& appState, SpriteTexture* renderingSpr);
+    void RenderSpriteDotByDot(AppState& appState, SpriteTexture* renderingSpr);
+    void RenderSpriteTwoDots(AppState& appState, SpriteTexture* renderingSpr);
 };
 
 

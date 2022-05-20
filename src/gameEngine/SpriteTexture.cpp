@@ -5,25 +5,33 @@
 #include "SpriteTexture.h"
 
 #include <utility>
+#include <cassert>
+
 namespace gameEngine
 {
-    SpriteTexture::SpriteTexture(Graph* graph, Rect<int> &srcRect)
+    std::vector<weak_ptr<SpriteTexture>> SpriteTexture::spriteTexturePool = {};
+
+    SpriteTexture::SpriteTexture(shared_ptr<Sprite>& ownerSpr, Graph* graph, Rect<int> &srcRect)
     {
+        m_OwnerSprite = ownerSpr;
         m_Graph = graph;
         m_SrcRect = srcRect;
+        m_RenderingProcess = [this](AppState& appState){
+            renderingProcess::RenderSpriteAlignToUnit(appState, this);
+        };
     }
 
 
-    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph)
+    shared_ptr<SpriteTexture> SpriteTexture::Create(shared_ptr<Sprite>& ownerSprite, Graph *graph)
     {
         auto srcRect = Rect<int>{0, 0, 0, 0};
 
-        return Create(graph, srcRect);
+        return Create(ownerSprite, graph, srcRect);
     }
 
-    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph, Rect<int> &srcRect)
+    shared_ptr<SpriteTexture> SpriteTexture::Create(shared_ptr<Sprite>& ownerSprite, Graph *graph, Rect<int> &srcRect)
     {
-        auto product = shared_ptr<SpriteTexture>(new SpriteTexture(graph, srcRect));
+        auto product = shared_ptr<SpriteTexture>(new SpriteTexture(ownerSprite, graph, srcRect));
 
         spriteTexturePool.push_back(product);
 
@@ -149,15 +157,37 @@ namespace gameEngine
     {
         std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(),
                          [](shared_ptr<SpriteTexture> &left, shared_ptr<SpriteTexture> &right) -> bool { return left->GetZ() > right->GetZ(); });
+        std::vector<int> garbageIndexes{};
+        int size = spriteTexturePool.size();
 
-        for (auto& renderingSpr : spriteTexturePool)
+        for (int i=0; i < size ; ++i)
+            if (auto renderingSpr = spriteTexturePool[i].lock())
+            {
+                if (renderingSpr == nullptr) continue;
+                if (renderingSpr->m_Graph == nullptr) continue;
+
+                renderingSpr->m_RenderingProcess(appState);
+            }
+            else
+            {
+                garbageIndexes.push_back(i);
+            }
+
+        collectGarbageInSpriteTexturePool(garbageIndexes);
+    }
+
+    SpriteTexture::SpriteTexture()
+    {
+        assert(false);
+    }
+
+    void SpriteTexture::collectGarbageInSpriteTexturePool(std::vector<int> &garbageIndexes)
+    {
+        for (int i=garbageIndexes.size()-1; i>=0; --i)
         {
-            if (renderingSpr == nullptr) continue;
-            if (renderingSpr->m_Graph == nullptr) continue;
-
-            renderingSpr->m_RenderingProcess(appState);
+            int index = garbageIndexes[i];
+            spriteTexturePool.erase(spriteTexturePool.begin()+index);
         }
-
     }
 
 

@@ -23,9 +23,9 @@ namespace gameEngine
         Graph(std::unique_ptr<SDL_Surface> surface, std::unique_ptr<SDL_Texture> texture);
         ~Graph();
         [[nodiscard]] const SDL_Texture& GetTexture() const;
-        void RenderGraph(SDL_Renderer* renderer, const Vec2<int>* startPoint, const Rect<int>* srcRect, double scale);
-        void RenderGraph(SDL_Renderer* renderer, const Vec2<int>* startPoint, const Rect<int>* srcRect, double scale, double rotationDeg);
-        void RenderGraph(SDL_Renderer* renderer, const Vec2<int>* startPoint, const Rect<int>* srcRect, double scale, double rotationDeg, bool isFlip);
+        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>* startPoint, const Rect<int>* srcRect, double scale);
+        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>* startPoint, const Rect<int>* srcRect, double scale, double rotationDeg);
+        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>* startPoint, const Rect<int>* srcRect, double scale, double rotationDeg, bool isFlip);
     };
 }
 

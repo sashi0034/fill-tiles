@@ -25,20 +25,20 @@ namespace gameEngine
         return *m_Texture;
     }
 
-    void Graph::RenderGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
+    void Graph::RenderGraph(const SDL_Renderer *renderer, const Vec2<int> *startPoint,
                             const Rect<int> *srcRect, double scale)
     {
         RenderGraph(renderer, startPoint, srcRect, scale, 0, false);
     }
 
-    void Graph::RenderGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
+    void Graph::RenderGraph(const SDL_Renderer *renderer, const Vec2<int> *startPoint,
                             const Rect<int> *srcRect, double scale,
                             double rotationDeg)
     {
         RenderGraph(renderer, startPoint, srcRect, scale, rotationDeg, false);
     }
 
-    void Graph::RenderGraph(SDL_Renderer *renderer, const Vec2<int> *startPoint,
+    void Graph::RenderGraph(const SDL_Renderer *renderer, const Vec2<int> *startPoint,
                             const Rect<int> *srcRect, double scale,
                             double rotationDeg, bool isFlip)
     {
@@ -47,7 +47,7 @@ namespace gameEngine
         SDL_Rect cutSrcRect = SDL_Rect{srcRect->X, srcRect->Y, srcRect->Width, srcRect->Height};
 
         const SDL_Point centerPoint{srcRect->Width / 2, srcRect->Height / 2};
-        SDL_RenderCopyEx(renderer, m_Texture.get(), &cutSrcRect, &drawingToScreenRect,
+        SDL_RenderCopyEx(const_cast<SDL_Renderer*>(renderer), m_Texture.get(), &cutSrcRect, &drawingToScreenRect,
                          rotationDeg, &centerPoint, isFlip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
     }
 }
