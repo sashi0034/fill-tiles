@@ -34,7 +34,7 @@ namespace gameEngine
             (*arr).erase((*arr).begin() + index);
             return 0;
         }
-    };
+    }
 }
 
 

@@ -25,7 +25,7 @@ namespace gameEngine
         return product;
     }
 
-    void Sprite::SetTexture(shared_ptr<SpriteTexture> &texture)
+    void Sprite::SetTexture(shared_ptr<SpriteTexture> texture)
     {
         m_Texture = std::move(texture);
     }

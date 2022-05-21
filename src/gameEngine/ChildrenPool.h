@@ -6,7 +6,8 @@
 #define FILL_TILES_CHILDRENPOOL_H
 
 #include <memory>
-#include "Graph.h"
+#include <vector>
+#include <algorithm>
 
 using std::unique_ptr;
 using std::shared_ptr;

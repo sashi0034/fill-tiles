@@ -30,7 +30,7 @@ namespace gameEngine
 
         Vec2<T> operator*(double times)
         {
-            return Vec2<T>{X * times, Y * times};
+            return Vec2<T>{T(X * times), T(Y * times)};
         }
 
         Vec2<T> operator/(int div)

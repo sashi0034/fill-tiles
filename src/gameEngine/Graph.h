@@ -20,7 +20,8 @@ namespace gameEngine
         std::unique_ptr<SDL_Surface> m_Surface = nullptr;
         std::unique_ptr<SDL_Texture> m_Texture = nullptr;
     public:
-        Graph(std::unique_ptr<SDL_Surface> surface, std::unique_ptr<SDL_Texture> texture);
+        Graph(SDL_Renderer *renderer, SDL_Surface *surface);
+        Graph(SDL_Surface *surface, SDL_Texture* texture);
         ~Graph();
         [[nodiscard]] const SDL_Texture& GetTexture() const;
         void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>* startPoint, const Rect<int>* srcRect, double scale);

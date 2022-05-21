@@ -8,10 +8,16 @@
 
 namespace gameEngine
 {
-    Graph::Graph(std::unique_ptr<SDL_Surface> surface, std::unique_ptr<SDL_Texture> texture)
+    Graph::Graph(SDL_Renderer* renderer, SDL_Surface *surface)
     {
-        m_Surface = std::move(surface);
-        m_Texture = std::move(texture);
+        m_Surface = unique_ptr<SDL_Surface>(surface);
+        m_Texture = unique_ptr<SDL_Texture >(SDL_CreateTextureFromSurface(renderer, surface));
+    }
+
+    Graph::Graph(SDL_Surface *surface, SDL_Texture* texture)
+    {
+        m_Surface = unique_ptr<SDL_Surface>(surface);
+        m_Texture =unique_ptr<SDL_Texture>(texture);
     }
 
     Graph::~Graph()
@@ -50,4 +56,5 @@ namespace gameEngine
         SDL_RenderCopyEx(const_cast<SDL_Renderer*>(renderer), m_Texture.get(), &cutSrcRect, &drawingToScreenRect,
                          rotationDeg, &centerPoint, isFlip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
     }
+
 }

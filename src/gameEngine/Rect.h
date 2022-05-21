@@ -19,11 +19,11 @@ namespace gameEngine
 
         Vec2<T> GetStartingPoint()
         {
-            return Vec2{X, Y};
+            return Vec2<T>{X, Y};
         }
         Vec2<T> GetSize()
         {
-            return Vec2{Width, Height};
+            return Vec2<T>{Width, Height};
         }
     };
 }

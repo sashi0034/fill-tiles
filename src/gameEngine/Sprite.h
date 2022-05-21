@@ -30,7 +30,7 @@ namespace gameEngine
     public:
         static shared_ptr<Sprite> Create();
 
-        void SetTexture(shared_ptr<SpriteTexture>& texture);
+        void SetTexture(shared_ptr<SpriteTexture> texture);
         const shared_ptr<SpriteTexture>& GetTexture() const;
 
         void SetUpdateProcess(const std::function<void(AppState&)>& process);

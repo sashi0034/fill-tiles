@@ -5,12 +5,13 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+
+#include <memory>
 #include "GameKernel.h"
 #include "mainScene/MainScene.h"
+#include "gameEngine/gameEngine.h"
 
 int GameKernel::StartGame() {
-    SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
 
     //Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -22,18 +23,21 @@ int GameKernel::StartGame() {
         printf("TTF could not initialize! TTF_Error: %s\n", TTF_GetError());
     }
 
-    window = SDL_CreateWindow("KEY EVENT TEST", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                              SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("KEY EVENT TEST", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                          SCREEN_WIDTH*PIXEL_PER_UNIT,SCREEN_HEIGHT*PIXEL_PER_UNIT, SDL_WINDOW_SHOWN);
+    unique_ptr<AppState> appState;
+
     if (window == NULL) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return 1;
     } else {
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        appState = std::make_unique<AppState>(Vec2<int>{SCREEN_WIDTH, SCREEN_HEIGHT}, PIXEL_PER_UNIT, window);
     }
 
+    auto renderer = &const_cast<SDL_Renderer&>(appState->GetRenderer());
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, 255);
 
-    mainScene::MainScene::Loop(window, renderer);
+    mainScene::MainScene::Loop(appState);
 
     IMG_Quit();
     SDL_DestroyRenderer(renderer);

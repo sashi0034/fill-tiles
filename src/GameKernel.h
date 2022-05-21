@@ -8,8 +8,9 @@
 
 class GameKernel {
 public:
-    static const int SCREEN_WIDTH = 640;
-    static const int SCREEN_HEIGHT = 480;
+    static const int PIXEL_PER_UNIT = 3;
+    static const int SCREEN_WIDTH = 416;
+    static const int SCREEN_HEIGHT = 240;
 
     static int StartGame();
 };

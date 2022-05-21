@@ -19,7 +19,7 @@ namespace gameEngine
 
     class Time
     {
-        std::chrono::system_clock::time_point m_OldTime;
+        std::chrono::system_clock::time_point m_OldTime{};
         int m_DeletaMilli{};
         double m_DeletaSec{};
 

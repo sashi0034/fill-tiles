@@ -9,10 +9,12 @@
 #include "../Time.h"
 #include "FontTest.h"
 #include "LibraryTest.h"
+#include "../gameEngine/gameEngine.h"
+#include "TestObject.h"
 
-
-void mainScene::MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
-    (void) window;
+void mainScene::MainScene::Loop(unique_ptr<AppState>& appState) {
+    //auto window = &const_cast<SDL_Window&>(appState->GetWindow());
+    auto renderer = &const_cast<SDL_Renderer&>(appState->GetRenderer());
 
     MoveTest moveTest(renderer);
     mainScene::FontTest fontTest(renderer);
@@ -30,6 +32,7 @@ void mainScene::MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
 
         moveTest.Render();
         fontTest.Render();
+        SpriteTexture::RenderAll(*appState);
 
         SDL_RenderPresent(renderer);
 
@@ -48,5 +51,6 @@ void mainScene::MainScene::Loop(SDL_Window *window, SDL_Renderer *renderer) {
         moveTest.Update(time.GetDeltaMilli(), state);
         boostTest.Update();
         time.update();
+        Sprite::UpdateAll(*appState);
     }
 }
