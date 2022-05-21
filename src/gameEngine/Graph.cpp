@@ -10,25 +10,25 @@ namespace gameEngine
 {
     Graph::Graph(SDL_Renderer* renderer, SDL_Surface *surface)
     {
-        m_Surface = unique_ptr<SDL_Surface>(surface);
-        m_Texture = unique_ptr<SDL_Texture >(SDL_CreateTextureFromSurface(renderer, surface));
+        m_Surface = surface;
+        m_Texture = SDL_CreateTextureFromSurface(renderer, surface);
     }
 
     Graph::Graph(SDL_Surface *surface, SDL_Texture* texture)
     {
-        m_Surface = unique_ptr<SDL_Surface>(surface);
-        m_Texture =unique_ptr<SDL_Texture>(texture);
+        m_Surface = surface;
+        m_Texture =texture;
     }
 
     Graph::~Graph()
     {
-        if (m_Surface != nullptr) SDL_FreeSurface(m_Surface.get());
-        if (m_Texture != nullptr) SDL_DestroyTexture(m_Texture.get());
+        if (m_Surface != nullptr) SDL_FreeSurface(m_Surface);
+        if (m_Texture != nullptr) SDL_DestroyTexture(m_Texture);
     }
 
-    const SDL_Texture& Graph::GetTexture() const
+    const SDL_Texture* Graph::GetTexture() const
     {
-        return *m_Texture;
+        return m_Texture;
     }
 
     void Graph::RenderGraph(const SDL_Renderer *renderer, const Vec2<int> *startPoint,
@@ -53,7 +53,7 @@ namespace gameEngine
         SDL_Rect cutSrcRect = SDL_Rect{srcRect->X, srcRect->Y, srcRect->Width, srcRect->Height};
 
         const SDL_Point centerPoint{srcRect->Width / 2, srcRect->Height / 2};
-        SDL_RenderCopyEx(const_cast<SDL_Renderer*>(renderer), m_Texture.get(), &cutSrcRect, &drawingToScreenRect,
+        SDL_RenderCopyEx(const_cast<SDL_Renderer*>(renderer), m_Texture, &cutSrcRect, &drawingToScreenRect,
                          rotationDeg, &centerPoint, isFlip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
     }
 

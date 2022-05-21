@@ -155,8 +155,10 @@ namespace gameEngine
 
     void SpriteTexture::RenderAll(AppState &appState)
     {
-        std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(),
-                         [](shared_ptr<SpriteTexture> &left, shared_ptr<SpriteTexture> &right) -> bool { return left->GetZ() > right->GetZ(); });
+        std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(),[](const weak_ptr<SpriteTexture> &left, const weak_ptr<SpriteTexture> &right) -> bool {
+            auto leftShared =left.lock();
+            auto rightShared = right.lock();
+            return leftShared ? leftShared ->GetZ() : 0 > rightShared ? rightShared->GetZ() : 0; });
         std::vector<int> garbageIndexes{};
         int size = spriteTexturePool.size();
 

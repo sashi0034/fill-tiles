@@ -15,8 +15,8 @@ namespace gameEngine
             : m_ScreenSize(screenSize), m_PixelPerUnit(pixelPerUnit)
     {
         m_Time=std::make_unique<Time>();
-        m_Window = unique_ptr<SDL_Window>(window);
-        m_Renderer = unique_ptr<SDL_Renderer>(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
+        m_Window = window;
+        m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     }
 
     int AppState::GetPixelPerUnit() const
@@ -33,25 +33,16 @@ namespace gameEngine
     {
         return *m_Time;
     }
-
-    const SDL_Renderer &AppState::GetRenderer() const
+    SDL_Window *AppState::GetWindow() const
     {
-        return *m_Renderer;
+        return m_Window;
     }
 
-    const SDL_Window &AppState::GetWindow() const
+    SDL_Renderer *AppState::GetRenderer() const
     {
-        return *m_Window;
+        return m_Renderer;
     }
 
-    SDL_Window *AppState::GetWindowAsPtr() const
-    {
-        return m_Window.get();
-    }
-
-    SDL_Renderer *AppState::GetRendererAsPtr() const
-    {
-        return m_Renderer.get();
-    }
+    AppState::~AppState() = default;
 
 }

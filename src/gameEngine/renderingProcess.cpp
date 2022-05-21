@@ -14,10 +14,10 @@ namespace gameEngine::renderingProcess
 
         const Vec2<int> screenPos = (globalPos * appState.GetPixelPerUnit()).EachTo<int>();
 
-        const SDL_Renderer &renderer = appState.GetRenderer();
+        SDL_Renderer* renderer = appState.GetRenderer();
         auto srcRect = renderingSpr->GetSrcRect();
 
-        renderingSpr->GetGraph()->RenderGraph(&renderer, &screenPos, &srcRect, double(scale));
+        renderingSpr->GetGraph()->RenderGraph(renderer, &screenPos, &srcRect, double(scale));
     }
 
     void RenderSpriteAlignToUnit(AppState &appState, SpriteTexture *renderingSpr)

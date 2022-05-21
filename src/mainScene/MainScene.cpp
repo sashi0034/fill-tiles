@@ -14,12 +14,15 @@
 
 void mainScene::MainScene::Loop(unique_ptr<AppState>& appState) {
     //auto window = &const_cast<SDL_Window&>(appState->GetWindow());
-    auto renderer = &const_cast<SDL_Renderer&>(appState->GetRenderer());
+    std::cout << "Start Main Scene" << std::endl;
+
+    auto renderer = appState->GetRenderer();
 
     MoveTest moveTest(renderer);
     mainScene::FontTest fontTest(renderer);
     Time time{};
     LibraryTest boostTest{};
+    unique_ptr<TestObject> testObject(new TestObject(*appState));
 
     while (1) {
 

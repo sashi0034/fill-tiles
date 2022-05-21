@@ -31,10 +31,10 @@ int GameKernel::StartGame() {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return 1;
     } else {
-        appState = std::make_unique<AppState>(Vec2<int>{SCREEN_WIDTH, SCREEN_HEIGHT}, PIXEL_PER_UNIT, window);
+        appState = std::make_unique<AppState>(Vec2<int>{SCREEN_WIDTH, SCREEN_HEIGHT}, 3, window);
     }
 
-    auto renderer = &const_cast<SDL_Renderer&>(appState->GetRenderer());
+    auto renderer = appState->GetRenderer();
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, 255);
 
     mainScene::MainScene::Loop(appState);
