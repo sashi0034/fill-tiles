@@ -11,12 +11,12 @@
 #include "LibraryTest.h"
 #include "../gameEngine/gameEngine.h"
 #include "TestObject.h"
+#include "MainRoot.h"
 
 void mainScene::MainScene::Loop(unique_ptr<AppState>& appState) {
     std::cout << "Start Main Scene" << std::endl;
 
-    unique_ptr<TestObject> test1(new TestObject(appState.get(), Vec2<double>{5, 5}));
-    unique_ptr<TestObject> test2(new TestObject(appState.get(), Vec2<double>{10, 3}));
+    MainRoot mainRoot(appState.get());
 
     do
     {

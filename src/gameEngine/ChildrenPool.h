@@ -36,10 +36,15 @@ namespace gameEngine
             return index;
         }
     public:
-        void Birth(T* child)
+        weak_ptr<T> Birth(T* child)
         {
             auto product = std::shared_ptr<T>(child);
-            m_Pool.push_back(std::pair(child, std::shared_ptr<T>(child)));
+            m_Pool.push_back(product);
+            return product;
+        };
+        void Register(shared_ptr<T>& child)
+        {
+            m_Pool.template emplace_back(child);
         };
         bool Destroy(T* child)
         {
@@ -54,6 +59,11 @@ namespace gameEngine
 
             for (int i = 0; i < size; ++i)
                 process(m_Pool[i]);
+        }
+        ~ChildrenPool()
+        {
+            // 子要素を先に開放する
+            m_Pool = std::vector<shared_ptr<T>>{};
         }
     };
 }

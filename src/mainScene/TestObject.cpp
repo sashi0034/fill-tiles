@@ -6,7 +6,8 @@
 
 namespace mainScene
 {
-    TestObject::TestObject(IAppState* appState, Vec2<double> vel)
+    TestObject::TestObject(ChildrenPool<ChildBase>* belongingPool, IAppState* appState, Vec2<double> vel)
+        : ChildBase(belongingPool)
     {
 
         m_Graph = unique_ptr<Graph>(new Graph(appState->GetRenderer(), IMG_Load("assets/dango_wolf_24x24.png")));

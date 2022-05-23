@@ -6,16 +6,17 @@
 #define FILL_TILES_TESTOBJECT_H
 
 #include "../gameEngine/gameEngine.h"
+#include "../gameEngine/ChildBase.h"
 
 namespace mainScene
 {
-    class TestObject
+    class TestObject : public ChildBase
     {
         unique_ptr<Graph> m_Graph;
         shared_ptr<Sprite> m_Spr;
         Vec2<double> m_Pos{};
     public:
-        explicit TestObject(IAppState* appState, Vec2<double> vel);
+        explicit TestObject(ChildrenPool<ChildBase>* belongingPool, IAppState* appState, Vec2<double> vel);
     };
 }
 

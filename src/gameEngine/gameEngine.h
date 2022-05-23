@@ -9,6 +9,7 @@
 #include "AppState.h"
 #include "arrayUtils.h"
 #include "ChildrenPool.h"
+#include "ChildBase.h"
 #include "Graph.h"
 #include "GraphBlend.h"
 #include "log.h"
