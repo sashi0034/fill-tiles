@@ -15,7 +15,7 @@ namespace mainScene
         shared_ptr<Sprite> m_Spr;
         Vec2<double> m_Pos{};
     public:
-        TestObject(AppState& appState);
+        explicit TestObject(IAppState* appState, Vec2<double> vel);
     };
 }
 

@@ -13,47 +13,14 @@
 #include "TestObject.h"
 
 void mainScene::MainScene::Loop(unique_ptr<AppState>& appState) {
-    //auto window = &const_cast<SDL_Window&>(appState->GetWindow());
     std::cout << "Start Main Scene" << std::endl;
 
-    auto renderer = appState->GetRenderer();
+    unique_ptr<TestObject> test1(new TestObject(appState.get(), Vec2<double>{5, 5}));
+    unique_ptr<TestObject> test2(new TestObject(appState.get(), Vec2<double>{10, 3}));
 
-    MoveTest moveTest(renderer);
-    mainScene::FontTest fontTest(renderer);
-    Time time{};
-    LibraryTest boostTest{};
-    unique_ptr<TestObject> testObject(new TestObject(*appState));
-
-    while (1) {
-
-        //std::cout << time.GetDeltaMilli() << std::endl;
-
-        auto fps = time.CountFps();
-        if (fps->HasValue) std::cout << "FPS: " << fps->Value << std::endl;
-
-        SDL_RenderClear(renderer);
-
-        moveTest.Render();
-        fontTest.Render();
-        SpriteTexture::RenderAll(*appState);
-
-        SDL_RenderPresent(renderer);
-
-        // event handling
-
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                break;
-            }
-        }
-        if (e.type == SDL_QUIT) break;
-
-        const Uint8 *state = SDL_GetKeyboardState(NULL);
-
-        moveTest.Update(time.GetDeltaMilli(), state);
-        boostTest.Update();
-        time.update();
-        Sprite::UpdateAll(*appState);
-    }
+    do
+    {
+        appState->UpdateFrame();
+        appState->RenderFrame();
+    } while (!appState->CanQuitApp());
 }

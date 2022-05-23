@@ -12,7 +12,7 @@ namespace gameEngine
 
     Sprite::Sprite()
     {
-        m_UpdateProcess = [](AppState&){};
+        m_UpdateProcess = [](IAppState*){};
     }
 
     shared_ptr<Sprite> Sprite::Create()
@@ -35,12 +35,12 @@ namespace gameEngine
         return m_Texture;
     }
 
-    void Sprite::SetUpdateProcess(const std::function<void(AppState &)> &process)
+    void Sprite::SetUpdateProcess(const std::function<void(IAppState*)> &process)
     {
         m_UpdateProcess = process;
     }
 
-    void Sprite::UpdateAll(AppState &appState)
+    void Sprite::UpdateAll(IAppState* appState)
     {
         int size = spritePool.size();
         std::vector<int> garbageIndexes{};

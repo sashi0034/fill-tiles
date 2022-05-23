@@ -25,25 +25,37 @@ namespace gameEngine
         [[nodiscard]] virtual const Time& GetTime() const = 0;
         [[nodiscard]] virtual SDL_Window* GetWindow() const = 0;
         [[nodiscard]] virtual SDL_Renderer* GetRenderer() const = 0;
+        [[nodiscard]] virtual const Uint8* GetKeyboardState() const = 0;
     };
 
 
-    class AppState : IAppState
+    class AppState : public IAppState
     {
+    public:
+        AppState();
+        ~AppState();
+        AppState(Vec2<int> screenSize, int pixelPerUnit, SDL_Window* window);
+
+        void UpdateFrame();
+        void RenderFrame();
+
+        [[nodiscard]] bool CanQuitApp() const;
+    private:
         const Vec2<int> m_ScreenSize{};
         const int m_PixelPerUnit=0;
         unique_ptr<Time> m_Time{};
         SDL_Window* m_Window{};
         SDL_Renderer* m_Renderer{};
+        const Uint8* m_KeyboardState{};
+        bool m_CanQuitApp = false;
+        void pollEvent();
     public:
-        AppState();
-        ~AppState();
-        AppState(Vec2<int> screenSize, int pixelPerUnit, SDL_Window* window);
         [[nodiscard]] int GetPixelPerUnit() const override;
         [[nodiscard]] const Vec2<int> & GetScreenSize() const override;
         [[nodiscard]] const Time & GetTime() const override;
         [[nodiscard]] SDL_Window* GetWindow() const override;
         [[nodiscard]] SDL_Renderer* GetRenderer() const override;
+        [[nodiscard]] const Uint8* GetKeyboardState() const override;
     };
 }
 

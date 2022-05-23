@@ -13,31 +13,33 @@ namespace gameEngine
 {
     struct Fps
     {
-        bool HasValue;
         int Value;
     };
 
     class Time
     {
         std::chrono::system_clock::time_point m_OldTime{};
-        int m_DeletaMilli{};
-        double m_DeletaSec{};
+        int m_DeltaMilli{};
+        double m_DeltaSec{};
 
         int m_FpsCount;
-        int m_FpsBuffur;
+        int m_FpsBuffer;
 
+        Fps m_Fps;
+
+        void countFps();
     public:
         Time();
 
-        int GetDeltaMilli();
+        int GetDeltaMilli() const;
 
-        double GetDeltaSec();
+        double GetDeltaSec() const;
 
         void Restart();
 
-        void update();
+        void Update();
 
-        std::unique_ptr<Fps> CountFps();
+        Fps GetFps();
     };
 }
 

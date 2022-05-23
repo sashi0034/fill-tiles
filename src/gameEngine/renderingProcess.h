@@ -16,10 +16,10 @@ namespace gameEngine{
 namespace gameEngine::renderingProcess
 {
 
-    void RenderSprite(AppState& appState, SpriteTexture* renderingSpr, double scale);
-    void RenderSpriteAlignToUnit(AppState& appState, SpriteTexture* renderingSpr);
-    void RenderSpriteDotByDot(AppState& appState, SpriteTexture* renderingSpr);
-    void RenderSpriteTwoDots(AppState& appState, SpriteTexture* renderingSpr);
+    void RenderSprite(IAppState* appState, SpriteTexture* renderingSpr, double scale);
+    void RenderSpriteAlignToUnit(IAppState* appState, SpriteTexture* renderingSpr);
+    void RenderSpriteDotByDot(IAppState* appState, SpriteTexture* renderingSpr);
+    void RenderSpriteTwoDots(IAppState* appState, SpriteTexture* renderingSpr);
 }
 
 

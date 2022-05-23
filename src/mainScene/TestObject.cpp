@@ -6,18 +6,19 @@
 
 namespace mainScene
 {
-    TestObject::TestObject(AppState& appState)
+    TestObject::TestObject(IAppState* appState, Vec2<double> vel)
     {
 
-        m_Graph = unique_ptr<Graph>(new Graph(appState.GetRenderer(), IMG_Load("assets/dango_wolf_24x24.png")));
+        m_Graph = unique_ptr<Graph>(new Graph(appState->GetRenderer(), IMG_Load("assets/dango_wolf_24x24.png")));
 
         m_Spr = Sprite::Create();
         m_Spr->SetTexture(SpriteTexture::Create(m_Spr, m_Graph.get()));
 
         m_Spr->GetTexture()->SetSrcRect(Rect<int>{0,0,24,24});
 
-        m_Spr->SetUpdateProcess([this](AppState&){
-            m_Pos = m_Pos + Vec2<double>{0.01, 0.01};
+        m_Spr->SetUpdateProcess([=](IAppState* appState){
+            Vec2<double> v = vel;
+            m_Pos = m_Pos + v*appState->GetTime().GetDeltaSec();
             m_Spr->GetTexture()->SetPosition(m_Pos);
             std::cout << m_Pos.X << std::endl;
         });

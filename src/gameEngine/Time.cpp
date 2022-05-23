@@ -13,45 +13,52 @@ namespace gameEngine
 
     void Time::Restart()
     {
-        m_DeletaMilli = 0;
-        m_DeletaSec = 0;
+        m_DeltaMilli = 0;
+        m_DeltaSec = 0;
         m_OldTime = std::chrono::system_clock::now();
     }
 
-    void Time::update()
+    void Time::Update()
     {
         auto cur = std::chrono::system_clock::now();
         auto dur = cur - m_OldTime;
         auto milli = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-        m_DeletaMilli = milli;
-        m_DeletaSec = milli / 1000.0;
+        m_DeltaMilli = milli;
+        m_DeltaSec = milli / 1000.0;
         m_OldTime = cur;
+
+        countFps();
+
     }
 
-    int Time::GetDeltaMilli()
+    int Time::GetDeltaMilli() const
     {
-        return m_DeletaMilli;
+        return m_DeltaMilli;
     }
 
-    double Time::GetDeltaSec()
+    double Time::GetDeltaSec() const
     {
-        return m_DeletaSec;
+        return m_DeltaSec;
     }
 
-    std::unique_ptr<Fps> Time::CountFps()
+    void Time::countFps()
     {
-        m_FpsBuffur += GetDeltaMilli();
+        m_FpsBuffer += GetDeltaMilli();
         m_FpsCount++;
-        if (m_FpsBuffur > 1000)
+        if (m_FpsBuffer > 1000)
         {
-            m_FpsBuffur -= 1000;
+            m_FpsBuffer -= 1000;
             int ret = m_FpsCount;
             m_FpsCount = 0;
-            return std::unique_ptr<Fps>(new Fps{true, ret});
+            m_Fps= Fps{ret};
         }
-
-        return std::unique_ptr<Fps>(new Fps{false, 0});
     }
+
+    Fps Time::GetFps()
+    {
+        return m_Fps;
+    }
+
 }
 
 

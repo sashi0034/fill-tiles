@@ -16,7 +16,7 @@ namespace gameEngine
         m_OwnerSprite = ownerSpr;
         m_Graph = graph;
         m_SrcRect = srcRect;
-        m_RenderingProcess = [this](AppState& appState){
+        m_RenderingProcess = [this](IAppState* appState){
             renderingProcess::RenderSpriteAlignToUnit(appState, this);
         };
     }
@@ -135,7 +135,7 @@ namespace gameEngine
         return m_Blend;
     }
 
-    void SpriteTexture::SetRenderingProcess(const std::function<void(AppState&)>& process)
+    void SpriteTexture::SetRenderingProcess(const std::function<void(IAppState*)>& process)
     {
         m_RenderingProcess = process;
     }
@@ -153,7 +153,7 @@ namespace gameEngine
         }
     }
 
-    void SpriteTexture::RenderAll(AppState &appState)
+    void SpriteTexture::RenderAll(IAppState*appState)
     {
         std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(),[](const weak_ptr<SpriteTexture> &left, const weak_ptr<SpriteTexture> &right) -> bool {
             auto leftShared =left.lock();

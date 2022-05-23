@@ -39,7 +39,7 @@ namespace gameEngine
         double m_RotationDeg = 0;
         GraphBlend m_Blend{};
 
-        std::function<void(AppState&)> m_RenderingProcess;
+        std::function<void(IAppState*)> m_RenderingProcess;
 
         static void collectGarbageInSpriteTexturePool(std::vector<int> &garbageIndexes);
 
@@ -77,11 +77,11 @@ namespace gameEngine
         void SetBlend(GraphBlend& blend);
         [[nodiscard]] GraphBlend GetBlend() const;
 
-        void SetRenderingProcess(const std::function<void(AppState&)>& process);
+        void SetRenderingProcess(const std::function<void(IAppState*)>& process);
 
         Vec2<double> GetParentalGlobalPosition();
 
-        static void RenderAll(AppState& appState);
+        static void RenderAll(IAppState* appState);
     };
 }
 

@@ -23,7 +23,7 @@ namespace gameEngine
 
         weak_ptr<Sprite> m_SelfPointer;
         shared_ptr<SpriteTexture> m_Texture{};
-        std::function<void(AppState&)> m_UpdateProcess;
+        std::function<void(IAppState*)> m_UpdateProcess;
         static void collectGarbageInSpritePool(std::vector<int>& garbageIndexes);
 
         Sprite();
@@ -33,9 +33,9 @@ namespace gameEngine
         void SetTexture(shared_ptr<SpriteTexture> texture);
         const shared_ptr<SpriteTexture>& GetTexture() const;
 
-        void SetUpdateProcess(const std::function<void(AppState&)>& process);
+        void SetUpdateProcess(const std::function<void(IAppState*)>& process);
 
-        static void UpdateAll(AppState &appState);
+        static void UpdateAll(IAppState* appState);
 
     };
 }
