@@ -20,6 +20,8 @@
 #include "SpriteTexture.h"
 #include "Time.h"
 #include "Vec2.h"
+#include "CoroTask.h"
+#include "CoroutineManager.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

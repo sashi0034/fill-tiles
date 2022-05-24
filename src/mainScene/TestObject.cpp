@@ -21,7 +21,25 @@ namespace mainScene
             Vec2<double> v = vel;
             m_Pos = m_Pos + v*appState->GetTime().GetDeltaSec();
             m_Spr->GetTexture()->SetPosition(m_Pos);
-            std::cout << m_Pos.X << std::endl;
+            m_CoroManager.UpdateEach();
+            //std::cout << m_Pos.X << std::endl;
         });
+
+        m_CoroManager.Start(new coroutine<CoroTask>::pull_type{std::bind(testCoro, std::placeholders::_1, this)});
+    }
+
+    CoroTask TestObject::testCoro(coroutine<CoroTask>::push_type &yield, TestObject *self)
+    {
+        for (int i = 0; i < 10; ++i)
+        {
+            std::cout << "coro test x: " << self->GetPos().X <<std::endl;
+            yield(CoroTask(CoroTask::Result::PENDING));
+        }
+        return CoroTask(CoroTask::Result::SUCCESS);
+    }
+
+    const Vec2<double>& TestObject::GetPos() const
+    {
+        return m_Pos;
     }
 }

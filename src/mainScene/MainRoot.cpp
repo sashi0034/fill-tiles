@@ -6,11 +6,16 @@
 #include "TestObject.h"
 
 namespace mainScene{
-MainRoot::MainRoot(IAppState *appState)
-{
-    m_Children.Birth(new TestObject(&m_Children, appState, Vec2<double>{1.1, 2.2}));
-    m_Children.Birth(new TestObject(&m_Children, appState, Vec2<double>{5.0, 8.0}));
-}
+    MainRoot::MainRoot(IAppState *appState)
+    {
+        m_Children.Birth(new TestObject(&m_Children, appState, Vec2<double>{1.1, 2.2}));
+        m_Children.Birth(new TestObject(&m_Children, appState, Vec2<double>{5.0, 8.0}));
+    }
+
+    MainRoot::~MainRoot()
+    {
+        m_Children.Release();
+    }
 }
 
 

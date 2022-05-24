@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <cassert>
+#include <iostream>
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -19,7 +21,6 @@ namespace gameEngine
     template<typename T> class ChildrenPool
     {
         std::vector<shared_ptr<T>> m_Pool{};
-
 
         int findIndex(T* target)
         {
@@ -49,21 +50,26 @@ namespace gameEngine
         bool Destroy(T* child)
         {
             int index = findIndex(child);
-            if (index>-1) return false;
+
+            if (index==-1) return false;
+
             m_Pool.erase(m_Pool.begin()+index);
             return true;
         }
-        void ProcessEach(std::function<void(shared_ptr<T>&)>& process)
+        void ProcessEach(std::function<void(shared_ptr<T>&)> process)
         {
             int size =m_Pool.size();
 
             for (int i = 0; i < size; ++i)
                 process(m_Pool[i]);
         }
+        void Release()
+        {
+            m_Pool = std::vector<shared_ptr<T>>{};
+        }
         ~ChildrenPool()
         {
-            // 子要素を先に開放する
-            m_Pool = std::vector<shared_ptr<T>>{};
+            assert(m_Pool.size()==0);
         }
     };
 }

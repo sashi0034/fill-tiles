@@ -14,6 +14,7 @@ namespace mainScene
     {
     public:
         explicit MainRoot(IAppState* appState);
+        ~MainRoot();
     private:
         shared_ptr<Sprite> m_Sprite{};
         ChildrenPool<ChildBase> m_Children{};
