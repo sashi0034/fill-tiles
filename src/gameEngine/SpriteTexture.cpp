@@ -153,6 +153,20 @@ namespace gameEngine
         }
     }
 
+    bool SpriteTexture::GetParentalVisibility()
+    {
+        if (auto parent = m_VisibilityParent.lock())
+        {
+            bool parentVisibility = parent->GetParentalVisibility();
+            return parent->m_IsVisible && parentVisibility;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+
     void SpriteTexture::RenderAll(IAppState*appState)
     {
         std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(),[](const weak_ptr<SpriteTexture> &left, const weak_ptr<SpriteTexture> &right) -> bool {
@@ -190,6 +204,26 @@ namespace gameEngine
             int index = garbageIndexes[i];
             spriteTexturePool.erase(spriteTexturePool.begin()+index);
         }
+    }
+
+    void SpriteTexture::SetVisibilityParent(const shared_ptr<SpriteTexture> &parent)
+    {
+        m_VisibilityParent = parent;
+    }
+
+    weak_ptr<SpriteTexture> SpriteTexture::GetVisibilityParent() const
+    {
+        return m_VisibilityParent;
+    }
+
+    void SpriteTexture::SetVisible(bool isVisible)
+    {
+        m_IsVisible=isVisible;
+    }
+
+    bool SpriteTexture::GetVisible() const
+    {
+        return m_IsVisible;
     }
 
 

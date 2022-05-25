@@ -10,6 +10,8 @@ namespace gameEngine::renderingProcess
 {
     void RenderSprite(IAppState*appState, SpriteTexture *renderingSpr, double scale)
     {
+        if (!renderingSpr->GetVisible() || !renderingSpr->GetParentalVisibility()) return;
+
         auto globalPos = renderingSpr->GetParentalGlobalPosition() + renderingSpr->GetPosition();
 
         const Vec2<int> screenPos = (globalPos * appState->GetPixelPerUnit()).EachTo<int>();

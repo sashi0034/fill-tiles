@@ -30,14 +30,16 @@ namespace gameEngine
 
         weak_ptr<Sprite> m_OwnerSprite{};
         Vec2<double> m_Position{0, 0};
+        weak_ptr<SpriteTexture> m_PositionParent{};
         double m_Z;
         Graph* m_Graph;
         Rect<int> m_SrcRect{0, 0, 0, 0};
         double m_Scale = 1.0;
         bool m_IsFlip = false;
-        weak_ptr<SpriteTexture> m_PositionParent{};
         double m_RotationDeg = 0;
         GraphBlend m_Blend{};
+        bool m_IsVisible = true;
+        weak_ptr<SpriteTexture> m_VisibilityParent{};
 
         std::function<void(IAppState*)> m_RenderingProcess;
 
@@ -71,6 +73,12 @@ namespace gameEngine
         void SetPositionParent(const shared_ptr<SpriteTexture>& parent);
         [[nodiscard]] weak_ptr<SpriteTexture> GetPositionParent() const;
 
+        void SetVisible(bool isVisible);
+        [[nodiscard]] bool GetVisible() const;
+
+        void SetVisibilityParent(const shared_ptr<SpriteTexture>& parent);
+        [[nodiscard]] weak_ptr<SpriteTexture> GetVisibilityParent() const;
+
         void SetRotationDeg(double deg);
         [[nodiscard]] double GetRotationDeg() const;
 
@@ -80,6 +88,7 @@ namespace gameEngine
         void SetRenderingProcess(const std::function<void(IAppState*)>& process);
 
         Vec2<double> GetParentalGlobalPosition();
+        bool GetParentalVisibility();
 
         static void RenderAll(IAppState* appState);
     };
