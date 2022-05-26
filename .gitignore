@@ -1,2 +1,12 @@
 cmake-build-debug/
 include/boost
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+fill_tiles
+fill_tiles.cbp
+fill_tiles_CXX_cotire.cmake
+fill_tiles_CXX_Debug_cotire.cmake
+fill_tiles_CXX_None_cotire.cmake
+Makefile
+Testing/Temporary/LastTest.log

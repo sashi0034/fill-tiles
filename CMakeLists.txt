@@ -10,6 +10,12 @@ project(fill_tiles)
 # Set the cmake minimum version to 3.5.1
 cmake_minimum_required(VERSION 3.5.1)
 
+# Make pre-compiled headers
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cotire/CMake)
+include(cotire)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=1")
+add_custom_target(${PROJECT_NAME}_custom)
+
 # Add SDL2 CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
@@ -27,6 +33,8 @@ set(RxCpp_INCLUDE_DIR "/home/sashi/RxCpp-4.1.1/Rx/v2/src")
 # Add all cpp source files under the src directory
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+add_dependencies(${PROJECT_NAME}_custom ${PROJECT_NAME})
 
 # Add all headers files under the include directory
 #target_include_directories(${PROJECT_NAME} PRIVATE include)
@@ -67,6 +75,9 @@ target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 
 # Add Boost library
 target_link_libraries(${PROJECT_NAME} Boost::boost Boost::context)
+
+# Use pro-compiled headers for cmake-debug-build
+cotire(${PROJECT_NAME}_custom)
 
 # Copy assets
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
