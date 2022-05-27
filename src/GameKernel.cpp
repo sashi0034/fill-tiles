@@ -16,7 +16,7 @@ int GameKernel::StartGame() {
     //Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        return 1;
+        return -1;
     }
     if (TTF_Init()<0)
     {
@@ -29,7 +29,7 @@ int GameKernel::StartGame() {
 
     if (window == NULL) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-        return 1;
+        return -1;
     } else {
         appState = std::make_unique<AppState>(Vec2<int>{SCREEN_WIDTH, SCREEN_HEIGHT}, 3, window);
     }

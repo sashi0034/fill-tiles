@@ -3,17 +3,19 @@
 //
 
 #include "TestObject.h"
+#include "MainRoot.h"
 
 namespace mainScene
 {
     TestObject::TestObject(ChildrenPool<ChildBase>* belongingPool, IAppState* appState, Vec2<double> vel)
         : ChildBase(belongingPool)
     {
+        (void)appState;
 
-        m_Graph = unique_ptr<Graph>(new Graph(appState->GetRenderer(), IMG_Load("assets/dango_wolf_24x24.png")));
+        m_Graph = MainRoot::GetInstance().ResImage->dango_wolf_24x24.get();
 
         m_Spr = Sprite::Create();
-        m_Spr->SetTexture(SpriteTexture::Create(m_Spr, m_Graph.get()));
+        m_Spr->SetTexture(SpriteTexture::Create(m_Spr, m_Graph));
 
         m_Spr->GetTexture()->SetSrcRect(Rect<int>{0,0,24,24});
 

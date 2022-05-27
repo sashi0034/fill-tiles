@@ -5,17 +5,23 @@
 #include "Graph.h"
 #include <SDL_image.h>
 #include "log.h"
+#include <cassert>
 
 namespace gameEngine
 {
     Graph::Graph(SDL_Renderer* renderer, SDL_Surface *surface)
     {
+        if (surface== nullptr) std::cout << "sfsedfdsfsdfsdfdsfsd";
+        assert(renderer);
+        assert(surface);
         m_Surface = surface;
         m_Texture = SDL_CreateTextureFromSurface(renderer, surface);
     }
 
     Graph::Graph(SDL_Surface *surface, SDL_Texture* texture)
     {
+        assert(surface);
+        assert(texture);
         m_Surface = surface;
         m_Texture =texture;
     }

@@ -25,13 +25,13 @@ namespace gameEngine
                 LOG_CERR << "Singleton Object Is Already Exit." << std::endl;
                 return;
             }
-            instance = unique_ptr(static_cast<T*>(this));
+            instance = unique_ptr<T>(static_cast<T*>(this));
         }
         virtual ~Singleton()
         {
             instance = nullptr;
         }
-        const T& GetInstance() const
+        static const T& GetInstance()
         {
             return *instance;
         }

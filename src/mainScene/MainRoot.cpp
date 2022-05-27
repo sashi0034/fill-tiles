@@ -3,10 +3,13 @@
 //
 
 #include "MainRoot.h"
+
+#include <memory>
 #include "TestObject.h"
 
 namespace mainScene{
     MainRoot::MainRoot(IAppState *appState)
+    : ResImage(std::make_unique<resource::Image>(appState))
     {
         m_Children.Birth(new TestObject(&m_Children, appState, Vec2<double>{1.1, 2.2}));
         m_Children.Birth(new TestObject(&m_Children, appState, Vec2<double>{5.0, 8.0}));
