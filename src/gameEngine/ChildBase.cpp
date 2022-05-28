@@ -14,4 +14,7 @@ namespace gameEngine
     {
         return m_BelongingPool;
     }
+
+    void ChildBase::Update()
+    {}
 }

@@ -16,6 +16,10 @@ namespace gameEngine
             FAILED,
             PENDING,
         };
+        static CoroTask RespondSuccess();
+        static CoroTask RespondFailed();
+        static CoroTask RespondPending();
+
         explicit CoroTask(Result result);
         Result GetResult();
     private:

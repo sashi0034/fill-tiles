@@ -19,8 +19,10 @@ namespace mainScene
         const unique_ptr<resource::Image> ResImage;
         const IAppState* AppStatePtr;
     private:
-        shared_ptr<Sprite> m_Sprite{};
-        ChildrenPool<ChildBase> m_Children{};
+        shared_ptr<Sprite> m_Spr{};
+        ChildrenPool<ChildBase> m_ChildrenPool{};
+
+        void createSelfSpr();
     };
 }
 

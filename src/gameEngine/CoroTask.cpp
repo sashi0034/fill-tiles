@@ -14,4 +14,19 @@ namespace gameEngine{
     {
         return m_Result;
     }
+
+    CoroTask CoroTask::RespondSuccess()
+    {
+        return CoroTask(CoroTask::Result::SUCCESS);
+    }
+
+    CoroTask CoroTask::RespondFailed()
+    {
+        return CoroTask(CoroTask::Result::FAILED);
+    }
+
+    CoroTask CoroTask::RespondPending()
+    {
+        return CoroTask(CoroTask::Result::PENDING);
+    }
 }
