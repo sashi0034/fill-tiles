@@ -12,10 +12,10 @@ namespace gameEngine
     class ChildBase
     {
     public:
-        explicit ChildBase(ChildrenPool<ChildBase>* belongingPool);
-        [[nodiscard]] ChildrenPool<ChildBase>* GetBelongingPool() const;
+        explicit ChildBase(IChildrenPool<ChildBase>* belongingPool);
+        [[nodiscard]] IChildrenPool<ChildBase>* GetBelongingPool() const;
     private:
-        ChildrenPool<ChildBase>* m_BelongingPool;
+        IChildrenPool<ChildBase>* m_BelongingPool;
     };
 }
 

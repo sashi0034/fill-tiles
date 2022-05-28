@@ -17,8 +17,15 @@ using std::weak_ptr;
 
 namespace gameEngine
 {
+    template<typename T> class IChildrenPool
+    {
+        virtual weak_ptr<T> Birth(T* child) = 0;
+        virtual void Register(shared_ptr<T>& child)=0;
+        virtual bool Destroy(T* child) = 0;
+    };
 
-    template<typename T> class ChildrenPool
+
+    template<typename T> class ChildrenPool : public IChildrenPool<T>
     {
         std::vector<shared_ptr<T>> m_Pool{};
 
@@ -37,17 +44,17 @@ namespace gameEngine
             return index;
         }
     public:
-        weak_ptr<T> Birth(T* child)
+        weak_ptr<T> Birth(T* child) override
         {
             auto product = std::shared_ptr<T>(child);
             m_Pool.push_back(product);
             return product;
         };
-        void Register(shared_ptr<T>& child)
+        void Register(shared_ptr<T>& child) override
         {
             m_Pool.template emplace_back(child);
         };
-        bool Destroy(T* child)
+        bool Destroy(T* child) override
         {
             int index = findIndex(child);
 

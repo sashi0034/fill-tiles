@@ -6,7 +6,7 @@
 #include "MainRoot.h"
 namespace mainScene{
 
-    BackGround::BackGround(ChildrenPool<ChildBase> *belongingPool)
+    BackGround::BackGround(IChildrenPool<ChildBase> *belongingPool)
     : ChildBase(belongingPool)
     {
         (void)belongingPool;

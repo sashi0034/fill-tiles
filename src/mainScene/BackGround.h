@@ -12,7 +12,7 @@ namespace mainScene
     class BackGround : public ChildBase
     {
     public:
-        explicit BackGround(ChildrenPool<ChildBase>* belongingPool);
+        explicit BackGround(IChildrenPool<ChildBase>* belongingPool);
     private:
         shared_ptr<Sprite> m_Spr;
         void render(IAppState* appState);

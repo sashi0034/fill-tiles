@@ -6,11 +6,11 @@
 
 namespace gameEngine
 {
-    ChildBase::ChildBase(ChildrenPool<ChildBase>* belongingPool)
+    ChildBase::ChildBase(IChildrenPool<ChildBase>* belongingPool)
         : m_BelongingPool(belongingPool)
     {}
 
-    ChildrenPool<ChildBase> *ChildBase::GetBelongingPool() const
+    IChildrenPool<ChildBase> *ChildBase::GetBelongingPool() const
     {
         return m_BelongingPool;
     }
