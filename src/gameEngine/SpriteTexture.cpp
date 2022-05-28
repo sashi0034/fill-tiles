@@ -180,7 +180,6 @@ namespace gameEngine
             if (auto renderingSpr = spriteTexturePool[i].lock())
             {
                 if (renderingSpr == nullptr) continue;
-                if (renderingSpr->m_Graph == nullptr) continue;
 
                 renderingSpr->m_RenderingProcess(appState);
             }

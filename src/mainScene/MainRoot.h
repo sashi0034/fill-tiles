@@ -17,6 +17,7 @@ namespace mainScene
         explicit MainRoot(IAppState* appState);
         ~MainRoot() override;
         const unique_ptr<resource::Image> ResImage;
+        const IAppState* AppStatePtr;
     private:
         shared_ptr<Sprite> m_Sprite{};
         ChildrenPool<ChildBase> m_Children{};

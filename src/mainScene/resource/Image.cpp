@@ -5,6 +5,7 @@
 #include "Image.h"
 
 #include <memory>
+#include <filesystem>
 #include "SDL_image.h"
 
 namespace mainScene::resource
@@ -12,17 +13,17 @@ namespace mainScene::resource
     Image::Image(IAppState *appState)
     : m_AppStatePtr(appState)
     {
-        LOG_COUT << "Loaded Image Resources.";
+        LOG_INFO << "Loaded Image Resources.";
     }
 
     unique_ptr<Graph> Image::loadPng(const std::string& fileName)
     {
         assert(m_AppStatePtr);
 
-        std::string path = R"(./assets/images/)" + fileName + ".png";
+        std::filesystem::path path = R"(./assets/images/)" + fileName + ".png";;
 
         auto renderer = m_AppStatePtr->GetRenderer();
-        auto surface = IMG_Load(path.c_str());
+        auto surface = IMG_Load(path.relative_path().c_str());
 
         assert(surface);
 

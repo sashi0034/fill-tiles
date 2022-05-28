@@ -9,7 +9,8 @@
 
 #define DEBUG_BUILD
 
-#define LOG_COUT std::cout << std::endl << " [OUT] " << __FILE__  << " ** " << __FUNCTION__ << " ** " << __LINE__ << std::endl
-#define LOG_CERR std::cerr << std::endl << " [ERR] " << __FILE__  << " ** " << __FUNCTION__ << " ** " << __LINE__ << std::endl
+#define LOG_INFO std::cout << " [INFO] " << __FILE__  << " ** " << __FUNCTION__ << " ** " << __LINE__ << std::endl
+#define LOG_CAUTION std::cout << " [CAUTION] " << __FILE__  << " ** " << __FUNCTION__ << " ** " << __LINE__ << std::endl
+#define LOG_ERR std::cerr << " [ERR] " << __FILE__  << " ** " << __FUNCTION__ << " ** " << __LINE__ << std::endl
 
 #endif //FILL_TILES_LOG_H

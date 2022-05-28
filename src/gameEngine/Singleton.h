@@ -22,7 +22,7 @@ namespace gameEngine
         {
             if (instance != nullptr)
             {
-                LOG_CERR << "Singleton Object Is Already Exit." << std::endl;
+                LOG_ERR << "Singleton Object Is Already Exit." << std::endl;
                 return;
             }
             instance = unique_ptr<T>(static_cast<T*>(this));

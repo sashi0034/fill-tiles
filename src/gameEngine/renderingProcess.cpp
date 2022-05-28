@@ -10,6 +10,8 @@ namespace gameEngine::renderingProcess
 {
     void RenderSprite(IAppState*appState, SpriteTexture *renderingSpr, double scale)
     {
+        auto renderingGraph =renderingSpr->GetGraph();
+        if (renderingGraph == nullptr) return;
         if (!renderingSpr->GetVisible() || !renderingSpr->GetParentalVisibility()) return;
 
         auto globalPos = renderingSpr->GetParentalGlobalPosition() + renderingSpr->GetPosition();
@@ -19,7 +21,7 @@ namespace gameEngine::renderingProcess
         SDL_Renderer* renderer = appState->GetRenderer();
         auto srcRect = renderingSpr->GetSrcRect();
 
-        renderingSpr->GetGraph()->RenderGraph(renderer, &screenPos, &srcRect, double(scale));
+        renderingGraph->RenderGraph(renderer, screenPos, srcRect, double(scale));
     }
 
     void RenderSpriteAlignToUnit(IAppState*appState, SpriteTexture *renderingSpr)

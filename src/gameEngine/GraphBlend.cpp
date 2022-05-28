@@ -36,7 +36,7 @@ namespace gameEngine
 #ifdef DEBUG_BUILD
         if (pal<0 || 255<pal)
         {
-            LOG_CERR << "BlendPal: " << pal << " Is Out Of Range" << std::endl ;
+            LOG_ERR << "BlendPal: " << pal << " Is Out Of Range" << std::endl ;
         }
 #endif
         m_Pal = std::max(0, std::min(255, pal));
