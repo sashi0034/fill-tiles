@@ -27,10 +27,10 @@ namespace gameEngine::detail
 
     void TextureAnimationEaser::Update(double deltaSec)
     {
-        if (m_EndTime==0) return;
+        if (m_EndTime == 0) return;
         if (IsDead()) return;
 
-        m_Time += deltaSec;
+        m_Time = std::min(deltaSec + m_Time, m_EndTime);
 
         switch (m_Ease)
         {
@@ -38,14 +38,16 @@ namespace gameEngine::detail
                 m_ProgressRatio = m_Time / m_EndTime;
                 break;
             case EAnimEase::InBack:
+                assert(false);
                 break;
             case EAnimEase::OutBack:
+                assert(false);
                 break;
             default:
                 assert(false);
         }
 
-        if (m_Time > m_EndTime) stepNextLoop();
+        if (m_Time >= m_EndTime) stepNextLoop();
     }
 
     void TextureAnimationEaser::stepNextLoop()

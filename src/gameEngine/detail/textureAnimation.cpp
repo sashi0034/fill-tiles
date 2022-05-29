@@ -44,7 +44,10 @@ namespace gameEngine::detail::textureAnimation
     {
         m_Easer.Update(deltaSecond);
         if (auto texture = m_Texture.lock())
-            texture->SetPosition(m_Easer.CalcProgressValue<Vec2<double>>(m_StartPos, m_EndPos));
+        {
+            auto pos = m_Easer.CalcProgressValue<Vec2<double>>(m_StartPos, m_EndPos);
+            texture->SetPosition(pos);
+        }
         return !m_Easer.IsDead();
     }
 

@@ -40,7 +40,7 @@ namespace gameEngine::detail
         template<typename T> T CalcProgressValue(T& startValue, T& globalEndValue){
             T endValue = globalEndValue;
             if (m_IsRelative) endValue = endValue + startValue;
-            T ret = startValue * (1-m_ProgressRatio) + endValue * m_ProgressRatio;
+            T ret = startValue * (1.0-m_ProgressRatio) + endValue * m_ProgressRatio;
             return ret;
         }
     };

@@ -30,8 +30,9 @@ namespace mainScene{
     void MainRoot::createSelfSpr()
     {
         m_Spr = Sprite::Create();
-        m_Spr->SetUpdateProcess([&](IAppState*){
+        m_Spr->SetUpdateProcess([&](IAppState* app){
             m_ChildrenPool.ProcessEach([&](auto child){ child->Update();});
+            m_TextureAnimator.Update(app->GetTime().GetDeltaSec());
         });
     }
 

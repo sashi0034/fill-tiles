@@ -14,7 +14,7 @@ namespace gameEngine::detail::textureAnimation
     class AnimationBase
     {
     public:
-        virtual bool UpdateAnimation(double);   // return false if object is dead.
+        virtual bool UpdateAnimation(double);   // returns false if object is dead.
         virtual TextureAnimationEaser * GetEaser();
         virtual ~AnimationBase() = default;
     };

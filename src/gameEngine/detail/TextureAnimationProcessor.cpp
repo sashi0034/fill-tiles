@@ -35,7 +35,8 @@ namespace gameEngine::detail
         if (auto next = m_NextAnimation.lock())
             next->trigger();
 
-        m_ParentalPool->Destroy(this);
+        auto isDestroyed = m_ParentalPool->Destroy(this);
+        assert(isDestroyed);
     }
 
     ITextureAnimationStarter *TextureAnimationProcessor::Then()
