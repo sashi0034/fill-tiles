@@ -44,7 +44,7 @@ namespace gameEngine
         }
 
         template<typename U>
-        Vec2<U> EachTo()
+        Vec2<U> EachTo() const
         {
             return Vec2<U>{static_cast<U>(this->X), static_cast<U>(this->Y)};
         }

@@ -22,6 +22,7 @@
 #include "Vec2.h"
 #include "CoroTask.h"
 #include "CoroutineManager.h"
+#include "TextureAnimator.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

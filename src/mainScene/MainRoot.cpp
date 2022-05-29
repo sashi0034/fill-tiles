@@ -8,6 +8,7 @@
 #include "TestObject.h"
 #include "BackGround.h"
 #include "Player.h"
+#include "AnimTest.h"
 
 namespace mainScene{
     MainRoot::MainRoot(IAppState *appState)
@@ -18,6 +19,7 @@ namespace mainScene{
         m_ChildrenPool.Birth(new TestObject(&m_ChildrenPool, appState, Vec2<double>{5.0, 8.0}));
         m_ChildrenPool.Birth(new BackGround(&m_ChildrenPool));
         m_ChildrenPool.Birth(new Player(&m_ChildrenPool));
+        m_ChildrenPool.Birth(new AnimTest(&m_ChildrenPool));
     }
 
     MainRoot::~MainRoot()
@@ -29,8 +31,13 @@ namespace mainScene{
     {
         m_Spr = Sprite::Create();
         m_Spr->SetUpdateProcess([&](IAppState*){
-            m_ChildrenPool.ProcessEach([&](auto child){child->Update();});
+            m_ChildrenPool.ProcessEach([&](auto child){ child->Update();});
         });
+    }
+
+    TextureAnimator &MainRoot::GetTextureAnimator()
+    {
+        return m_TextureAnimator;
     }
 }
 

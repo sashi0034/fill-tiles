@@ -19,6 +19,7 @@ namespace gameEngine
 {
     template<typename T> class IChildrenPool
     {
+    public:
         virtual weak_ptr<T> Birth(T* child) = 0;
         virtual void Register(shared_ptr<T>& child)=0;
         virtual bool Destroy(T* child) = 0;
@@ -29,6 +30,7 @@ namespace gameEngine
     {
         std::vector<shared_ptr<T>> m_Pool{};
 
+        // @todo: イテレータのままで返したい
         int findIndex(T* target)
         {
             auto size = m_Pool.size();
@@ -42,6 +44,14 @@ namespace gameEngine
                 return -1;
             }
             return index;
+        }
+        void collectGarbage(std::vector<int> &upwardIndexes)
+        {
+            for (int i= upwardIndexes.size() - 1; i >= 0; --i)
+            {
+                int index = upwardIndexes[i];
+                m_Pool.erase(m_Pool.begin()+index);
+            }
         }
     public:
         weak_ptr<T> Birth(T* child) override
@@ -60,15 +70,22 @@ namespace gameEngine
 
             if (index==-1) return false;
 
-            m_Pool.erase(m_Pool.begin()+index);
+            //m_Pool.erase(m_Pool.begin()+index);
+            m_Pool[index]= nullptr;
             return true;
         }
         void ProcessEach(std::function<void(shared_ptr<T>&)> process)
         {
             int size =m_Pool.size();
+            std::vector<int> garbage{};
 
             for (int i = 0; i < size; ++i)
-                process(m_Pool[i]);
+                if (m_Pool[i] != nullptr)
+                    process(m_Pool[i]);
+                else
+                    garbage.push_back(i);
+
+            collectGarbage(garbage);
         }
         void Release()
         {

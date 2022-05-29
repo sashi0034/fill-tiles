@@ -31,7 +31,7 @@ namespace gameEngine
         {
             instance = nullptr;
         }
-        static const T& GetInstance()
+        static T& GetInstance()
         {
             return *instance;
         }

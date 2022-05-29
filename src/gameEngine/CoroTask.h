@@ -12,9 +12,9 @@ namespace gameEngine
     {
     public:
         enum class Result{
-            SUCCESS,
-            FAILED,
-            PENDING,
+            Success,
+            Failed,
+            Pending,
         };
         static CoroTask RespondSuccess();
         static CoroTask RespondFailed();

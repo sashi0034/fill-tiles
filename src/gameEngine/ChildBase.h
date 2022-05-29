@@ -15,6 +15,7 @@ namespace gameEngine
         explicit ChildBase(IChildrenPool<ChildBase>* belongingPool);
         [[nodiscard]] IChildrenPool<ChildBase>* GetBelongingPool() const;
         virtual void Update();
+        virtual void Update(int deltaMilli);
     private:
         IChildrenPool<ChildBase>* m_BelongingPool;
     };

@@ -18,9 +18,11 @@ namespace mainScene
         ~MainRoot() override;
         const unique_ptr<resource::Image> ResImage;
         const IAppState* AppStatePtr;
+        TextureAnimator& GetTextureAnimator();
     private:
         shared_ptr<Sprite> m_Spr{};
         ChildrenPool<ChildBase> m_ChildrenPool{};
+        TextureAnimator m_TextureAnimator{};
 
         void createSelfSpr();
     };

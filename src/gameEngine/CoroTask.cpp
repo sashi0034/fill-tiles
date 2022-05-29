@@ -17,16 +17,16 @@ namespace gameEngine{
 
     CoroTask CoroTask::RespondSuccess()
     {
-        return CoroTask(CoroTask::Result::SUCCESS);
+        return CoroTask(CoroTask::Result::Success);
     }
 
     CoroTask CoroTask::RespondFailed()
     {
-        return CoroTask(CoroTask::Result::FAILED);
+        return CoroTask(CoroTask::Result::Failed);
     }
 
     CoroTask CoroTask::RespondPending()
     {
-        return CoroTask(CoroTask::Result::PENDING);
+        return CoroTask(CoroTask::Result::Pending);
     }
 }
