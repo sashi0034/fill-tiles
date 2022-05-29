@@ -11,33 +11,34 @@
 
 namespace gameEngine::detail::textureAnimation
 {
-    class IAnimation
+    class AnimationBase
     {
     public:
-        // Returns false is object is dead.
-        virtual bool UpdateAnimation(double deltaSecond) = 0;
-
-        virtual TextureAnimationEaser * GetEaser() = 0;
+        virtual bool UpdateAnimation(double);   // return false if object is dead.
+        virtual TextureAnimationEaser * GetEaser();
+        virtual ~AnimationBase() = default;
     };
 
-    class VirtualDelay final: public IAnimation
+    class VirtualDelay final: public AnimationBase
     {
     public:
         VirtualDelay(std::function<void()> process, double delayTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
+        ~VirtualDelay() override = default;
     private:
         double m_Time=0;
         double m_DelayTime;
         std::function<void()> m_Process;
     };
 
-    class Position final: public IAnimation
+    class Position final: public AnimationBase
     {
     public:
         Position(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
+        ~Position() override = default;
     private:
         weak_ptr<SpriteTexture> m_Texture;
         Vec2<double> m_StartPos{};
@@ -45,12 +46,13 @@ namespace gameEngine::detail::textureAnimation
         TextureAnimationEaser m_Easer;
     };
 
-    class Rotation final: public IAnimation
+    class Rotation final: public AnimationBase
     {
     public:
         Rotation(const weak_ptr<SpriteTexture> &targetTexture, double endDeg, double endTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
+        ~Rotation() override = default;
     private:
         weak_ptr<SpriteTexture> m_Texture;
         double m_StartDeg=0;
@@ -58,12 +60,13 @@ namespace gameEngine::detail::textureAnimation
         TextureAnimationEaser m_Easer;
     };
 
-    class Scale final: public IAnimation
+    class Scale final: public AnimationBase
     {
     public:
         Scale(const weak_ptr<SpriteTexture> &targetTexture, double endScale, double endTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
+        ~Scale() override = default;
     private:
         weak_ptr<SpriteTexture> m_Texture;
         double m_StartScale = 0;

@@ -17,7 +17,7 @@ namespace gameEngine::detail
 {
     namespace textureAnimation
     {
-        class IAnimation;
+        class AnimationBase;
     }
     class ITextureAnimationEaseProperty;
     class ITextureAnimationLinker;
@@ -75,11 +75,12 @@ namespace gameEngine::detail
         weak_ptr<ITextureAnimationPointer> GetWeakPtr() override;
         void Update(double deltaTime);
 
+        ~TextureAnimationProcessor();
     private:
         TextureAnimationProcessor(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, bool isFirst);
 
         weak_ptr<TextureAnimationProcessor> m_SelfPtr{};
-        unique_ptr<textureAnimation::IAnimation> m_AnimationProcess{};
+        unique_ptr<textureAnimation::AnimationBase> m_AnimationProcess{};
         weak_ptr<SpriteTexture> m_TargetTexture;
         IChildrenPool <TextureAnimationProcessor> * m_ParentalPool;
         double m_CountTime = 0;

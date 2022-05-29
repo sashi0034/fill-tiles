@@ -10,12 +10,12 @@
 namespace gameEngine::detail
 {
     TextureAnimationProcessor::TextureAnimationProcessor(weak_ptr<SpriteTexture> &texture,
-                                                         IChildrenPool<TextureAnimationProcessor> *parentalPool, bool isFirst)
+                                                         IChildrenPool<TextureAnimationProcessor> *parentalPool,
+                                                         bool isFirst)
             : m_TargetTexture(texture), m_ParentalPool(parentalPool)
     {
         if (isFirst) trigger();
     }
-
 
 
     void TextureAnimationProcessor::Update(double deltaTime)
@@ -29,6 +29,7 @@ namespace gameEngine::detail
 
         if (!isRunning) stepToNextAnimation();
     }
+
     void TextureAnimationProcessor::stepToNextAnimation()
     {
         if (auto next = m_NextAnimation.lock())
@@ -37,7 +38,7 @@ namespace gameEngine::detail
         m_ParentalPool->Destroy(this);
     }
 
-    ITextureAnimationStarter* TextureAnimationProcessor::Then()
+    ITextureAnimationStarter *TextureAnimationProcessor::Then()
     {
         return this;
     }
@@ -61,47 +62,47 @@ namespace gameEngine::detail
                                                                             IChildrenPool<TextureAnimationProcessor> *parentalPool,
                                                                             bool isFirst)
     {
-        auto product = std::shared_ptr<TextureAnimationProcessor>(new TextureAnimationProcessor(texture, parentalPool, isFirst));
+        auto product = std::shared_ptr<TextureAnimationProcessor>(
+                new TextureAnimationProcessor(texture, parentalPool, isFirst));
         product->m_SelfPtr = product;
         return product;
     }
 
-    ITextureAnimationEaseProperty * TextureAnimationProcessor::SetLoop(int loop)
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::SetLoop(int loop)
     {
         m_AnimationProcess->GetEaser()->SetLoop(loop);
         return this;
     }
 
 
-    ITextureAnimationEaseProperty * TextureAnimationProcessor::SetEase(gameEngine::EAnimEase easeType)
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::SetEase(gameEngine::EAnimEase easeType)
     {
         m_AnimationProcess->GetEaser()->SetEase(easeType);
         return this;
     }
 
-    ITextureAnimationEaseProperty * TextureAnimationProcessor::SetRelative(bool isRelative)
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::SetRelative(bool isRelative)
     {
         m_AnimationProcess->GetEaser()->SetRelative(isRelative);
         return this;
     }
 
 
-
     ITextureAnimationLinker *
     TextureAnimationProcessor::VirtualDelay(std::function<void()> process, double delayTime)
     {
         auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
-        nextAnimation->m_AnimationProcess =std::make_unique<textureAnimation::VirtualDelay>( process, delayTime);
+        nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::VirtualDelay>(process, delayTime);
 
         m_ParentalPool->Register(nextAnimation);
         m_NextAnimation = nextAnimation;
         return nextAnimation.get();
     }
 
-    ITextureAnimationEaseProperty * TextureAnimationProcessor::AnimPosition(Vec2<double> endPos, double duration)
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimPosition(Vec2<double> endPos, double duration)
     {
         auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
-        nextAnimation->m_AnimationProcess =std::make_unique<textureAnimation::Position>(
+        nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Position>(
                 m_TargetTexture, endPos, duration);
 
         m_ParentalPool->Register(nextAnimation);
@@ -109,10 +110,10 @@ namespace gameEngine::detail
         return nextAnimation.get();
     }
 
-    ITextureAnimationEaseProperty * TextureAnimationProcessor::AnimRotation(double endDeg, double duration)
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimRotation(double endDeg, double duration)
     {
         auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
-        nextAnimation->m_AnimationProcess =std::make_unique<textureAnimation::Rotation>(
+        nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Rotation>(
                 m_TargetTexture, endDeg, duration);
 
         m_ParentalPool->Register(nextAnimation);
@@ -120,10 +121,10 @@ namespace gameEngine::detail
         return nextAnimation.get();
     }
 
-    ITextureAnimationEaseProperty * TextureAnimationProcessor::AnimScale(double endScale, double duration)
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimScale(double endScale, double duration)
     {
         auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
-        nextAnimation->m_AnimationProcess =std::make_unique<textureAnimation::Scale>(
+        nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Scale>(
                 m_TargetTexture, endScale, duration);
 
         m_ParentalPool->Register(nextAnimation);
@@ -136,6 +137,8 @@ namespace gameEngine::detail
         return m_SelfPtr;
     }
 
+    TextureAnimationProcessor::~TextureAnimationProcessor()
+    {}
 
 }
 

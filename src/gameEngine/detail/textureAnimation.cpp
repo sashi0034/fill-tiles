@@ -98,4 +98,17 @@ namespace gameEngine::detail::textureAnimation
     {
         return &m_Easer;
     }
+
+    bool AnimationBase::UpdateAnimation(double)
+    {
+        assert(false);
+        return false;
+    }
+
+    TextureAnimationEaser *AnimationBase::GetEaser()
+    {
+        assert(false);
+        return nullptr;
+    }
+
 }
