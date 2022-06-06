@@ -3,6 +3,7 @@
 //
 
 #include "AnimTest.h"
+#include "MainRoot.h"
 
 namespace mainScene
 {
@@ -31,6 +32,14 @@ namespace mainScene
         self->m_Texture->SetPosition(self->m_Pos);
 
         /* example */
+//        mainRoot.GetTextureAnimator().TargetTo(self->m_Texture)
+//                ->AnimGraph(Vec2<int>{24, 24})->SetFrameLoop(10)->FromSrc(Vec2<int>{0, 0})
+//                ->AddFrame(Vec2<int>{0, 0}, 0.2)
+//                ->AddFrame(Vec2<int>{1, 0}, 0.2)
+//                ->AddFrame(Vec2<int>{2, 0}, 0.2)
+//                ->AddFrame(Vec2<int>{3, 0}, 0.2);
+
+
         mainRoot.GetTextureAnimator().TargetTo(self->m_Texture)
                 ->AnimPosition(Vec2<double>{64, 64}, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)->SetRelative(false)
                 ->With()
@@ -43,6 +52,7 @@ namespace mainScene
                 ->VirtualDelay([]() { std::cout << "yes!" << std::endl; }, 0)
                 ->Then()
                 ->VirtualDelay([]() { std::cout << "finished animation!" << std::endl; }, 0.5);
+
 
         yield(CoroTask::RespondPending());
 //

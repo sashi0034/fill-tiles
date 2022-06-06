@@ -6,7 +6,7 @@
 #define FILL_TILES_ANIMTEST_H
 
 #include "../gameEngine/gameEngine.h"
-#include "MainRoot.h"
+
 using namespace boost::coroutines2;
 
 namespace mainScene

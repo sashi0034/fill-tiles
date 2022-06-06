@@ -21,6 +21,7 @@ namespace gameEngine::detail
     }
     class ITextureAnimationEaseProperty;
     class ITextureAnimationLinker;
+    class ITextureAnimationGraphProperty;
 
 
     class ITextureAnimationStarter
@@ -29,6 +30,7 @@ namespace gameEngine::detail
         virtual ITextureAnimationEaseProperty * AnimPosition(Vec2<double> endPos, double duration) = 0;
         virtual ITextureAnimationEaseProperty * AnimRotation(double endDeg, double duration) = 0;
         virtual ITextureAnimationEaseProperty * AnimScale(double endScale, double duration) = 0;
+        virtual ITextureAnimationGraphProperty * AnimGraph(Vec2<int> cellSize) = 0;
         virtual ITextureAnimationLinker * VirtualDelay(std::function<void()> process, double deltaTime) = 0;
     };
 
@@ -58,7 +60,23 @@ namespace gameEngine::detail
         virtual ITextureAnimationEaseProperty * SetRelative(bool isRelative) = 0;
     };
 
-    class TextureAnimationProcessor final: public ITextureAnimationStarter, public ITextureAnimationEaseProperty
+    class ITextureAnimationGraph : public ITextureAnimationLinker
+    {
+    public:
+        virtual ITextureAnimationGraph* AddFrame(Vec2<int> cellPos, double duration) = 0;
+    };
+
+    class ITextureAnimationGraphProperty : public ITextureAnimationGraph
+    {
+    public:
+        virtual ITextureAnimationGraphProperty* SetFrameLoop(int loop) = 0;
+        virtual ITextureAnimationGraphProperty* FromCellSrc(int loop) = 0;
+    };
+
+    class TextureAnimationProcessor final:
+            public ITextureAnimationStarter,
+            public ITextureAnimationEaseProperty,
+            public ITextureAnimationGraphProperty
     {
     public:
         static shared_ptr<TextureAnimationProcessor> Create(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, bool isFirst);
@@ -73,6 +91,12 @@ namespace gameEngine::detail
         ITextureAnimationEaseProperty * SetLoop(int loop) override;
         ITextureAnimationEaseProperty * SetRelative(bool isRelative) override;
         weak_ptr<ITextureAnimationPointer> GetWeakPtr() override;
+
+        ITextureAnimationGraphProperty *AnimGraph(Vec2<int> cellSize) override;
+        ITextureAnimationGraphProperty *FromCellSrc(int loop) override;
+        ITextureAnimationGraph *AddFrame(Vec2<int> cellPos, double duration) override;
+        ITextureAnimationGraphProperty *SetFrameLoop(int loop) override;
+
         void Update(double deltaTime);
 
         ~TextureAnimationProcessor();

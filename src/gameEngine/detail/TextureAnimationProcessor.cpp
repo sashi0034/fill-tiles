@@ -97,7 +97,7 @@ namespace gameEngine::detail
 
         m_ParentalPool->Register(nextAnimation);
         m_NextAnimation = nextAnimation;
-        return nextAnimation.get();
+        return static_cast<ITextureAnimationEaseProperty*>(nextAnimation.get());
     }
 
     ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimPosition(Vec2<double> endPos, double duration)
@@ -135,11 +135,36 @@ namespace gameEngine::detail
 
     weak_ptr<ITextureAnimationPointer> TextureAnimationProcessor::GetWeakPtr()
     {
-        return m_SelfPtr;
+        return static_cast<const weak_ptr<ITextureAnimationEaseProperty> &>(m_SelfPtr);
     }
 
     TextureAnimationProcessor::~TextureAnimationProcessor()
     {}
+
+    ITextureAnimationGraphProperty *TextureAnimationProcessor::AnimGraph(Vec2<int> cellSize)
+    {
+        (void)cellSize;
+        return nullptr;
+    }
+
+    ITextureAnimationGraphProperty *TextureAnimationProcessor::FromCellSrc(int loop)
+    {
+        (void)loop;
+        return nullptr;
+    }
+
+    ITextureAnimationGraph *TextureAnimationProcessor::AddFrame(Vec2<int> cellPos, double duration)
+    {
+        (void) cellPos;
+        (void)duration;
+        return nullptr;
+    }
+
+    ITextureAnimationGraphProperty *TextureAnimationProcessor::SetFrameLoop(int loop)
+    {
+        (void)loop;
+        return nullptr;
+    }
 
 }
 
