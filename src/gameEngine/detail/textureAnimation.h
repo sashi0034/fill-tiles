@@ -15,8 +15,14 @@ namespace gameEngine::detail::textureAnimation
     {
     public:
         virtual bool UpdateAnimation(double);   // returns false if object is dead.
-        virtual TextureAnimationEaser * GetEaser();
         virtual ~AnimationBase() = default;
+    };
+
+    class EaseAbleAnimationBase : public AnimationBase
+    {
+    public:
+        virtual TextureAnimationEaser * GetEaser() = 0;
+        ~EaseAbleAnimationBase() override = default;
     };
 
     class VirtualDelay final: public AnimationBase
@@ -24,7 +30,6 @@ namespace gameEngine::detail::textureAnimation
     public:
         VirtualDelay(std::function<void()> process, double delayTime);
         bool UpdateAnimation(double deltaSecond) override;
-        TextureAnimationEaser * GetEaser() override;
         ~VirtualDelay() override = default;
     private:
         double m_Time=0;
@@ -32,7 +37,7 @@ namespace gameEngine::detail::textureAnimation
         std::function<void()> m_Process;
     };
 
-    class Position final: public AnimationBase
+    class Position final: public EaseAbleAnimationBase
     {
     public:
         Position(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime);
@@ -46,7 +51,7 @@ namespace gameEngine::detail::textureAnimation
         TextureAnimationEaser m_Easer;
     };
 
-    class Rotation final: public AnimationBase
+    class Rotation final: public EaseAbleAnimationBase
     {
     public:
         Rotation(const weak_ptr<SpriteTexture> &targetTexture, double endDeg, double endTime);
@@ -60,7 +65,7 @@ namespace gameEngine::detail::textureAnimation
         TextureAnimationEaser m_Easer;
     };
 
-    class Scale final: public AnimationBase
+    class Scale final: public EaseAbleAnimationBase
     {
     public:
         Scale(const weak_ptr<SpriteTexture> &targetTexture, double endScale, double endTime);
@@ -79,7 +84,6 @@ namespace gameEngine::detail::textureAnimation
     public:
         Graph(const weak_ptr<SpriteTexture> &targetTexture, Vec2<int> cellSize);
         bool UpdateAnimation(double deltaSecond) override;
-        TextureAnimationEaser *GetEaser() override;
         void AddFrame(Vec2<int> &cellPos, double duration, bool isFlip);
         void SetLoopMax(int loopMax);
         void SetCellSrcStart(const Vec2<int> &cellSrcStart);

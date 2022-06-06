@@ -12,10 +12,6 @@ namespace gameEngine::detail::textureAnimation
         assert(false);
     }
 
-    TextureAnimationEaser *AnimationBase::GetEaser()
-    {
-        assert(false);
-    }
 
     VirtualDelay::VirtualDelay(std::function<void()> process, double delayTime)
             : m_DelayTime(delayTime), m_Process(process)
@@ -34,10 +30,6 @@ namespace gameEngine::detail::textureAnimation
         return true;
     }
 
-    TextureAnimationEaser * VirtualDelay::GetEaser()
-    {
-        assert(false);
-    }
 
 
     Position::Position(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime)
@@ -123,10 +115,6 @@ namespace gameEngine::detail::textureAnimation
         }
     }
 
-    TextureAnimationEaser *Graph::GetEaser()
-    {
-        assert(false);
-    }
 
     bool Graph::UpdateAnimation(double deltaSecond)
     {

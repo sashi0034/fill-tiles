@@ -71,20 +71,23 @@ namespace gameEngine::detail
 
     ITextureAnimationEaseProperty *TextureAnimationProcessor::SetLoop(int loop)
     {
-        m_AnimationProcess->GetEaser()->SetLoop(loop);
+        auto *animation = dynamic_cast<textureAnimation::EaseAbleAnimationBase *>(m_AnimationProcess.get());
+        animation->GetEaser()->SetLoop(loop);
         return this;
     }
 
 
     ITextureAnimationEaseProperty *TextureAnimationProcessor::SetEase(gameEngine::EAnimEase easeType)
     {
-        m_AnimationProcess->GetEaser()->SetEase(easeType);
+        auto* animation = dynamic_cast<textureAnimation::EaseAbleAnimationBase*>(m_AnimationProcess.get());
+        animation->GetEaser()->SetEase(easeType);
         return this;
     }
 
     ITextureAnimationEaseProperty *TextureAnimationProcessor::SetRelative(bool isRelative)
     {
-        m_AnimationProcess->GetEaser()->SetRelative(isRelative);
+        auto* animation = dynamic_cast<textureAnimation::EaseAbleAnimationBase*>(m_AnimationProcess.get());
+        animation->GetEaser()->SetRelative(isRelative);
         return this;
     }
 
@@ -103,8 +106,8 @@ namespace gameEngine::detail
     ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimPosition(Vec2<double> endPos, double duration)
     {
         auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
-        nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Position>(
-                m_TargetTexture, endPos, duration);
+        textureAnimation::AnimationBase* base = new textureAnimation::Position(m_TargetTexture, endPos, duration);
+        nextAnimation->m_AnimationProcess = unique_ptr<textureAnimation::AnimationBase>(base);
 
         m_ParentalPool->Register(nextAnimation);
         m_NextAnimation = nextAnimation;
@@ -139,7 +142,7 @@ namespace gameEngine::detail
     }
 
     TextureAnimationProcessor::~TextureAnimationProcessor()
-    {}
+    = default;
 
     ITextureAnimationGraphProperty *TextureAnimationProcessor::AnimGraph(Vec2<int> cellSize)
     {
