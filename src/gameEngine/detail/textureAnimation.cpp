@@ -7,6 +7,16 @@
 namespace gameEngine::detail::textureAnimation
 {
 
+    bool AnimationBase::UpdateAnimation(double)
+    {
+        assert(false);
+    }
+
+    TextureAnimationEaser *AnimationBase::GetEaser()
+    {
+        assert(false);
+    }
+
     VirtualDelay::VirtualDelay(std::function<void()> process, double delayTime)
             : m_DelayTime(delayTime), m_Process(process)
     {}
@@ -26,7 +36,7 @@ namespace gameEngine::detail::textureAnimation
 
     TextureAnimationEaser * VirtualDelay::GetEaser()
     {
-        return nullptr;
+        assert(false);
     }
 
 
@@ -102,16 +112,81 @@ namespace gameEngine::detail::textureAnimation
         return &m_Easer;
     }
 
-    bool AnimationBase::UpdateAnimation(double)
+
+    Graph::Graph(const weak_ptr<SpriteTexture> &targetTexture, Vec2<int> cellSize)
+        : m_Texture(targetTexture)
     {
-        assert(false);
-        return false;
+        if (auto texture = targetTexture.lock())
+        {
+            m_CellSize = cellSize;
+            m_LoopMax = 1;
+        }
     }
 
-    TextureAnimationEaser *AnimationBase::GetEaser()
+    TextureAnimationEaser *Graph::GetEaser()
     {
         assert(false);
-        return nullptr;
     }
+
+    bool Graph::UpdateAnimation(double deltaSecond)
+    {
+        if (m_FrameList.empty()) return false;
+        if (m_LoopCount == m_LoopMax) return false;
+
+        if (m_CurrentFrameTime==0) updateTexture();
+
+        m_CurrentFrameTime += deltaSecond;
+        double currFrameTimeMax = m_FrameList[m_CurrentFrameIndex].Duration;
+        if (m_CurrentFrameTime >= currFrameTimeMax) stepToNextFrame();
+
+        std::cout << m_CurrentFrameTime << std::endl;
+
+        return true;
+    }
+
+    void Graph::SetLoopMax(int loopMax)
+    {
+        m_LoopMax = loopMax;
+    }
+
+    void Graph::SetCellSrcStart(const Vec2<int> &cellSrcStart)
+    {
+        m_CellSrcStart = cellSrcStart;
+    }
+
+    void Graph::AddFrame(Vec2<int>& cellPos, double duration, bool isFlip)
+    {
+        m_FrameList.push_back(FrameElement{cellPos, duration, isFlip});
+    }
+
+    void Graph::updateTexture()
+    {
+        if (auto texture = m_Texture.lock())
+        {
+            const auto currFrame = m_FrameList[m_CurrentFrameIndex];
+            const auto currCellPos = currFrame.CellPos;
+            const auto currSrcXY =
+                    m_CellSrcStart
+                    + Vec2<int>{m_CellSize.X * currCellPos.X, m_CellSize.Y *currCellPos.Y};
+            const auto currSrcRect = Rect<int>{currSrcXY.X, currSrcXY.Y, m_CellSize.X, m_CellSize.Y};
+            texture->SetSrcRect(currSrcRect);
+
+            texture->SetFlip(currFrame.IsFlip);
+        }
+    }
+
+    void Graph::stepToNextFrame()
+    {
+        m_CurrentFrameTime = 0;
+        m_CurrentFrameIndex++;
+        const int frameSize = m_FrameList.size();
+        if (m_CurrentFrameIndex>=frameSize) stepToNextLoop();
+    }
+    void Graph::stepToNextLoop()
+    {
+        m_CurrentFrameIndex = 0;
+        m_LoopCount++;
+    }
+
 
 }

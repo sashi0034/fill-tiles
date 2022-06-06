@@ -74,6 +74,38 @@ namespace gameEngine::detail::textureAnimation
         TextureAnimationEaser m_Easer;
     };
 
+    class Graph final: public AnimationBase
+    {
+    public:
+        Graph(const weak_ptr<SpriteTexture> &targetTexture, Vec2<int> cellSize);
+        bool UpdateAnimation(double deltaSecond) override;
+        TextureAnimationEaser *GetEaser() override;
+        void AddFrame(Vec2<int> &cellPos, double duration, bool isFlip);
+        void SetLoopMax(int loopMax);
+        void SetCellSrcStart(const Vec2<int> &cellSrcStart);
+        ~Graph() override = default;
+
+    private:
+        void updateTexture();
+        void stepToNextFrame();
+        void stepToNextLoop();
+
+        struct FrameElement
+        {
+            const Vec2<int> CellPos;
+            const double Duration;
+            const bool IsFlip;
+        };
+        std::vector<FrameElement> m_FrameList{};
+        weak_ptr<SpriteTexture> m_Texture;
+        Vec2<int> m_CellSize{};
+        Vec2<int> m_CellSrcStart{};
+        double m_CurrentFrameTime = 0;
+        int m_CurrentFrameIndex = 0;
+        int m_LoopMax = 0;
+        int m_LoopCount = 0;
+    };
+
 }
 
 

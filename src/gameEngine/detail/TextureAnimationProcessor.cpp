@@ -143,27 +143,42 @@ namespace gameEngine::detail
 
     ITextureAnimationGraphProperty *TextureAnimationProcessor::AnimGraph(Vec2<int> cellSize)
     {
-        (void)cellSize;
-        return nullptr;
+        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
+        nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Graph>(
+                m_TargetTexture, cellSize);
+
+        m_ParentalPool->Register(nextAnimation);
+        m_NextAnimation = nextAnimation;
+        return nextAnimation.get();
     }
 
-    ITextureAnimationGraphProperty *TextureAnimationProcessor::FromCellSrc(int loop)
+    ITextureAnimationGraphProperty *TextureAnimationProcessor::SetCellSrcStart(Vec2<int> cellSrcStart)
     {
-        (void)loop;
-        return nullptr;
+        auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());
+        animation->SetCellSrcStart(cellSrcStart);
+        return this;
     }
 
     ITextureAnimationGraph *TextureAnimationProcessor::AddFrame(Vec2<int> cellPos, double duration)
     {
-        (void) cellPos;
-        (void)duration;
-        return nullptr;
+        auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());
+        animation->AddFrame(cellPos, duration, false);
+        return this;
+    }
+
+
+    ITextureAnimationGraph *TextureAnimationProcessor::AddFrameFlipped(Vec2<int> cellPos, double duration)
+    {
+        auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());
+        animation->AddFrame(cellPos, duration, true);
+        return this;
     }
 
     ITextureAnimationGraphProperty *TextureAnimationProcessor::SetFrameLoop(int loop)
     {
-        (void)loop;
-        return nullptr;
+        auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());
+        animation->SetLoopMax(loop);
+        return this;
     }
 
 }

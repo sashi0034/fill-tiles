@@ -64,13 +64,14 @@ namespace gameEngine::detail
     {
     public:
         virtual ITextureAnimationGraph* AddFrame(Vec2<int> cellPos, double duration) = 0;
+        virtual ITextureAnimationGraph* AddFrameFlipped(Vec2<int> cellPos, double duration) = 0;
     };
 
     class ITextureAnimationGraphProperty : public ITextureAnimationGraph
     {
     public:
         virtual ITextureAnimationGraphProperty* SetFrameLoop(int loop) = 0;
-        virtual ITextureAnimationGraphProperty* FromCellSrc(int loop) = 0;
+        virtual ITextureAnimationGraphProperty* SetCellSrcStart(Vec2<int> cellSrcStart) = 0;
     };
 
     class TextureAnimationProcessor final:
@@ -93,9 +94,10 @@ namespace gameEngine::detail
         weak_ptr<ITextureAnimationPointer> GetWeakPtr() override;
 
         ITextureAnimationGraphProperty *AnimGraph(Vec2<int> cellSize) override;
-        ITextureAnimationGraphProperty *FromCellSrc(int loop) override;
+        ITextureAnimationGraphProperty *SetCellSrcStart(Vec2<int> cellSrcStart) override;
         ITextureAnimationGraph *AddFrame(Vec2<int> cellPos, double duration) override;
         ITextureAnimationGraphProperty *SetFrameLoop(int loop) override;
+        ITextureAnimationGraph *AddFrameFlipped(Vec2<int> cellPos, double duration) override;
 
         void Update(double deltaTime);
 
