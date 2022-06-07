@@ -11,10 +11,13 @@ namespace gameEngine::detail
 {
     TextureAnimationProcessor::TextureAnimationProcessor(weak_ptr<SpriteTexture> &texture,
                                                          IChildrenPool<TextureAnimationProcessor> *parentalPool,
-                                                         bool isFirst)
+                                                         weak_ptr<TextureAnimationProcessor> *beforeAnimation)
             : m_TargetTexture(texture), m_ParentalPool(parentalPool)
     {
-        if (isFirst) trigger();
+        if (beforeAnimation == nullptr)
+            trigger();
+        else if (auto beforeAnimationPtr = beforeAnimation->lock())
+            m_BeforeAnimation = beforeAnimationPtr;
     }
 
 
@@ -61,11 +64,11 @@ namespace gameEngine::detail
 
     shared_ptr<TextureAnimationProcessor> TextureAnimationProcessor::Create(weak_ptr<SpriteTexture> &texture,
                                                                             IChildrenPool<TextureAnimationProcessor> *parentalPool,
-                                                                            bool isFirst)
+                                                                            weak_ptr<TextureAnimationProcessor> *beforeAnimation)
     {
         auto product = std::shared_ptr<TextureAnimationProcessor>(
-                new TextureAnimationProcessor(texture, parentalPool, isFirst));
-        product->m_SelfPtr = product;
+                new TextureAnimationProcessor(texture, parentalPool, beforeAnimation));
+        product->m_SelfWeakPtr = product;
         return product;
     }
 
@@ -95,7 +98,7 @@ namespace gameEngine::detail
     ITextureAnimationLinker *
     TextureAnimationProcessor::VirtualDelay(std::function<void()> process, double delayTime)
     {
-        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
+        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, &m_SelfWeakPtr);
         nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::VirtualDelay>(process, delayTime);
 
         m_ParentalPool->Register(nextAnimation);
@@ -105,7 +108,7 @@ namespace gameEngine::detail
 
     ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimPosition(Vec2<double> endPos, double duration)
     {
-        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
+        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, &m_SelfWeakPtr);
         textureAnimation::AnimationBase* base = new textureAnimation::Position(m_TargetTexture, endPos, duration);
         nextAnimation->m_AnimationProcess = unique_ptr<textureAnimation::AnimationBase>(base);
 
@@ -116,7 +119,7 @@ namespace gameEngine::detail
 
     ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimRotation(double endDeg, double duration)
     {
-        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
+        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, &m_SelfWeakPtr);
         nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Rotation>(
                 m_TargetTexture, endDeg, duration);
 
@@ -127,7 +130,7 @@ namespace gameEngine::detail
 
     ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimScale(double endScale, double duration)
     {
-        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
+        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, &m_SelfWeakPtr);
         nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Scale>(
                 m_TargetTexture, endScale, duration);
 
@@ -138,7 +141,7 @@ namespace gameEngine::detail
 
     weak_ptr<ITextureAnimationPointer> TextureAnimationProcessor::GetWeakPtr()
     {
-        return static_cast<const weak_ptr<ITextureAnimationEaseProperty> &>(m_SelfPtr);
+        return static_cast<const weak_ptr<ITextureAnimationEaseProperty> &>(m_SelfWeakPtr);
     }
 
     TextureAnimationProcessor::~TextureAnimationProcessor()
@@ -146,7 +149,7 @@ namespace gameEngine::detail
 
     ITextureAnimationGraphProperty *TextureAnimationProcessor::AnimGraph(Vec2<int> cellSize)
     {
-        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, false);
+        auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, &m_SelfWeakPtr);
         nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Graph>(
                 m_TargetTexture, cellSize);
 
@@ -182,6 +185,12 @@ namespace gameEngine::detail
         auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());
         animation->SetLoopMax(loop);
         return this;
+    }
+
+    void TextureAnimationProcessor::ForceDestroy()
+    {
+        m_ParentalPool->Destroy(this);
+        if (auto beforeAnimation = m_BeforeAnimation.lock()) beforeAnimation->ForceDestroy();
     }
 
 }

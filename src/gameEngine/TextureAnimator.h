@@ -23,10 +23,16 @@ namespace gameEngine
         OutBack,
     };
 
-    class TextureAnimator
+    class ITextureAnimator
     {
     public:
-        detail::ITextureAnimationStarter * TargetTo(shared_ptr<SpriteTexture> &texture);
+        virtual detail::ITextureAnimationStarter * TargetTo(shared_ptr<SpriteTexture> &texture) = 0;
+    };
+
+    class TextureAnimator : public ITextureAnimator
+    {
+    public:
+        detail::ITextureAnimationStarter * TargetTo(shared_ptr<SpriteTexture> &texture) override;
         //unique_ptr<TextureAnimationCreator> VirtualTo();
 
         void Update(double deltaTime);

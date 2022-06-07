@@ -127,8 +127,6 @@ namespace gameEngine::detail::textureAnimation
         double currFrameTimeMax = m_FrameList[m_CurrentFrameIndex].Duration;
         if (m_CurrentFrameTime >= currFrameTimeMax) stepToNextFrame();
 
-        std::cout << m_CurrentFrameTime << std::endl;
-
         return true;
     }
 

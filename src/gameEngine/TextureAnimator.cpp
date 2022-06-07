@@ -8,7 +8,7 @@ namespace gameEngine{
     detail::ITextureAnimationStarter* TextureAnimator::TargetTo(shared_ptr<SpriteTexture> &texture)
     {
         weak_ptr<SpriteTexture> texturePtr = texture;
-        auto product = detail::TextureAnimationProcessor::Create(texturePtr, &m_Pool, true);
+        auto product = detail::TextureAnimationProcessor::Create(texturePtr, &m_Pool, nullptr);
         m_Pool.Register(product);
         return product.get();
     }

@@ -38,6 +38,7 @@ namespace gameEngine::detail
     {
     public:
         virtual weak_ptr<ITextureAnimationPointer> GetWeakPtr() = 0;
+        virtual void ForceDestroy() = 0;
     };
 
     class ITextureAnimationWith : public ITextureAnimationPointer
@@ -80,7 +81,7 @@ namespace gameEngine::detail
             public ITextureAnimationGraphProperty
     {
     public:
-        static shared_ptr<TextureAnimationProcessor> Create(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, bool isFirst);
+        static shared_ptr<TextureAnimationProcessor> Create(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, weak_ptr<TextureAnimationProcessor> *beforeAnimation);
 
         ITextureAnimationEaseProperty * AnimPosition(Vec2<double> endPos, double duration) override;
         ITextureAnimationEaseProperty * AnimRotation(double endDeg, double duration) override;
@@ -100,12 +101,13 @@ namespace gameEngine::detail
         ITextureAnimationGraph *AddFrameFlipped(Vec2<int> cellPos, double duration) override;
 
         void Update(double deltaTime);
+        void ForceDestroy() override;
 
         ~TextureAnimationProcessor();
     private:
-        TextureAnimationProcessor(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, bool isFirst);
+        TextureAnimationProcessor(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, weak_ptr<TextureAnimationProcessor> *beforeAnimation);
 
-        weak_ptr<TextureAnimationProcessor> m_SelfPtr{};
+        weak_ptr<TextureAnimationProcessor> m_SelfWeakPtr{};
         unique_ptr<textureAnimation::AnimationBase> m_AnimationProcess{};
         weak_ptr<SpriteTexture> m_TargetTexture;
         IChildrenPool <TextureAnimationProcessor> * m_ParentalPool;
@@ -113,6 +115,7 @@ namespace gameEngine::detail
 
         bool m_IsImmediatelyStepToNext = false;
         bool m_IsTriggered = false;
+        weak_ptr<TextureAnimationProcessor> m_BeforeAnimation{};
         weak_ptr<TextureAnimationProcessor> m_NextAnimation{};
 
         void trigger();
