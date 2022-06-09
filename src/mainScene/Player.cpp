@@ -15,12 +15,26 @@ namespace mainScene
     {
         m_Image = MainRoot::GetInstance().ResImage->kisaragi_32x32.get();
 
-        m_Spr = Sprite::Create();
-        m_Texture = SpriteTexture::Create(m_Spr, m_Image);
-        m_Spr->SetTexture(m_Texture);
-        m_Texture->SetSrcRect(Rect<int>{0,0,32,32});
+        initViewModel();
+        initView();
 
         initAction();
+    }
+
+    void Player::initViewModel()
+    {
+        m_ViewModelSprite = Sprite::Create();
+        m_ViewModelTexture = SpriteTexture::Create(m_ViewModelSprite, nullptr);
+        m_ViewModelSprite->SetTexture(m_ViewModelTexture);
+    }
+
+    void Player::initView()
+    {
+        m_ViewSprite = Sprite::Create();
+        m_ViewTexture = SpriteTexture::Create(m_ViewSprite, m_Image);
+        m_ViewSprite->SetTexture(m_ViewTexture);
+        m_ViewTexture->SetSrcRect(Rect<int>{0, 0, 32, 32});
+        m_ViewTexture->SetPositionParent(m_ViewModelSprite->GetTexture());
     }
 
     // todo: プレイヤー処理を移動
@@ -28,8 +42,10 @@ namespace mainScene
     {
         for (int i=0; i<256; ++i)
         {
-            self->m_Pos = self->m_Pos + Vec2<double>{128.0-i, 128.0-i} *
+            auto newPos = self->GetPos() + Vec2<double>{128.0-i, 128.0-i} *
                     MainRoot::GetInstance().AppStatePtr->GetTime().GetDeltaSec();
+            self->setPos(newPos);
+
             yield(CoroTask::RespondPending());
         }
 
@@ -41,7 +57,6 @@ namespace mainScene
         bool actionUpdating = m_State.UpdateAction();
         if (!actionUpdating) initAction();
 
-        m_Texture->SetPosition(m_Pos);
     }
 
     void Player::initAction()
@@ -56,4 +71,15 @@ namespace mainScene
 
         return CoroTask(CoroTask::Result::Success);
     }
+
+    Vec2<double> Player::GetPos()
+    {
+        return m_ViewTexture->GetPosition();
+    }
+
+    void Player::setPos(Vec2<double> newPos)
+    {
+        m_ViewTexture->SetPosition(newPos);
+    }
+
 }

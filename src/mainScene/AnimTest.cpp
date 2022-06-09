@@ -61,7 +61,7 @@ namespace mainScene
 //            yield(CoroTask::RespondPending());
 //
 //        }
-//        self->m_Texture->SetRotationDeg(45);
+//        self->m_ViewTexture->SetRotationDeg(45);
 
         return CoroTask::RespondSuccess();
     }

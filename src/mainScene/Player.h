@@ -15,12 +15,19 @@ namespace mainScene
     public:
         explicit Player(IChildrenPool<ChildBase> *belonging);
         void Update() override;
+        Vec2<double> GetPos();
     private:
+        void setPos(Vec2<double> newPos);
+        void initViewModel();
+        void initView();
+
         void initAction();
 
-        Vec2<double> m_Pos{};
-        shared_ptr<Sprite> m_Spr;
-        shared_ptr<SpriteTexture> m_Texture;
+        shared_ptr<Sprite> m_ViewModelSprite;
+        shared_ptr<SpriteTexture> m_ViewModelTexture;
+
+        shared_ptr<Sprite> m_ViewSprite;
+        shared_ptr<SpriteTexture> m_ViewTexture;
         Graph* m_Image;
 
         PlayerState m_State = PlayerState(EPlayerState::Walk);
