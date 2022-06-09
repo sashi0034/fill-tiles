@@ -6,8 +6,7 @@
 #define FILL_TILES_PLAYER_H
 
 #include "../gameEngine/gameEngine.h"
-
-using namespace boost::coroutines2;
+#include "PlayerState.h"
 
 namespace mainScene
 {
@@ -17,13 +16,17 @@ namespace mainScene
         explicit Player(IChildrenPool<ChildBase> *belonging);
         void Update() override;
     private:
+        void initAction();
+
         Vec2<double> m_Pos{};
         shared_ptr<Sprite> m_Spr;
         shared_ptr<SpriteTexture> m_Texture;
         Graph* m_Image;
-        coroutine<CoroTask>::pull_type m_Action;
 
-        static CoroTask wait(coroutine<CoroTask>::push_type& yield, Player* self);
+        PlayerState m_State = PlayerState(EPlayerState::Walk);
+
+        static CoroTask wait(CoroTaskYield& yield, Player* self);
+        static CoroTask walk(CoroTaskYield& yield, Player* self);
     };
 
 

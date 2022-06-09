@@ -5,6 +5,8 @@
 #ifndef FILL_TILES_COROTASK_H
 #define FILL_TILES_COROTASK_H
 
+#include "boost/coroutine2/coroutine.hpp"
+
 
 namespace gameEngine
 {
@@ -26,6 +28,8 @@ namespace gameEngine
         Result m_Result;
     };
 
+    using CoroTaskCall = boost::coroutines2::coroutine<CoroTask>::pull_type;
+    using CoroTaskYield = boost::coroutines2::coroutine<CoroTask>::push_type;
 }
 
 
