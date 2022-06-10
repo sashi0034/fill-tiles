@@ -22,6 +22,7 @@
 #include "Vec2.h"
 #include "CoroTask.h"
 #include "CoroutineManager.h"
+#include "coroUtils.h"
 #include "TextureAnimator.h"
 #include "Range.h"
 

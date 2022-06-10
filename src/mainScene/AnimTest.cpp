@@ -23,7 +23,7 @@ namespace mainScene
 
     CoroTask AnimTest::wait(coroutine<CoroTask>::push_type &yield, AnimTest *self)
     {
-        yield(CoroTask::RespondPending());
+        yield();
 
         auto& mainRoot = MainRoot::GetInstance();
         auto appState = mainRoot.AppStatePtr;
@@ -53,7 +53,7 @@ namespace mainScene
                 ->VirtualDelay([]() { std::cout << "finished animation!" << std::endl; }, 0.5);
 
 
-        yield(CoroTask::RespondPending());
+        yield();
 //
 //        for (int i=0; i<256; ++i)
 //        {
@@ -63,7 +63,6 @@ namespace mainScene
 //        }
 //        self->m_ViewTexture->SetRotationDeg(45);
 
-        return CoroTask::RespondSuccess();
     }
 
     void AnimTest::Update()

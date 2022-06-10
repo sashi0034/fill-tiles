@@ -42,7 +42,7 @@ namespace mainScene
         EAngle goingAngle = EAngle::None;
         while (goingAngle == EAngle::None)
         {
-            CoroTask::RespondPending(yield);
+            yield();
             auto keyState = appState->GetKeyboardState();
             if (keyState== nullptr) continue;
             if (keyState[SDL_Scancode::SDL_SCANCODE_W]) goingAngle = EAngle::Up;
@@ -54,7 +54,6 @@ namespace mainScene
         self->m_State.ChangeState(EPlayerState::Walk,
                                   new CoroTaskCall(std::bind(walk, std::placeholders::_1, self, goingAngle)));
 
-        return CoroTask::RespondSuccess();
     }
 
     void Player::Update()
@@ -80,9 +79,7 @@ namespace mainScene
             ->AnimPosition(moveVector, 0.5)->SetEase(EAnimEase::Linear)->SetRelative(true)
             ->GetWeakPtr();
 
-        CoroTask::WaitForExpire<>(yield, moveAnim);
-
-        return CoroTask(CoroTask::Result::Success);
+        coroUtils::WaitForExpire<>(yield, moveAnim);
     }
 
     Vec2<double> Player::GetPos()

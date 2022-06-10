@@ -35,9 +35,8 @@ namespace mainScene
         for (int i = 0; i < 10; ++i)
         {
             std::cout << "coro test x: " << self->GetPos().X <<std::endl;
-            yield(CoroTask(CoroTask::Result::Pending));
+            yield();
         }
-        return CoroTask(CoroTask::Result::Success);
     }
 
     const Vec2<double>& TestObject::GetPos() const
