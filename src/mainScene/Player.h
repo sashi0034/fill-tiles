@@ -7,6 +7,7 @@
 
 #include "../gameEngine/gameEngine.h"
 #include "PlayerState.h"
+#include "Angle.h"
 
 namespace mainScene
 {
@@ -30,10 +31,12 @@ namespace mainScene
         shared_ptr<SpriteTexture> m_ViewTexture;
         Graph* m_Image;
 
+        TextureAnimator m_PlayerAnimator{};
         PlayerState m_State = PlayerState(EPlayerState::Walk);
+        EAngle m_Angle;
 
-        static CoroTask wait(CoroTaskYield& yield, Player* self);
-        static CoroTask walk(CoroTaskYield& yield, Player* self);
+        static CoroTask wait(CoroTaskYield &yield, Player *self, IAppState *appState);
+        static CoroTask walk(CoroTaskYield &yield, Player *self, EAngle goingAngle);
     };
 
 

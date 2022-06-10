@@ -20,7 +20,8 @@ namespace mainScene
     class Angle
     {
     public:
-        explicit Angle(EAngle angle);
+        Angle();
+        Angle(EAngle angle);
         Vec2<int> ToXY();
         EAngle GetKind();
         static Angle ConvertFrom(Vec2<double> pos);

@@ -37,17 +37,22 @@ namespace mainScene
         m_ViewTexture->SetPositionParent(m_ViewModelSprite->GetTexture());
     }
 
-    // todo: プレイヤー処理を移動
-    CoroTask Player::wait(CoroTaskYield &yield, Player *self)
+    CoroTask Player::wait(CoroTaskYield &yield, Player *self, IAppState *appState)
     {
-        for (int i=0; i<256; ++i)
+        EAngle goingAngle = EAngle::None;
+        while (goingAngle == EAngle::None)
         {
-            auto newPos = self->GetPos() + Vec2<double>{128.0-i, 128.0-i} *
-                    MainRoot::GetInstance().AppStatePtr->GetTime().GetDeltaSec();
-            self->setPos(newPos);
-
-            yield(CoroTask::RespondPending());
+            CoroTask::RespondPending(yield);
+            auto keyState = appState->GetKeyboardState();
+            if (keyState== nullptr) continue;
+            if (keyState[SDL_Scancode::SDL_SCANCODE_W]) goingAngle = EAngle::Up;
+            if (keyState[SDL_Scancode::SDL_SCANCODE_A]) goingAngle = EAngle::Left;
+            if (keyState[SDL_Scancode::SDL_SCANCODE_S]) goingAngle = EAngle::Down;
+            if (keyState[SDL_Scancode::SDL_SCANCODE_D]) goingAngle = EAngle::Right;
         }
+
+        self->m_State.ChangeState(EPlayerState::Walk,
+                                  new CoroTaskCall(std::bind(walk, std::placeholders::_1, self, goingAngle)));
 
         return CoroTask::RespondSuccess();
     }
@@ -57,17 +62,25 @@ namespace mainScene
         bool actionUpdating = m_State.UpdateAction();
         if (!actionUpdating) initAction();
 
+        m_PlayerAnimator.Update(MainRoot::GetInstance().AppStatePtr->GetTime().GetDeltaSec());
     }
 
     void Player::initAction()
     {
-        m_State.ChangeState(EPlayerState::Wait, new CoroTaskCall(std::bind(wait, std::placeholders::_1, this)));
+        IAppState* app = const_cast<IAppState*>(MainRoot::GetInstance().AppStatePtr);
+        m_State.ChangeState(EPlayerState::Wait, new CoroTaskCall(
+                std::bind(wait, std::placeholders::_1, this, app)));
     }
 
-    CoroTask Player::walk(CoroTaskYield &yield, Player *self)
+    CoroTask Player::walk(CoroTaskYield &yield, Player *self, EAngle goingAngle)
     {
-        (void) yield;
-        (void)self;
+        auto moveVector = Angle(goingAngle).ToXY().EachTo<double>() * 16;
+
+        auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_ViewModelTexture)
+            ->AnimPosition(moveVector, 0.5)->SetEase(EAnimEase::Linear)->SetRelative(true)
+            ->GetWeakPtr();
+
+        CoroTask::WaitForExpire<>(yield, moveAnim);
 
         return CoroTask(CoroTask::Result::Success);
     }

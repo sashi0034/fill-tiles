@@ -29,4 +29,10 @@ namespace gameEngine{
     {
         return CoroTask(CoroTask::Result::Pending);
     }
+
+    CoroTask CoroTask::RespondPending(boost::coroutines2::coroutine<CoroTask>::push_type &yield)
+    {
+        yield(CoroTask(CoroTask::Result::Pending));
+        return CoroTask(CoroTask::Result::Pending);
+    }
 }

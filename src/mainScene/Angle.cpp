@@ -8,6 +8,10 @@
 
 namespace mainScene{
 
+    Angle::Angle()
+    : m_Angle(EAngle::None)
+    {}
+
     Angle::Angle(EAngle angle) : m_Angle(angle)
     {}
 
@@ -39,6 +43,7 @@ namespace mainScene{
         // atan2の定義域は -pi ~ pi
 
         double theta = std::atan2(pos.Y, pos.X);
+
         if (Range<double>(-M_PI / 4, M_PI / 4).IsBetween(theta))
         {
             return Angle(EAngle::Right);
@@ -56,4 +61,5 @@ namespace mainScene{
             return Angle(EAngle::Left);
         }
     }
+
 }
