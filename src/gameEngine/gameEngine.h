@@ -16,7 +16,6 @@
 #include "Rect.h"
 #include "renderingProcess.h"
 #include "Singleton.h"
-#include "Sprite.h"
 #include "SpriteTexture.h"
 #include "Time.h"
 #include "Vec2.h"

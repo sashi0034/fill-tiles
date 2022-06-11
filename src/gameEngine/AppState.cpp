@@ -3,8 +3,8 @@
 //
 
 #include "AppState.h"
+#include "../gameEngine/SpriteTexture.h"
 #include <memory>
-#include "Sprite.h"
 
 namespace gameEngine
 {
