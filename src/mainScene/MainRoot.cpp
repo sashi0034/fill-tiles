@@ -12,7 +12,7 @@
 
 namespace mainScene{
     MainRoot::MainRoot(IAppState *appState)
-    : ResImage(std::make_unique<resource::Image>(appState)), AppStatePtr(appState)
+    : ResImage(std::make_unique<resource::Image>(appState)), m_AppState(appState)
     {
         createSelfSpr();
         m_ChildrenPool.Birth(new TestObject(&m_ChildrenPool, appState, Vec2<double>{1.1, 2.2}));
@@ -39,6 +39,11 @@ namespace mainScene{
     TextureAnimator &MainRoot::GetTextureAnimator()
     {
         return m_TextureAnimator;
+    }
+
+    IAppState *MainRoot::GetAppState()
+    {
+        return m_AppState;
     }
 }
 

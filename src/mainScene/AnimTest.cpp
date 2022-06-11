@@ -26,7 +26,7 @@ namespace mainScene
         yield();
 
         auto& mainRoot = MainRoot::GetInstance();
-        auto appState = mainRoot.AppStatePtr;
+        auto appState = mainRoot.GetAppState();
         auto screenSize = appState->GetScreenSize().EachTo<double>();
         self->m_Pos = screenSize/2.0;
         self->m_Texture->SetPosition(self->m_Pos);

@@ -72,6 +72,7 @@ namespace gameEngine::detail
     {
     public:
         virtual ITextureAnimationGraphProperty* SetFrameLoop(int loop) = 0;
+        virtual ITextureAnimationGraphProperty* SetFrameLoopEndless(bool loop) = 0;
         virtual ITextureAnimationGraphProperty* SetCellSrcStart(Vec2<int> cellSrcStart) = 0;
     };
 
@@ -104,6 +105,9 @@ namespace gameEngine::detail
         void ForceDestroy() override;
 
         ~TextureAnimationProcessor();
+
+        ITextureAnimationGraphProperty *SetFrameLoopEndless(bool isEndless) override;
+
     private:
         TextureAnimationProcessor(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, weak_ptr<TextureAnimationProcessor> *beforeAnimation);
 

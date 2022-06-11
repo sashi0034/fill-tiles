@@ -119,7 +119,7 @@ namespace gameEngine::detail::textureAnimation
     bool Graph::UpdateAnimation(double deltaSecond)
     {
         if (m_FrameList.empty()) return false;
-        if (m_LoopCount == m_LoopMax) return false;
+        if (!m_IsLoopEndless && m_LoopCount >= m_LoopMax) return false;
 
         if (m_CurrentFrameTime==0) updateTexture();
 
@@ -172,6 +172,11 @@ namespace gameEngine::detail::textureAnimation
     {
         m_CurrentFrameIndex = 0;
         m_LoopCount++;
+    }
+
+    void Graph::SetLoopEndless(bool isEndless)
+    {
+        m_IsLoopEndless = isEndless;
     }
 
 

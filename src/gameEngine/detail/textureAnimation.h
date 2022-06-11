@@ -86,6 +86,7 @@ namespace gameEngine::detail::textureAnimation
         bool UpdateAnimation(double deltaSecond) override;
         void AddFrame(Vec2<int> &cellPos, double duration, bool isFlip);
         void SetLoopMax(int loopMax);
+        void SetLoopEndless(bool isEndless);
         void SetCellSrcStart(const Vec2<int> &cellSrcStart);
         ~Graph() override = default;
 
@@ -108,6 +109,7 @@ namespace gameEngine::detail::textureAnimation
         int m_CurrentFrameIndex = 0;
         int m_LoopMax = 0;
         int m_LoopCount = 0;
+        bool m_IsLoopEndless = false;
     };
 
 }

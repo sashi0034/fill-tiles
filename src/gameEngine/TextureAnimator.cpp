@@ -23,5 +23,10 @@ namespace gameEngine{
         m_Pool.Release();
     }
 
+    void TextureAnimator::Release()
+    {
+        m_Pool.Release();
+    }
+
 
 }

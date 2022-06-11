@@ -17,12 +17,13 @@ namespace mainScene
         explicit MainRoot(IAppState* appState);
         ~MainRoot() override;
         const unique_ptr<resource::Image> ResImage;
-        const IAppState* AppStatePtr;
+        IAppState* GetAppState();
         TextureAnimator& GetTextureAnimator();
     private:
         shared_ptr<Sprite> m_Spr{};
         ChildrenPool<ChildBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
+        IAppState* m_AppState;
 
         void createSelfSpr();
     };

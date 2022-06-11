@@ -7,9 +7,7 @@
 
 #include "CoroTask.h"
 
-namespace gameEngine
-{
-    namespace coroUtils
+namespace gameEngine::coroUtils
     {
         template<typename T>
         static CoroTask WaitForExpire(
@@ -20,7 +18,6 @@ namespace gameEngine
                 yield();
         }
     }
-}
 
 
 #endif //FILL_TILES_COROUTILS_H

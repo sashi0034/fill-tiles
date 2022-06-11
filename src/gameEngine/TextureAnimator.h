@@ -36,6 +36,7 @@ namespace gameEngine
         //unique_ptr<TextureAnimationCreator> VirtualTo();
 
         void Update(double deltaTime);
+        void Release();
         ~TextureAnimator();
     private:
         ChildrenPool<detail::TextureAnimationProcessor> m_Pool;

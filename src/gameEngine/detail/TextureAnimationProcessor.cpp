@@ -187,6 +187,14 @@ namespace gameEngine::detail
         return this;
     }
 
+
+    ITextureAnimationGraphProperty *TextureAnimationProcessor::SetFrameLoopEndless(bool isEndless)
+    {
+        auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());
+        animation->SetLoopEndless(isEndless);
+        return this;
+    }
+
     void TextureAnimationProcessor::ForceDestroy()
     {
         m_ParentalPool->Destroy(this);

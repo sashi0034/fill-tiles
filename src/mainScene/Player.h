@@ -24,6 +24,8 @@ namespace mainScene
 
         void initAction();
 
+        static bool isDashing(const Uint8 *keyState);
+
         shared_ptr<Sprite> m_ViewModelSprite;
         shared_ptr<SpriteTexture> m_ViewModelTexture;
 
@@ -33,10 +35,15 @@ namespace mainScene
 
         TextureAnimator m_PlayerAnimator{};
         PlayerState m_State = PlayerState(EPlayerState::Walk);
-        EAngle m_Angle;
+        EAngle m_Angle = EAngle::Down;
+
+        static EAngle getInputAngle(const Uint8 *keyState);
+        void animWait(EAngle angle);
+        void animWalk(EAngle angle, double frameSpeed);
+        void changeStateToWalk(IAppState *appState, EAngle newAngle, bool canChangeAnim);
 
         static CoroTask wait(CoroTaskYield &yield, Player *self, IAppState *appState);
-        static CoroTask walk(CoroTaskYield &yield, Player *self, EAngle goingAngle);
+        static void walk(CoroTaskYield &yield, Player *self, IAppState *appState, EAngle goingAngle, bool canChangeAnim);
     };
 
 

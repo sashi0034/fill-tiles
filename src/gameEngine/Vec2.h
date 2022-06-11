@@ -13,6 +13,12 @@ namespace gameEngine
         T X;
         T Y;
 
+        Vec2()= default;
+        Vec2(T x, T y){
+            X = x;
+            Y = y;
+        }
+
         Vec2<T> operator+(Vec2<T> other)
         {
             return Vec2<T>{this->X + other.X, this->Y + other.Y};
@@ -49,6 +55,10 @@ namespace gameEngine
             return Vec2<U>{static_cast<U>(this->X), static_cast<U>(this->Y)};
         }
     };
+
+    template <class InputIterator>
+    Vec2(InputIterator, InputIterator)
+    -> Vec2<typename std::iterator_traits<InputIterator>::value_type>;
 }
 
 #endif //FILL_TILES_VEC_H

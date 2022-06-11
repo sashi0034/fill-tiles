@@ -59,7 +59,7 @@ namespace gameEngine
 
         const SDL_Point centerPoint{srcRect.Width / 2, srcRect.Height / 2};
         SDL_RenderCopyEx(const_cast<SDL_Renderer*>(renderer), m_Texture, &cutSrcRect, &drawingToScreenRect,
-                         rotationDeg, &centerPoint, isFlip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
+                         rotationDeg, &centerPoint, isFlip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
     }
 
 }
