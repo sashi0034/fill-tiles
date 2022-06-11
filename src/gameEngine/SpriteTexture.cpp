@@ -11,27 +11,27 @@ namespace gameEngine
 {
     std::vector<weak_ptr<SpriteTexture>> SpriteTexture::spriteTexturePool = {};
 
-    SpriteTexture::SpriteTexture(shared_ptr<Sprite>& ownerSpr, Graph* graph, Rect<int> &srcRect)
+    SpriteTexture::SpriteTexture(Graph *graph, Rect<int> &srcRect)
     {
-        m_OwnerSprite = ownerSpr;
         m_Graph = graph;
         m_SrcRect = srcRect;
+        m_UpdateProcess = [](IAppState*){};
         m_RenderingProcess = [this](IAppState* appState){
             renderingProcess::RenderSpriteAlignToUnit(appState, this);
         };
     }
 
 
-    shared_ptr<SpriteTexture> SpriteTexture::Create(shared_ptr<Sprite>& ownerSprite, Graph *graph)
+    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph)
     {
         auto srcRect = Rect<int>{0, 0, 0, 0};
 
-        return Create(ownerSprite, graph, srcRect);
+        return Create(graph, srcRect);
     }
 
-    shared_ptr<SpriteTexture> SpriteTexture::Create(shared_ptr<Sprite>& ownerSprite, Graph *graph, Rect<int> &srcRect)
+    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph, Rect<int> &srcRect)
     {
-        auto product = shared_ptr<SpriteTexture>(new SpriteTexture(ownerSprite, graph, srcRect));
+        auto product = shared_ptr<SpriteTexture>(new SpriteTexture(graph, srcRect));
 
         spriteTexturePool.push_back(product);
 
@@ -167,9 +167,24 @@ namespace gameEngine
     }
 
 
+
+    void SpriteTexture::UpdateAll(IAppState *appState)
+    {
+        int size = spriteTexturePool.size();
+        std::vector<int> garbageIndexes{};
+
+        for (int i = 0; i < size; ++i)
+            if (auto updatingSpr = spriteTexturePool[i].lock())
+                updatingSpr->m_UpdateProcess(appState);
+            else
+                garbageIndexes.push_back(i);
+
+        collectGarbageInSpriteTexturePool(garbageIndexes);
+    }
+
     void SpriteTexture::RenderAll(IAppState*appState)
     {
-        std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(),[](const weak_ptr<SpriteTexture> &left, const weak_ptr<SpriteTexture> &right) -> bool {
+        std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(), [](const weak_ptr<SpriteTexture> &left, const weak_ptr<SpriteTexture> &right) -> bool {
             auto leftShared =left.lock();
             auto rightShared = right.lock();
             return (leftShared ? leftShared->GetZ() : 0.0) > (rightShared ? rightShared->GetZ() : 0.0); });
@@ -201,7 +216,7 @@ namespace gameEngine
         for (int i=garbageIndexes.size()-1; i>=0; --i)
         {
             int index = garbageIndexes[i];
-            spriteTexturePool.erase(spriteTexturePool.begin()+index);
+            spriteTexturePool.erase(spriteTexturePool.begin() + index);
         }
     }
 
@@ -224,6 +239,12 @@ namespace gameEngine
     {
         return m_IsVisible;
     }
+
+    void SpriteTexture::SetUpdateProcess(const std::function<void(IAppState *)> &process)
+    {
+        m_UpdateProcess = process;
+    }
+
 
 
 }

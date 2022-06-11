@@ -20,7 +20,7 @@ namespace mainScene
         IAppState* GetAppState();
         TextureAnimator& GetTextureAnimator();
     private:
-        shared_ptr<Sprite> m_Spr{};
+        shared_ptr<SpriteTexture> m_Spr{};
         ChildrenPool<ChildBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         IAppState* m_AppState;

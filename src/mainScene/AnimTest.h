@@ -18,7 +18,6 @@ namespace mainScene
         void Update() override;
     private:
         Vec2<double> m_Pos{};
-        shared_ptr<Sprite> m_Spr;
         shared_ptr<SpriteTexture> m_Texture;
         Graph *m_Image;
         coroutine<CoroTask>::pull_type m_Action;

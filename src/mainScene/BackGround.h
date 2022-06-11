@@ -14,7 +14,7 @@ namespace mainScene
     public:
         explicit BackGround(IChildrenPool<ChildBase>* belongingPool);
     private:
-        shared_ptr<Sprite> m_Spr;
+        shared_ptr<SpriteTexture> m_Spr;
         void render(IAppState* appState);
     };
 }

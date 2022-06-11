@@ -11,10 +11,9 @@ namespace mainScene{
     {
         (void)belongingPool;
 
-        m_Spr = Sprite::Create();
-        m_Spr->SetTexture(SpriteTexture::Create(m_Spr, nullptr));
-        m_Spr->GetTexture()->SetZ(1000);
-        m_Spr->GetTexture()->SetRenderingProcess([=](IAppState* app){ render(app);});
+        m_Spr = SpriteTexture::Create(nullptr);
+        m_Spr->SetZ(1000);
+        m_Spr->SetRenderingProcess([=](IAppState* app){ render(app);});
     }
 
     void BackGround::render(IAppState *appState)

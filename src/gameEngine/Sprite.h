@@ -13,13 +13,14 @@ using std::shared_ptr;
 using std::unique_ptr;
 using std::weak_ptr;
 
+#if 0
 namespace gameEngine
 {
     class SpriteTexture;
 
     class Sprite
     {
-        static std::vector<weak_ptr<Sprite>> spritePool;
+        static std::vector<weak_ptr<Sprite>> spriteTexturePool;
 
         weak_ptr<Sprite> m_SelfPointer;
         shared_ptr<SpriteTexture> m_Texture{};
@@ -39,6 +40,6 @@ namespace gameEngine
 
     };
 }
-
+#endif
 
 #endif //FILL_TILES_SPRITE_H

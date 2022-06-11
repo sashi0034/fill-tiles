@@ -25,18 +25,14 @@ namespace mainScene
 
     void Player::initViewModel()
     {
-        m_ViewModelSprite = Sprite::Create();
-        m_ViewModelTexture = SpriteTexture::Create(m_ViewModelSprite, nullptr);
-        m_ViewModelSprite->SetTexture(m_ViewModelTexture);
+        m_ViewModelTexture = SpriteTexture::Create(nullptr);
     }
 
     void Player::initView()
     {
-        m_ViewSprite = Sprite::Create();
-        m_ViewTexture = SpriteTexture::Create(m_ViewSprite, m_Image);
-        m_ViewSprite->SetTexture(m_ViewTexture);
-        m_ViewTexture->SetSrcRect(Rect<int>{0, 0, 32, 32});
-        m_ViewTexture->SetPositionParent(m_ViewModelSprite->GetTexture());
+        m_ViewTexture = SpriteTexture::Create(m_Image);
+        m_ViewTexture->SetSrcRect(Rect<int>{0, 0, CellSize.X, CellSize.Y});
+        m_ViewTexture->SetPositionParent(m_ViewModelTexture);
     }
 
     CoroTask Player::wait(CoroTaskYield &yield, Player *self, IAppState *appState)
@@ -117,7 +113,7 @@ namespace mainScene
 
     void Player::animWalk(EAngle angle, double frameSpeed)
     {
-        const Vec2<int> cellSize{32, 32};
+        const Vec2<int>& cellSize = CellSize;
         const double baseTemp = 0.2 * frameSpeed;
 
         switch (angle)
@@ -147,7 +143,7 @@ namespace mainScene
 
     void Player::animWait(EAngle angle)
     {
-        const Vec2<int> cellSize{32, 32};
+        const Vec2<int>& cellSize = CellSize;
         const double baseTemp = 0.25;
 
         switch (angle)

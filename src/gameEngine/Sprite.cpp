@@ -6,9 +6,10 @@
 
 #include <memory>
 
+#if 0
 namespace gameEngine
 {
-    std::vector<weak_ptr<Sprite>> Sprite::spritePool = {};
+    std::vector<weak_ptr<Sprite>> Sprite::spriteTexturePool = {};
 
     Sprite::Sprite()
     {
@@ -20,7 +21,7 @@ namespace gameEngine
         auto product = shared_ptr<Sprite>(new Sprite());
 
         product->m_SelfPointer = product;
-        spritePool.push_back(product);
+        spriteTexturePool.push_back(product);
 
         return product;
     }
@@ -42,11 +43,11 @@ namespace gameEngine
 
     void Sprite::UpdateAll(IAppState* appState)
     {
-        int size = spritePool.size();
+        int size = spriteTexturePool.size();
         std::vector<int> garbageIndexes{};
 
         for (int i = 0; i < size; ++i)
-            if (auto updatingSpr = spritePool[i].lock())
+            if (auto updatingSpr = spriteTexturePool[i].lock())
                 updatingSpr->m_UpdateProcess(appState);
             else
                 garbageIndexes.push_back(i);
@@ -59,9 +60,10 @@ namespace gameEngine
         for (int i=garbageIndexes.size()-1; i>=0; --i)
         {
             int index = garbageIndexes[i];
-            spritePool.erase(spritePool.begin()+index);
+            spriteTexturePool.erase(spriteTexturePool.begin()+index);
         }
     }
 
 
 }
+#endif

@@ -17,6 +17,7 @@ namespace mainScene
         explicit Player(IChildrenPool<ChildBase> *belonging);
         void Update() override;
         Vec2<double> GetPos();
+        static inline const Vec2<int> CellSize{32, 32};
     private:
         void setPos(Vec2<double> newPos);
         void initViewModel();
@@ -26,10 +27,8 @@ namespace mainScene
 
         static bool isDashing(const Uint8 *keyState);
 
-        shared_ptr<Sprite> m_ViewModelSprite;
         shared_ptr<SpriteTexture> m_ViewModelTexture;
 
-        shared_ptr<Sprite> m_ViewSprite;
         shared_ptr<SpriteTexture> m_ViewTexture;
         Graph* m_Image;
 

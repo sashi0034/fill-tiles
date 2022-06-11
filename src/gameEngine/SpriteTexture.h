@@ -14,7 +14,6 @@
 #include "GraphBlend.h"
 #include "AppState.h"
 #include "renderingProcess.h"
-#include "Sprite.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -22,17 +21,14 @@ using std::weak_ptr;
 
 namespace gameEngine
 {
-    class Sprite;
-
     class SpriteTexture
     {
         static std::vector<weak_ptr<SpriteTexture>> spriteTexturePool;
 
-        weak_ptr<Sprite> m_OwnerSprite{};
         Vec2<double> m_Position{0, 0};
         weak_ptr<SpriteTexture> m_PositionParent{};
-        double m_Z;
-        Graph* m_Graph;
+        double m_Z{};
+        Graph* m_Graph{};
         Rect<int> m_SrcRect{0, 0, 0, 0};
         double m_Scale = 1.0;
         bool m_IsFlip = false;
@@ -42,14 +38,15 @@ namespace gameEngine
         weak_ptr<SpriteTexture> m_VisibilityParent{};
 
         std::function<void(IAppState*)> m_RenderingProcess;
+        std::function<void(IAppState*)> m_UpdateProcess;
 
         static void collectGarbageInSpriteTexturePool(std::vector<int> &garbageIndexes);
 
         SpriteTexture();
-        SpriteTexture(shared_ptr<Sprite>& ownerSpr, Graph* graph, Rect<int>& srcRect);
+        SpriteTexture(Graph *graph, Rect<int> &srcRect);
     public:
-        static shared_ptr<SpriteTexture> Create(shared_ptr<Sprite>& ownerSpr, Graph* graph);
-        static shared_ptr<SpriteTexture> Create(shared_ptr<Sprite>& ownerSpr, Graph* graph, Rect<int>& srcRect);
+        static shared_ptr<SpriteTexture> Create(Graph *graph);
+        static shared_ptr<SpriteTexture> Create(Graph *graph, Rect<int> &srcRect);
 
         void SetPosition(const Vec2<double>& pos);
         [[nodiscard]] Vec2<double> GetPosition() const;
@@ -85,12 +82,14 @@ namespace gameEngine
         void SetBlend(GraphBlend& blend);
         [[nodiscard]] GraphBlend GetBlend() const;
 
+        void SetUpdateProcess(const std::function<void(IAppState*)>& process);
         void SetRenderingProcess(const std::function<void(IAppState*)>& process);
 
         Vec2<double> GetParentalGlobalPosition();
         bool GetParentalVisibility();
 
         static void RenderAll(IAppState* appState);
+        static void UpdateAll(IAppState* appState);
     };
 }
 

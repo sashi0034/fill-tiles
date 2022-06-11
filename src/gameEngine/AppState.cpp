@@ -49,7 +49,7 @@ namespace gameEngine
         pollEvent();
         m_KeyboardState = SDL_GetKeyboardState(NULL);
         m_Time->Update();
-        Sprite::UpdateAll(this);
+        SpriteTexture::UpdateAll(this);
     }
 
     void AppState::RenderFrame()

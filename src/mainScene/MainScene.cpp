@@ -9,7 +9,6 @@
 #include "FontTest.h"
 #include "LibraryTest.h"
 #include "../gameEngine/gameEngine.h"
-#include "TestObject.h"
 #include "MainRoot.h"
 
 void mainScene::MainScene::Loop(unique_ptr<AppState>& appState) {

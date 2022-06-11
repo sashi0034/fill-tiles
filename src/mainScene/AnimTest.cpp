@@ -13,9 +13,7 @@ namespace mainScene
     {
         m_Image = MainRoot::GetInstance().ResImage->dango_wolf_24x24.get();
 
-        m_Spr = Sprite::Create();
-        m_Texture = SpriteTexture::Create(m_Spr, m_Image);
-        m_Spr->SetTexture(m_Texture);
+        m_Texture = SpriteTexture::Create(m_Image);
         m_Texture->SetSrcRect(Rect<int>{0,0,24, 24});
 
         std::cout << "#1" << std::endl;
