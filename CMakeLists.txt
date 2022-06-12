@@ -69,4 +69,4 @@ target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 target_link_libraries(${PROJECT_NAME} Boost::boost Boost::context)
 
 # Copy assets
-file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+#file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
