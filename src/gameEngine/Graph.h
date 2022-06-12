@@ -10,6 +10,7 @@
 #include <memory>
 #include "Vec2.h"
 #include "Rect.h"
+#include "GraphBlend.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -20,14 +21,14 @@ namespace gameEngine
     {
         SDL_Surface* m_Surface = nullptr;
         SDL_Texture* m_Texture = nullptr;
+
+        static const inline GraphBlend defaultBlend{};
     public:
         Graph(SDL_Renderer *renderer, SDL_Surface *surface);
         Graph(SDL_Surface *surface, SDL_Texture* texture);
         ~Graph();
         [[nodiscard]] const SDL_Texture* GetTexture() const;
-        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>& startPoint, const Rect<int>& srcRect, double scale);
-        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>& startPoint, const Rect<int>& srcRect, double scale, double rotationDeg);
-        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>& startPoint, const Rect<int>& srcRect, double scale, double rotationDeg, bool isFlip);
+        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>& startPoint, const Rect<int>& srcRect, double scale, double rotationDeg=0, bool isFlipHorizontal= false, const GraphBlend &blend= defaultBlend);
     };
 }
 

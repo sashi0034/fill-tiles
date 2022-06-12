@@ -10,23 +10,18 @@ namespace gameEngine
     GraphBlend::GraphBlend()
     = default;
 
-    GraphBlend::GraphBlend(int pal)
-    {
-        SetPal(pal);
-    }
-
-    GraphBlend::GraphBlend(int mode, int pal)
+    GraphBlend::GraphBlend(SDL_BlendMode mode, int pal)
     {
         m_Mode = mode;
         SetPal(pal);
     }
 
-    void GraphBlend::GetMode(int mode)
+    void GraphBlend::GetMode(SDL_BlendMode mode)
     {
         m_Mode = mode;
     }
 
-    int GraphBlend::GetMode() const
+    SDL_BlendMode GraphBlend::GetMode() const
     {
         return m_Mode;
     }
@@ -36,7 +31,7 @@ namespace gameEngine
 #ifdef DEBUG_BUILD
         if (pal<0 || 255<pal)
         {
-            LOG_ERR << "BlendPal: " << pal << " Is Out Of Range" << std::endl ;
+            LOG_CAUTION << "BlendPal: " << pal << " Is Out Of Range" << std::endl ;
         }
 #endif
         m_Pal = std::max(0, std::min(255, pal));

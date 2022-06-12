@@ -14,18 +14,18 @@ namespace gameEngine::renderingProcess
         if (renderingGraph == nullptr) return;
         if (!renderingSpr->GetVisible() || !renderingSpr->GetParentalVisibility()) return;
 
+        auto blend = renderingSpr->GetBlend();
         double rotationDeg = renderingSpr->GetRotationDeg();
-
         bool isFlip = renderingSpr->GetFlip();
 
         auto globalPos = renderingSpr->GetParentalGlobalPosition() + renderingSpr->GetPosition();
-
         const Vec2<int> screenPos = (globalPos * appState->GetPixelPerUnit()).EachTo<int>();
 
         SDL_Renderer* renderer = appState->GetRenderer();
         auto srcRect = renderingSpr->GetSrcRect();
 
-        renderingGraph->RenderGraph(renderer, screenPos, srcRect, double(scale), rotationDeg, isFlip);
+
+        renderingGraph->RenderGraph(renderer, screenPos, srcRect, double(scale), rotationDeg, isFlip, blend);
     }
 
     void RenderSpriteAlignToUnit(IAppState*appState, SpriteTexture *renderingSpr)

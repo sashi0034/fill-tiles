@@ -11,15 +11,14 @@ namespace gameEngine
 {
     class GraphBlend
     {
-        int m_Mode = SDL_BLENDMODE_BLEND;
+        SDL_BlendMode m_Mode = SDL_BLENDMODE_BLEND;
         int m_Pal = 255;
     public:
         GraphBlend();
-        GraphBlend(int pal);
-        GraphBlend(int mode, int pal);
+        GraphBlend(SDL_BlendMode mode, int pal);
 
-        void GetMode(int mode);
-        [[nodiscard]] int GetMode() const;
+        void GetMode(SDL_BlendMode mode);
+        [[nodiscard]] SDL_BlendMode GetMode() const;
 
         void SetPal(int pal);
         [[nodiscard]] int GetPal() const;
