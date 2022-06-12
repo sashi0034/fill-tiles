@@ -8,6 +8,7 @@
 #include "BackGround.h"
 #include "Player.h"
 #include "AnimTest.h"
+#include "TileMap.h"
 
 namespace mainScene{
     MainRoot::MainRoot(IAppState *appState)
@@ -16,6 +17,7 @@ namespace mainScene{
         createSelfSpr();
         m_ChildrenPool.Birth(new BackGround(&m_ChildrenPool));
         m_ChildrenPool.Birth(new Player(&m_ChildrenPool));
+        m_ChildrenPool.Birth(new AnimTest(&m_ChildrenPool));
         m_ChildrenPool.Birth(new AnimTest(&m_ChildrenPool));
     }
 

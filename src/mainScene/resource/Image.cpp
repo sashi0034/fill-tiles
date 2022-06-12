@@ -13,7 +13,7 @@ namespace mainScene::resource
     Image::Image(IAppState *appState)
     : m_AppStatePtr(appState)
     {
-        LOG_INFO << "Loaded Image Resources.";
+        LOG_INFO << "Loaded Image Resources." << std::endl;
     }
 
     unique_ptr<Graph> Image::loadPng(const std::string& fileName)

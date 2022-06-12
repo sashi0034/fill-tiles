@@ -8,6 +8,7 @@
 #include "../gameEngine/gameEngine.h"
 #include "../gameEngine/ChildBase.h"
 #include "resource/Image.h"
+#include "TileMap.h"
 
 namespace mainScene
 {
@@ -24,7 +25,7 @@ namespace mainScene
         ChildrenPool<ChildBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         IAppState* m_AppState;
-
+        unique_ptr<TileMap> test{new TileMap()};
         void createSelfSpr();
     };
 }
