@@ -41,21 +41,21 @@ namespace gameEngine
             const SDL_Renderer *renderer,
             const Vec2<int> &startPoint,
             const Rect<int> &srcRect,
-            double scale,
+            Vec2<double> scale,
             double rotationDeg,
             bool isFlipHorizontal,
             const GraphBlend &blend)
     {
-        auto screenSize = const_cast<Rect<int> &>(srcRect).GetSize() * scale;
+        const auto srcRectSize = const_cast<Rect<int> &>(srcRect).GetSize();
+        const auto screenSize = Vec2<double>{srcRectSize.X * scale.X, srcRectSize.Y * scale.Y}.EachTo<int>();
         SDL_Rect drawingToScreenRect = SDL_Rect{startPoint.X, startPoint.Y, screenSize.X, screenSize.Y};
         SDL_Rect cutSrcRect = SDL_Rect{srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height};
 
         SDL_SetTextureBlendMode(m_Texture, blend.GetMode());
         SDL_SetTextureAlphaMod(m_Texture, blend.GetPal());
 
-        const SDL_Point centerPoint{srcRect.Width / 2, srcRect.Height / 2};
         SDL_RenderCopyEx(const_cast<SDL_Renderer *>(renderer), m_Texture, &cutSrcRect, &drawingToScreenRect,
-                         rotationDeg, &centerPoint, isFlipHorizontal ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+                         rotationDeg, nullptr, isFlipHorizontal ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
     }
 
 }

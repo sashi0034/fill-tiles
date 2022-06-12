@@ -28,7 +28,7 @@ namespace gameEngine
         Graph(SDL_Surface *surface, SDL_Texture* texture);
         ~Graph();
         [[nodiscard]] const SDL_Texture* GetTexture() const;
-        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>& startPoint, const Rect<int>& srcRect, double scale, double rotationDeg=0, bool isFlipHorizontal= false, const GraphBlend &blend= defaultBlend);
+        void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>& startPoint, const Rect<int>& srcRect, Vec2<double> scale, double rotationDeg=0, bool isFlipHorizontal= false, const GraphBlend &blend= defaultBlend);
     };
 }
 

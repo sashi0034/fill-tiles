@@ -16,7 +16,7 @@ namespace gameEngine
     class Singleton
     {
     private:
-        static unique_ptr<T> instance;
+        static T* instance;
     public:
         Singleton()
         {
@@ -25,7 +25,7 @@ namespace gameEngine
                 LOG_ERR << "Singleton Object Is Already Exit." << std::endl;
                 return;
             }
-            instance = unique_ptr<T>(static_cast<T*>(this));
+            instance = static_cast<T*>(this);
         }
         virtual ~Singleton()
         {
@@ -36,7 +36,7 @@ namespace gameEngine
             return *instance;
         }
     };
-    template <typename T> unique_ptr<T> Singleton<T>::instance = nullptr;
+    template <typename T> T* Singleton<T>::instance = nullptr;
 }
 
 #endif //FILL_TILES_SINGLETON_H

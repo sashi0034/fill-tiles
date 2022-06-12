@@ -38,6 +38,8 @@ namespace mainScene
                 ->AddFrame(Vec2<int>{3, 0}, 0.2);
 
         mainRoot.GetTextureAnimator().TargetTo(self->m_Texture)
+                ->AnimScale(Vec2{3.0, 3.0}, 5.0)->SetLoop(1)
+                ->Then()
                 ->AnimPosition(Vec2<double>{64, 64}, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)->SetRelative(false)
                 ->With()
                 ->AnimRotation(60, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)

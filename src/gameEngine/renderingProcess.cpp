@@ -5,27 +5,37 @@
 #include "renderingProcess.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include "iostream"
 
 namespace gameEngine::renderingProcess
 {
-    void RenderSprite(IAppState*appState, SpriteTexture *renderingSpr, double scale)
+    void RenderSprite(IAppState*appState, SpriteTexture *renderingSpr, double baseScale)
     {
-        auto renderingGraph =renderingSpr->GetGraph();
+        const int pixelPerUnit = appState->GetPixelPerUnit();
+        auto renderingGraph = renderingSpr->GetGraph();
         if (renderingGraph == nullptr) return;
         if (!renderingSpr->GetVisible() || !renderingSpr->GetParentalVisibility()) return;
 
+        const auto sprScale = renderingSpr->GetScale();
         auto blend = renderingSpr->GetBlend();
         double rotationDeg = renderingSpr->GetRotationDeg();
         bool isFlip = renderingSpr->GetFlip();
+        const auto srcRect = renderingSpr->GetSrcRect();
 
         auto globalPos = renderingSpr->GetParentalGlobalPosition() + renderingSpr->GetPosition();
-        const Vec2<int> screenPos = (globalPos * appState->GetPixelPerUnit()).EachTo<int>();
+        if (sprScale.X != 1)
+        {
+            std::cout << "";
+        }
+        Vec2<double> scalingDeltaPos(
+                (1.0 - sprScale.X) * srcRect.Width / (double(pixelPerUnit) / baseScale) / 2.0,
+                (1.0 - sprScale.Y) * srcRect.Height / (double(pixelPerUnit) / baseScale) / 2.0);
+        const Vec2<int> screenPos = ((globalPos + scalingDeltaPos) * pixelPerUnit).EachTo<int>();
 
-        SDL_Renderer* renderer = appState->GetRenderer();
-        auto srcRect = renderingSpr->GetSrcRect();
+        SDL_Renderer *renderer = appState->GetRenderer();
 
 
-        renderingGraph->RenderGraph(renderer, screenPos, srcRect, double(scale), rotationDeg, isFlip, blend);
+        renderingGraph->RenderGraph(renderer, screenPos, srcRect, sprScale * baseScale, rotationDeg, isFlip, blend);
     }
 
     void RenderSpriteAlignToUnit(IAppState*appState, SpriteTexture *renderingSpr)

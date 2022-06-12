@@ -23,7 +23,7 @@ namespace mainScene{
             for (int y = 0; y <appState->GetScreenSize().Y ; y+=tileSize)
             {
                 MainRoot::GetInstance().ResImage->test_room_floor_32x32->RenderGraph(
-                        appState->GetRenderer(), Vec2<int>{x, y}*appState->GetPixelPerUnit(), Rect<int>{0, 0, 32, 32}, double(appState->GetPixelPerUnit())
+                        appState->GetRenderer(), Vec2<int>{x, y}*appState->GetPixelPerUnit(), Rect<int>{0, 0, 32, 32},  Vec2<double>{1, 1}*appState->GetPixelPerUnit()
                         );
             }
     }

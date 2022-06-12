@@ -19,32 +19,32 @@ namespace gameEngine
             Y = y;
         }
 
-        Vec2<T> operator+(Vec2<T> other)
+        Vec2<T> operator+(Vec2<T> other) const
         {
             return Vec2<T>{this->X + other.X, this->Y + other.Y};
         }
 
-        Vec2<T> operator-(Vec2<T> other)
+        Vec2<T> operator-(Vec2<T> other) const
         {
             return Vec2<T>{this->X - other.X, this->Y - other.Y};
         }
 
-        Vec2<T> operator*(int times)
+        Vec2<T> operator*(int times) const
         {
             return Vec2<T>{X * times, Y * times};
         }
 
-        Vec2<T> operator*(double times)
+        Vec2<T> operator*(double times) const
         {
             return Vec2<T>{T(X * times), T(Y * times)};
         }
 
-        Vec2<T> operator/(int div)
+        Vec2<T> operator/(int div) const
         {
             return Vec2<T>{static_cast<T>(X / div), static_cast<T>(Y / div)};
         }
 
-        Vec2<T> operator/(double div)
+        Vec2<T> operator/(double div) const
         {
             return Vec2<T>{static_cast<T>(X / div), static_cast<T>(Y / div)};
         }
