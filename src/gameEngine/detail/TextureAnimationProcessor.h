@@ -29,7 +29,7 @@ namespace gameEngine::detail
     public:
         virtual ITextureAnimationEaseProperty * AnimPosition(Vec2<double> endPos, double duration) = 0;
         virtual ITextureAnimationEaseProperty * AnimRotation(double endDeg, double duration) = 0;
-        virtual ITextureAnimationEaseProperty * AnimScale(double endScale, double duration) = 0;
+        virtual ITextureAnimationEaseProperty * AnimScale(const Vec2<double> &endScale, double duration) = 0;
         virtual ITextureAnimationGraphProperty * AnimGraph(Vec2<int> cellSize) = 0;
         virtual ITextureAnimationLinker * VirtualDelay(std::function<void()> process, double deltaTime) = 0;
     };
@@ -86,7 +86,7 @@ namespace gameEngine::detail
 
         ITextureAnimationEaseProperty * AnimPosition(Vec2<double> endPos, double duration) override;
         ITextureAnimationEaseProperty * AnimRotation(double endDeg, double duration) override;
-        ITextureAnimationEaseProperty * AnimScale(double endScale, double duration) override;
+        ITextureAnimationEaseProperty * AnimScale(const Vec2<double> &endScale, double duration) override;
         ITextureAnimationLinker * VirtualDelay(std::function<void()> process, double delayTime) override;
         ITextureAnimationStarter * Then() override;
         ITextureAnimationStarter * With() override;

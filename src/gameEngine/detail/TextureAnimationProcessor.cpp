@@ -128,7 +128,7 @@ namespace gameEngine::detail
         return nextAnimation.get();
     }
 
-    ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimScale(double endScale, double duration)
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimScale(const Vec2<double> &endScale, double duration)
     {
         auto nextAnimation = Create(m_TargetTexture, m_ParentalPool, &m_SelfWeakPtr);
         nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Scale>(

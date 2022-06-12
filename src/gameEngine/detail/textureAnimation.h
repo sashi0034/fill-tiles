@@ -68,14 +68,14 @@ namespace gameEngine::detail::textureAnimation
     class Scale final: public EaseAbleAnimationBase
     {
     public:
-        Scale(const weak_ptr<SpriteTexture> &targetTexture, double endScale, double endTime);
+        Scale(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
         ~Scale() override = default;
     private:
         weak_ptr<SpriteTexture> m_Texture;
-        double m_StartScale = 0;
-        double m_EndScale{};
+        Vec2<double> m_StartScale{};
+        Vec2<double> m_EndScale{};
         TextureAnimationEaser m_Easer;
     };
 

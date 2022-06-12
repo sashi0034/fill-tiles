@@ -30,7 +30,7 @@ namespace gameEngine
         double m_Z{};
         Graph* m_Graph{};
         Rect<int> m_SrcRect{0, 0, 0, 0};
-        double m_Scale = 1.0;
+        Vec2<double> m_Scale{1.0, 1.0};
         bool m_IsFlip = false;
         double m_RotationDeg = 0;
         GraphBlend m_Blend{};
@@ -61,8 +61,8 @@ namespace gameEngine
         void SetSrcRect(const Vec2<int>& startingPoint);
         [[nodiscard]] Rect<int> GetSrcRect() const;
 
-        void SetScale(double scale);
-        [[nodiscard]] double GetScale() const;
+        void SetScale(const Vec2<double> &scale);
+        [[nodiscard]] Vec2<double> GetScale() const;
 
         void SetFlip(bool isFlip);
         [[nodiscard]] bool GetFlip() const;

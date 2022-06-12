@@ -81,7 +81,7 @@ namespace gameEngine::detail::textureAnimation
         return &m_Easer;
     }
 
-    Scale::Scale(const weak_ptr<SpriteTexture> &targetTexture, double endScale, double endTime)
+    Scale::Scale(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime)
             : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
         if (auto texture = targetTexture.lock())
@@ -95,7 +95,7 @@ namespace gameEngine::detail::textureAnimation
     {
         m_Easer.Update(deltaSecond);
         if (auto texture = m_Texture.lock())
-            texture->SetScale(m_Easer.CalcProgressValue<double>(m_StartScale, m_EndScale));
+            texture->SetScale(m_Easer.CalcProgressValue<Vec2<double>>(m_StartScale, m_EndScale));
         return !m_Easer.IsDead();
     }
 

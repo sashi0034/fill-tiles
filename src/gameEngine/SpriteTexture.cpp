@@ -85,12 +85,12 @@ namespace gameEngine
         return m_SrcRect;
     }
 
-    void SpriteTexture::SetScale(double scale)
+    void SpriteTexture::SetScale(const Vec2<double> &scale)
     {
         m_Scale = scale;
     }
 
-    double SpriteTexture::GetScale() const
+    Vec2<double> SpriteTexture::GetScale() const
     {
         return m_Scale;
     }
