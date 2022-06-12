@@ -5,16 +5,4 @@
 #include "ChildBase.h"
 
 namespace gameEngine
-{
-    ChildBase::ChildBase(IChildrenPool<ChildBase>* belongingPool)
-        : m_BelongingPool(belongingPool)
-    {}
-
-    IChildrenPool<ChildBase> *ChildBase::GetBelongingPool() const
-    {
-        return m_BelongingPool;
-    }
-
-    void ChildBase::Update()
-    {}
-}
+{}

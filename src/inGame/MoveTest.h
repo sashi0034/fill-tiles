@@ -9,7 +9,7 @@
 #include <SDL.h>
 
 
-namespace mainScene {
+namespace inGame {
     class MoveTest {
     private:
         const int animeCycle = 200;

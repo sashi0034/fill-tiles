@@ -9,7 +9,7 @@
 #include <rxcpp/rx.hpp>
 #include <boost/coroutine2/coroutine.hpp>
 
-namespace mainScene
+namespace inGame
 {
     enum class ETest{
         hoge0,

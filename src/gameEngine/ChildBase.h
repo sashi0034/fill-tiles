@@ -9,14 +9,18 @@
 
 namespace gameEngine
 {
+    template <typename T>
     class ChildBase
     {
-    public:
-        explicit ChildBase(IChildrenPool<ChildBase>* belongingPool);
-        [[nodiscard]] IChildrenPool<ChildBase>* GetBelongingPool() const;
-        virtual void Update();
     private:
-        IChildrenPool<ChildBase>* m_BelongingPool;
+        IChildrenPool<T>* m_BelongingPool{};
+    public:
+        explicit ChildBase(IChildrenPool<T>* belongingPool) : m_BelongingPool(belongingPool)
+        {};
+    protected:
+        [[nodiscard]] IChildrenPool<T>* getBelongingPool() const{
+            return m_BelongingPool;
+        }
     };
 }
 

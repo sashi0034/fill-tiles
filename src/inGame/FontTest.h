@@ -4,7 +4,7 @@
 
 #include "SDL_ttf.h"
 
-namespace mainScene
+namespace inGame
 {
     class FontTest
     {

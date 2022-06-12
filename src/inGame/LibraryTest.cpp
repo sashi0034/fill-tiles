@@ -12,7 +12,7 @@ typedef boost::coroutines2::coroutine<int> coro_t;
 
 
 
-namespace mainScene
+namespace inGame
 {
 
     LibraryTest::LibraryTest()
