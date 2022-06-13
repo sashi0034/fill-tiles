@@ -58,4 +58,12 @@ namespace gameEngine
                          rotationDeg, nullptr, isFlipHorizontal ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
     }
 
+    Graph *Graph::CreateFromFilePath(SDL_Renderer *renderer, const std::string &filePath)
+    {
+        auto surface = IMG_Load(filePath.c_str());
+        assert(surface);
+
+        return new Graph(renderer, surface);
+    }
+
 }

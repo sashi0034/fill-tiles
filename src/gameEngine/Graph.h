@@ -26,6 +26,7 @@ namespace gameEngine
     public:
         Graph(SDL_Renderer *renderer, SDL_Surface *surface);
         Graph(SDL_Surface *surface, SDL_Texture* texture);
+        static Graph* CreateFromFilePath(SDL_Renderer *renderer, const std::string& filePath);
         ~Graph();
         [[nodiscard]] const SDL_Texture* GetTexture() const;
         void RenderGraph(const SDL_Renderer* renderer, const Vec2<int>& startPoint, const Rect<int>& srcRect, Vec2<double> scale, double rotationDeg=0, bool isFlipHorizontal= false, const GraphBlend &blend= defaultBlend);

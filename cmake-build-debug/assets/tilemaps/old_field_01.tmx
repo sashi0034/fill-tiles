@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="40" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="24" nextobjectid="176">
- <tileset firstgid="1" source="natural_tileset.tsx"/>
+ <tileset firstgid="1" source="old_natural_tileset.tsx"/>
  <layer id="16" name="タイルレイヤー1" width="40" height="28">
   <data encoding="csv">
 35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,19,19,19,19,19,19,19,35,35,35,35,35,35,35,179,179,179,179,179,179,179,179,
