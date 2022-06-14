@@ -3,6 +3,7 @@
 //
 
 #include "TileMap.h"
+#include <memory>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/lexical_cast.hpp>
@@ -12,22 +13,17 @@
 #include "GameRoot.h"
 
 
-namespace inGame{
+namespace inGame
+{
 
     TileMap::TileMap()
-    {
-        testXml();
-    }
-
-    void TileMap::testXml()
-    {
-        loadMapFile("field_00.tmx");
-    }
+    {}
 
 
-    template <typename T> std::vector<T> TileMap::parseCsv(const std::string& source)
+    template<typename T>
+    std::vector<T> TileMap::parseCsv(const std::string &source)
     {
-        auto result =  std::vector<T>{};
+        auto result = std::vector<T>{};
 
         const auto crlf = std::regex("\r?\n");
         const std::string lf = "\n";
@@ -41,7 +37,7 @@ namespace inGame{
             boost::tokenizer<boost::escaped_list_separator<char> > tokenList(line);
             for (const std::string &str: tokenList)
             {
-                if (str=="") continue;
+                if (str == "") continue;
                 try
                 {
                     T parsedValue = boost::lexical_cast<T>(str);
@@ -57,7 +53,10 @@ namespace inGame{
         return result;
     }
 
-    void TileMap::loadMapFile(const std::string& fileName)
+    /*
+     *  Main Process Of Loading Map File.
+     */
+    void TileMap::LoadMapFile(const std::string &fileName)
     {
         using namespace boost::property_tree;
 
@@ -73,18 +72,41 @@ namespace inGame{
         const int mapWidth = boost::lexical_cast<int>(treeMap.get<std::string>("<xmlattr>.width"));
         const int mapHeight = boost::lexical_cast<int>(treeMap.get<std::string>("<xmlattr>.height"));
 
-        m_MatSize = Vec2{mapWidth, mapHeight};
-        m_Mat.resize(mapWidth, std::vector<TileMapMatElement>(mapHeight));
-        for (auto& row : m_Mat)
-            for (auto& ele : row)
-                ele = TileMapMatElement{};
+        resizeMat(mapWidth, mapHeight);
 
+        readLayersAndObjects(treeMap);
 
+        initMatElements();
+    }
+
+    void TileMap::readLayersAndObjects(
+            boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> treeMap)
+    {
         for (const auto &treeLayer: treeMap.get_child("layer"))
         {
-            if (treeLayer.first!="data") continue;
+            if (treeLayer.first != "data") continue;
             readLayerData(treeLayer.second);
         }
+    }
+
+    void TileMap::resizeMat(const int mapWidth, const int mapHeight)
+    {
+        m_MatSize = Vec2{mapWidth, mapHeight};
+        m_Mat.resize(mapWidth, std::vector<unique_ptr<TileMapMatElement>>(mapHeight, unique_ptr<TileMapMatElement>(
+                nullptr)));
+        for (auto &row: m_Mat)
+            for (auto &ele: row)
+                ele = std::make_unique<TileMapMatElement>();
+    }
+
+
+    void TileMap::initMatElements()
+    {
+        for (int x = 0; x < m_MatSize.X; ++x)
+            for (int y = 0; y < m_MatSize.Y; ++y)
+                m_Mat[x][y]->UpdateChipList();
+
+        // @todo: 崖などの情報を登録する
     }
 
 
@@ -96,31 +118,29 @@ namespace inGame{
         const auto data = treeData.get_value<std::string>();
         const auto parsedData = parseCsv<int>(data);
         const int dataSize = parsedData.size();
-        assert(dataSize==m_MatSize.X*m_MatSize.Y);
+        assert(dataSize == m_MatSize.X * m_MatSize.Y);
 
-        for (int y=0; y<m_MatSize.Y; ++y)
+        for (int y = 0; y < m_MatSize.Y; ++y)
         {
             for (int x = 0; x < m_MatSize.X; ++x)
             {
-                const int index = x + y*m_MatSize.X;
+                const int index = x + y * m_MatSize.X;
 
                 // Tiledのレイヤー要素のマップタイルIDは+1加算されているので、-1が必要
-                const int chipId = parsedData[index]-1;
+                const int chipId = parsedData[index] - 1;
 
-                if (chipId==-1) continue;
+                if (chipId == -1) continue;
 
-                if (m_Tileset.count(chipId)!=0)
+                if (m_Tileset.count(chipId) != 0)
                 {
-                    TilePropertyChip* chipPtr = &m_Tileset[chipId];
-                    m_Mat[x][y].AddChip(chipPtr);
-                }
-                else
+                    TilePropertyChip *chipPtr = &m_Tileset[chipId];
+                    m_Mat[x][y]->AddChip(chipPtr);
+                } else
                 {
                     assert(false);
                 }
             }
         }
-
     }
 
 
@@ -155,7 +175,7 @@ namespace inGame{
                 readTileProperty(property.second, &newTile);
             }
 
-            assert(newTile.Name != ETileName::none);
+            assert(newTile.Kind != ETileKind::none);
 
             m_Tileset[id] = newTile;
         }
@@ -171,15 +191,32 @@ namespace inGame{
         const auto propertyName = property.get<std::string>("<xmlattr>.name");
         const auto value = property.get<std::string>("<xmlattr>.value");
 
-        if (propertyName == "name")
+        if (propertyName == "kind")
         {
-            ETileName nameKind = magic_enum::enum_cast<ETileName>(value).value_or(ETileName::none);
-            propertyRef->Name = nameKind;
-        }
-        else
+            ETileKind kind = magic_enum::enum_cast<ETileKind>(value).value_or(ETileKind::none);
+            propertyRef->Kind = kind;
+        } else
         {
             assert(false);
         }
+    }
+
+    Vec2<int> TileMap::GetMatSize() const
+    {
+        return m_MatSize;
+    }
+
+    ITileMapMatElement *TileMap::GetElementAt(const Vec2<int> &pos) const
+    {
+        assert(Range<int>(0, m_MatSize.X-1).IsBetween(pos.X));
+        assert(Range<int>(0, m_MatSize.Y-1).IsBetween(pos.Y));
+
+        return m_Mat[pos.X][pos.Y].get();
+    }
+
+    Graph &TileMap::GetTilesetImage() const
+    {
+        return *m_TilesetImage;
     }
 
 

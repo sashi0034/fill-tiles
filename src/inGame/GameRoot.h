@@ -24,7 +24,6 @@ namespace inGame
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         IAppState* m_AppState;
-        unique_ptr<TileMap> test{new TileMap()};
         void createSelfSpr();
     };
 }

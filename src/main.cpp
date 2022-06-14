@@ -10,5 +10,4 @@ int main(int argc, char* argv[]) {
     int res = GameKernel::StartGame();
 
     return res;
-
 }

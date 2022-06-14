@@ -9,6 +9,7 @@
 #include "../gameEngine/ChildBase.h"
 #include "resource/Image.h"
 #include "TileMap.h"
+#include "FieldManager.h"
 
 namespace inGame
 {
@@ -23,7 +24,7 @@ namespace inGame
     private:
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
-        unique_ptr<TileMap> test{new TileMap()};
+        unique_ptr<FieldManager> m_FieldManager{};
     };
 }
 

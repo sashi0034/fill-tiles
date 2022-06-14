@@ -73,7 +73,7 @@ namespace inGame
     {
         yield();
 
-        auto moveVector = Angle(goingAngle).ToXY().EachTo<double>() * FieldManager::PixelPerUnit;
+        auto moveVector = Angle(goingAngle).ToXY().EachTo<double>() * FieldManager::PixelPerChip;
         bool isDash = isDashing(appState->GetKeyboardState());
         double movingTIme = isDash ? 0.2 : 0.4;
 

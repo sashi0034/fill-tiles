@@ -201,7 +201,7 @@ namespace gameEngine::detail
 
         auto isSucceeded = m_ParentalPool->Destroy(this);
         assert(isSucceeded);
-        
+
         if (auto beforeAnimation = m_BeforeAnimation.lock()) beforeAnimation->ForceDestroy();
     }
 
