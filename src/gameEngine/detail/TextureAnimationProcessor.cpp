@@ -197,7 +197,11 @@ namespace gameEngine::detail
 
     void TextureAnimationProcessor::ForceDestroy()
     {
-        m_ParentalPool->Destroy(this);
+        assert(m_NextAnimation.expired());
+
+        auto isSucceeded = m_ParentalPool->Destroy(this);
+        assert(isSucceeded);
+        
         if (auto beforeAnimation = m_BeforeAnimation.lock()) beforeAnimation->ForceDestroy();
     }
 

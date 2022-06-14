@@ -29,28 +29,30 @@ namespace gameEngine
     template<typename T> class ChildrenPool : public IChildrenPool<T>
     {
         std::vector<shared_ptr<T>> m_Pool{};
+        int currentProcessingIndex = 0;
 
-        // @todo: イテレータのままで返したい
-        int findIndex(T* target)
+        typename std::vector<shared_ptr<T>>::iterator findIterator(T* target)
         {
-            auto size = m_Pool.size();
-            if (size == 0) return -1;
+            assert(!m_Pool.empty());
+            assert(currentProcessingIndex < int(m_Pool.size()));
 
-            auto iter = std::find_if(m_Pool.begin(), m_Pool.end(),
-                                     [target](shared_ptr<T> child) { return child.get() == target; });
-            size_t index = std::distance(m_Pool.begin(), iter);
-            if (index == size)
-            {
-                return -1;
-            }
-            return index;
+            if (target == m_Pool[currentProcessingIndex].get()) return m_Pool.begin() + currentProcessingIndex;
+
+            auto iter = std::find_if(
+                    m_Pool.begin(), m_Pool.end(),
+                    [target](shared_ptr<T> child) {
+                        return child.get() == target;
+                    });
+
+            return iter;
         }
+
         void collectGarbage(std::vector<int> &upwardIndexes)
         {
-            for (int i= upwardIndexes.size() - 1; i >= 0; --i)
+            for (int i = upwardIndexes.size() - 1; i >= 0; --i)
             {
                 int index = upwardIndexes[i];
-                m_Pool.erase(m_Pool.begin()+index);
+                m_Pool.erase(m_Pool.begin() + index);
             }
         }
     public:
@@ -66,12 +68,14 @@ namespace gameEngine
         };
         bool Destroy(T* child) override
         {
-            int index = findIndex(child);
+            if (m_Pool.empty()) return false;
 
-            if (index==-1) return false;
+            auto iter = findIterator(child);
 
-            //m_Pool.erase(m_Pool.begin()+index);
-            m_Pool[index]= nullptr;
+            if (iter==m_Pool.end()) return false;
+
+            *iter = nullptr;
+
             return true;
         }
         void ProcessEach(std::function<void(shared_ptr<T>&)> process)
@@ -80,11 +84,15 @@ namespace gameEngine
             std::vector<int> garbage{};
 
             for (int i = 0; i < size; ++i)
+            {
+                currentProcessingIndex = i;
                 if (m_Pool[i] != nullptr)
                     process(m_Pool[i]);
                 else
                     garbage.push_back(i);
+            }
 
+            currentProcessingIndex = 0;
             collectGarbage(garbage);
         }
         void Release()
