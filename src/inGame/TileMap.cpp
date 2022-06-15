@@ -82,21 +82,19 @@ namespace inGame
     void TileMap::readLayersAndObjects(
             boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> treeMap)
     {
-        for (const auto &treeLayer: treeMap.get_child("layer"))
+        for (const auto &treeLayer: treeMap.get_child(""))
         {
-            if (treeLayer.first != "data") continue;
-            readLayerData(treeLayer.second);
+            if (treeLayer.first != "layer") continue;
+            readLayerData(treeLayer.second.get_child("data"));
         }
     }
 
     void TileMap::resizeMat(const int mapWidth, const int mapHeight)
     {
         m_MatSize = Vec2{mapWidth, mapHeight};
-        m_Mat.resize(mapWidth, std::vector<unique_ptr<TileMapMatElement>>(mapHeight, unique_ptr<TileMapMatElement>(
-                nullptr)));
-        for (auto &row: m_Mat)
-            for (auto &ele: row)
-                ele = std::make_unique<TileMapMatElement>();
+        m_Mat.resize(mapWidth*mapHeight, TileMapMatElement());
+
+
     }
 
 
@@ -104,7 +102,7 @@ namespace inGame
     {
         for (int x = 0; x < m_MatSize.X; ++x)
             for (int y = 0; y < m_MatSize.Y; ++y)
-                m_Mat[x][y]->UpdateChipList();
+                getElementAt(Vec2{x, y})->UpdateChipList();
 
         // @todo: 崖などの情報を登録する
     }
@@ -134,7 +132,7 @@ namespace inGame
                 if (m_Tileset.count(chipId) != 0)
                 {
                     TilePropertyChip *chipPtr = &m_Tileset[chipId];
-                    m_Mat[x][y]->AddChip(chipPtr);
+                    getElementAt(Vec2{x, y})->AddChip(chipPtr);
                 } else
                 {
                     assert(false);
@@ -206,17 +204,25 @@ namespace inGame
         return m_MatSize;
     }
 
-    ITileMapMatElement *TileMap::GetElementAt(const Vec2<int> &pos) const
+    ITileMapMatElement * TileMap::GetElementAt(const Vec2<int> &pos)
     {
-        assert(Range<int>(0, m_MatSize.X-1).IsBetween(pos.X));
-        assert(Range<int>(0, m_MatSize.Y-1).IsBetween(pos.Y));
-
-        return m_Mat[pos.X][pos.Y].get();
+        return getElementAt(pos);
     }
 
     Graph &TileMap::GetTilesetImage() const
     {
         return *m_TilesetImage;
+    }
+
+    TileMapMatElement* TileMap::getElementAt(const Vec2<int> &pos)
+    {
+        int index = pos.X + pos.Y * m_MatSize.X;
+
+        assert(Range<int>(0, m_Mat.size()-1).IsBetween(index));
+
+        const TileMapMatElement* element = &m_Mat[index];
+
+        return const_cast<TileMapMatElement*>(element);
     }
 
 

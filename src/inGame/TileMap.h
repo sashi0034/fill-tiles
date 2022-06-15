@@ -20,13 +20,13 @@ namespace inGame
         TileMap();
         void LoadMapFile(const std::string &fileName);
         Vec2<int> GetMatSize() const;
-        ITileMapMatElement * GetElementAt(const Vec2<int>& pos) const;
+        ITileMapMatElement * GetElementAt(const Vec2<int>& pos);
         Graph& GetTilesetImage() const;
     private:
         unique_ptr<Graph> m_TilesetImage{};
         std::unordered_map<int, TilePropertyChip> m_Tileset;
         Vec2<int> m_MatSize{};
-        std::vector<std::vector<unique_ptr<TileMapMatElement>>> m_Mat{};
+        std::vector<TileMapMatElement> m_Mat{};
 
         void loadTilesetFile(const std::string &fileName);
 
@@ -46,6 +46,8 @@ namespace inGame
                 boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> treeMap);
 
         void initMatElements();
+
+        TileMapMatElement* getElementAt(const Vec2<int>& pos);
     };
 }
 

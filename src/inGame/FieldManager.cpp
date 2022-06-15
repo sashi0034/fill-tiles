@@ -35,7 +35,7 @@ namespace inGame
                 std::min(startingChipPoint.Y + ScreenChipSize.Y, matSize.Y)};
 
         for (int chipY = renderingChipStartingPoint.Y; chipY<=renderingChipEndPoint.Y; ++chipY)
-            for (int chipX = renderingChipStartingPoint.X; chipY<=renderingChipEndPoint.X; ++chipX)
+            for (int chipX = renderingChipStartingPoint.X; chipX<=renderingChipEndPoint.X; ++chipX)
             {
                 const auto chipPos = Vec2{chipX, chipY};
                 const Vec2<int> renderingScreenPos =
