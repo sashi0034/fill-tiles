@@ -17,11 +17,28 @@ namespace gameEngine
         T Width;
         T Height;
 
-        Vec2<T> GetStartingPoint()
+        Rect(T x, T y, T width, T height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+
+        Rect(const Vec2<T>& startingPoint, const Vec2<T>& size)
+        {
+            X = startingPoint.X;
+            Y = startingPoint.Y;
+            Width = size.X;
+            Height = size.Y;
+        }
+
+        Vec2<T> GetStartingPoint() const
         {
             return Vec2<T>{X, Y};
         }
-        Vec2<T> GetSize()
+
+        Vec2<T> GetSize() const
         {
             return Vec2<T>{Width, Height};
         }
