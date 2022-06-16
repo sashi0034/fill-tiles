@@ -107,6 +107,7 @@ namespace gameEngine
 
     void SpriteTexture::SetPositionParent(const shared_ptr<SpriteTexture>& parent)
     {
+        assert(parent.get() != this);
         m_PositionParent = parent;
     }
 

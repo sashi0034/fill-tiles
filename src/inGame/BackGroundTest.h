@@ -2,17 +2,17 @@
 // Created by sashi0034 on 2022/05/28.
 //
 
-#ifndef FILL_TILES_BACKGROUND_H
-#define FILL_TILES_BACKGROUND_H
+#ifndef FILL_TILES_BACKGROUNDTEST_H
+#define FILL_TILES_BACKGROUNDTEST_H
 
 #include "ActorBase.h"
 
 namespace inGame
 {
-    class BackGround : public ActorBase
+    class BackGroundTest : public ActorBase
     {
     public:
-        explicit BackGround(IChildrenPool<ActorBase>* belongingPool);
+        explicit BackGroundTest(IChildrenPool<ActorBase>* belongingPool);
     private:
         shared_ptr<SpriteTexture> m_Spr;
         void render(IAppState* appState);
@@ -20,4 +20,4 @@ namespace inGame
 }
 
 
-#endif //FILL_TILES_BACKGROUND_H
+#endif //FILL_TILES_BACKGROUNDTEST_H

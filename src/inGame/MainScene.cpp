@@ -5,22 +5,19 @@
 #include "MainScene.h"
 
 #include <memory>
-#include "BackGround.h"
 #include "Player.h"
 #include "AnimTest.h"
 #include "field/TileMap.h"
+#include "GameRoot.h"
 
 namespace inGame{
-    MainScene::MainScene(IAppState *appState, IChildrenPool<ActorBase> *parent)
-            : ActorBase(parent),
-            ResImage(std::make_unique<resource::Image>(appState))
+    MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root)
+            : ActorBase(parent), m_Root(root)
     {
-        m_FieldManager = std::make_unique<FieldManager>(&m_ChildrenPool, appState);
+        m_ScrollManager = std::make_unique<ScrollManager>(this);
+        m_FieldManager = std::make_unique<FieldManager>(this);
 
-        m_ChildrenPool.Birth(new BackGround(&m_ChildrenPool));
-        m_ChildrenPool.Birth(new Player(&m_ChildrenPool, m_FieldManager.get()));
-        m_ChildrenPool.Birth(new AnimTest(&m_ChildrenPool));
-
+        m_ChildrenPool.Birth(new Player(&m_ChildrenPool, this));
     }
 
     MainScene::~MainScene()
@@ -37,6 +34,21 @@ namespace inGame{
     {
         m_ChildrenPool.ProcessEach([&](auto child){ child->Update(appState);});
         m_TextureAnimator.Update(appState->GetTime().GetDeltaSec());
+    }
+
+    GameRoot *MainScene::GetRoot()
+    {
+        return m_Root;
+    }
+
+    FieldManager & MainScene::GetFieldManager()
+    {
+        return *m_FieldManager;
+    }
+
+    ScrollManager *MainScene::GetScrollManager()
+    {
+        return m_ScrollManager.get();
     }
 
 }

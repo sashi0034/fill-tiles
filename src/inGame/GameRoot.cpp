@@ -5,7 +5,7 @@
 #include "GameRoot.h"
 
 #include <memory>
-#include "BackGround.h"
+#include "BackGroundTest.h"
 #include "MainScene.h"
 
 namespace inGame{
@@ -13,7 +13,7 @@ namespace inGame{
     : ResImage(std::make_unique<resource::Image>(appState)), m_AppState(appState)
     {
         createSelfSpr();
-        m_ChildrenPool.Birth(new MainScene(appState, &m_ChildrenPool));
+        m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this));
     }
 
     GameRoot::~GameRoot()

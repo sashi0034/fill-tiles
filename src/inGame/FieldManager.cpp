@@ -5,28 +5,32 @@
 #include "FieldManager.h"
 #include "GameRoot.h"
 #include "field/FieldRenderer.h"
+#include "MainScene.h"
 
 namespace inGame
 {
     using namespace field;
 
-    FieldManager::FieldManager(IChildrenPool<ActorBase> *parentPool, IAppState *app) :
-            ActorBase(parentPool),
-            ScreenMatSize(app->GetScreenSize() / PixelPerMat)
+    FieldManager::FieldManager(IFieldViewDebugScene *parentalScene) :
+            ScreenMatSize(GameRoot::GetInstance().GetAppState()->GetScreenSize() / PixelPerMat),
+            m_ParentalScene(parentalScene)
     {
         m_TileMap.LoadMapFile("field_00.tmx");
 
         m_Texture = SpriteTexture::Create(nullptr);
         m_Texture->SetRenderingProcess([this](IAppState *appState) { renderTileMap(appState); });
+
+        m_ParentalScene->GetScrollManager()->RegisterSprite(m_Texture);
     }
 
     void FieldManager::renderTileMap(IAppState *appState)
     {
-        const auto globalPos = m_Texture->GetParentalGlobalPosition().CopyBy<int>();
+        const auto globalPos = m_Texture->GetParentalGlobalPosition();
+        const auto screenGlobalPos = (globalPos * appState->GetPixelPerUnit()).CopyBy<int>();
 
         const auto negativeCorrection = Vec2<int>{globalPos.X<0 ? -1 : 0, globalPos.Y<0 ? -1 : 0};
 
-        const Vec2<int> startingChipPoint = (globalPos / PixelPerMat).CopyBy<int>() + negativeCorrection;
+        const Vec2<int> startingChipPoint = (globalPos * -1 / PixelPerMat).CopyBy<int>() + negativeCorrection;
 
         const Vec2<int> matSize = m_TileMap.GetMatSize();
 
@@ -35,15 +39,16 @@ namespace inGame
             std::max(0, startingChipPoint.Y)};
 
         const auto renderingChipEndPoint = Vec2<int>{
-                std::min(startingChipPoint.X + ScreenMatSize.X, matSize.X),
-                std::min(startingChipPoint.Y + ScreenMatSize.Y, matSize.Y)};
+                std::min(startingChipPoint.X + 1 + ScreenMatSize.X, matSize.X-1),
+                std::min(startingChipPoint.Y + 1 + ScreenMatSize.Y, matSize.Y-1)};
+
 
         for (int chipY = renderingChipStartingPoint.Y; chipY<=renderingChipEndPoint.Y; ++chipY)
             for (int chipX = renderingChipStartingPoint.X; chipX<=renderingChipEndPoint.X; ++chipX)
             {
                 const auto chipPos = Vec2{chipX, chipY};
                 const Vec2<int> renderingScreenPos =
-                        globalPos + Vec2{chipX, chipY} * PixelPerMat * appState->GetPixelPerUnit();
+                        screenGlobalPos + (Vec2<int>{chipX, chipY} * PixelPerMat) * appState->GetPixelPerUnit();
                 const auto mapElement = m_TileMap.GetElementAt(chipPos);
                 const auto chipList = mapElement->GetChipList();
 

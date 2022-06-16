@@ -14,10 +14,12 @@
 
 namespace inGame
 {
-    class FieldManager : ActorBase
+    class IFieldViewDebugScene;
+
+    class FieldManager
     {
     public:
-        explicit FieldManager(IChildrenPool<ActorBase> *parentPool, IAppState *app);
+        explicit FieldManager(IFieldViewDebugScene *parentalScene);
 
         bool CanMoveTo(const MatPos& pos);
 
@@ -29,6 +31,7 @@ namespace inGame
         void renderTileMap(IAppState *appState);
         void renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &renderer, IAppState *appState,
                         const Vec2<int> &screenPos);
+        IFieldViewDebugScene* m_ParentalScene;
         field::TileMap m_TileMap{};
         shared_ptr<SpriteTexture> m_Texture;
 

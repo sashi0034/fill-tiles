@@ -2,11 +2,11 @@
 // Created by sashi0034 on 2022/05/28.
 //
 
-#include "BackGround.h"
+#include "BackGroundTest.h"
 #include "GameRoot.h"
 namespace inGame{
 
-    BackGround::BackGround(IChildrenPool<ActorBase> *belongingPool)
+    BackGroundTest::BackGroundTest(IChildrenPool<ActorBase> *belongingPool)
     : ActorBase(belongingPool)
     {
         (void)belongingPool;
@@ -16,7 +16,7 @@ namespace inGame{
         m_Spr->SetRenderingProcess([=](IAppState* app){ render(app);});
     }
 
-    void BackGround::render(IAppState *appState)
+    void BackGroundTest::render(IAppState *appState)
     {
         const int tileSize = 32;
         for (int x=0; x<appState->GetScreenSize().X; x+=tileSize)

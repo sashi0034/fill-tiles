@@ -12,10 +12,10 @@ using namespace boost::coroutines2;
 
 namespace inGame
 {
-    Player::Player(IChildrenPool<ActorBase> *belonging, FieldManager *field)
-            : ActorBase(belonging), m_State(inGame::EPlayerState::Walk), m_Field(field)
-    {
-        m_Image = GameRoot::GetInstance().ResImage->kisaragi_32x32.get();
+    Player::Player(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene)
+            : ActorBase(belonging), m_State(inGame::EPlayerState::Walk), m_ParentalScene(mainScene), m_Field(mainScene->GetFieldManager())
+{
+        m_Image = mainScene->GetRoot()->ResImage->kisaragi_32x32.get();
 
         initViewModel();
         initView();
@@ -26,6 +26,7 @@ namespace inGame
     void Player::initViewModel()
     {
         m_ViewModelTexture = SpriteTexture::Create(nullptr);
+        m_ParentalScene->GetScrollManager()->RegisterSprite(m_ViewModelTexture);
     }
 
     void Player::initView()
@@ -53,7 +54,7 @@ namespace inGame
             auto inputAngle = Angle(getInputAngle(keyState));
 
             if (inputAngle.IsValid() &&
-            self->m_Field->CanMoveTo(self->GetMatPos() + MatPos(inputAngle.ToXY())))
+            self->m_Field.CanMoveTo(self->GetMatPos() + MatPos(inputAngle.ToXY())))
                 goingAngle = inputAngle.GetKind();
 
             yield();
@@ -69,6 +70,13 @@ namespace inGame
         if (!actionUpdating) initAction();
 
         m_PlayerAnimator.Update(appState->GetTime().GetDeltaSec());
+
+        m_ParentalScene->GetScrollManager()->SetScroll(GetPos() * -1 +
+                                                       (m_ParentalScene->GetRoot()->GetAppState()->GetScreenSize() /
+                                                        2).CopyBy<double>());
+
+
+
     }
 
     void Player::initAction()
