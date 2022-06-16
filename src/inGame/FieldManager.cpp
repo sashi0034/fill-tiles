@@ -4,6 +4,7 @@
 
 #include "FieldManager.h"
 #include "GameRoot.h"
+#include "field/FieldRenderer.h"
 
 namespace inGame
 {
@@ -46,64 +47,38 @@ namespace inGame
                 const auto mapElement = m_TileMap.GetElementAt(chipPos);
                 const auto chipList = mapElement->GetChipList();
 
+                const auto srcSize = Vec2{PixelPerChip, PixelPerChip};
+                const double pixelPerUnit = appState->GetPixelPerUnit();
+                const auto pixelScaleSize = Vec2<double>{pixelPerUnit, pixelPerUnit};
+
+                FieldRenderer renderer = FieldRenderer(PixelPerChip,
+                                                       GameRoot::GetInstance().ResImage.get(),
+                                                       chipPos,
+                                                       renderingScreenPos,
+                                                       appState->GetRenderer(),
+                                                       srcSize,
+                                                       pixelScaleSize,
+                                                       &m_TileMap);
+
                 for (const auto chip : chipList)
-                    renderChip(chipPos, renderingScreenPos, appState, chip);
+                    renderChip(chip, renderer, appState, renderingScreenPos);
             }
     }
 
-    void FieldManager::renderChip(const Vec2<int> &matPos, const Vec2<int> &screenPos, IAppState *appState,
-                                  const TilePropertyChip *chip)
+    void FieldManager::renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &renderer, IAppState *appState,
+                                  const Vec2<int> &screenPos)
     {
-        // @todo: tileKindでswitch
-        // @todo: まずはnormal_plateau_16x16.pngを描画したい
-        // @todo: https://github.com/sashi0034/min-rpg/blob/master/ingame_manager.cpp#:~:text=FieldLayerBase%3A%3AdrawingAutoTile
-
-
         auto srcStarting = chip->SrcPoint;
-        const auto& resImage = *GameRoot::GetInstance().ResImage;
         const auto srcSize = Vec2{PixelPerChip, PixelPerChip};
         const double pixelPerUnit = appState->GetPixelPerUnit();
         const auto pixelScaleSize = Vec2<double>{pixelPerUnit, pixelPerUnit};
 
-        switch (chip->Kind)
-        {
-            case ETileKind::normal_plateau_cliff:
-                renderPlateauCliff(matPos, screenPos, appState, resImage.normal_plateau_16x16.get(), srcSize,
-                                   pixelScaleSize,
-                                   [&](int x, int y) {
-                                       return m_TileMap.HasChipAt(Vec2{x, y}, ETileKind::normal_plateau_cliff) ==
-                                              Boolean::True;
-                                   });
-                break;
-            default:
-                m_TileMap.GetTilesetImage().RenderGraph(
-                        appState->GetRenderer(),
-                        screenPos, Rect<int>(srcStarting, srcSize),
-                        pixelScaleSize);
-        }
+        bool rendered = renderer.RenderChip(chip->Kind);
+        if (!rendered)
+            m_TileMap.GetTilesetImage().RenderGraph(
+                    appState->GetRenderer(),
+                    screenPos, Rect<int>(srcStarting, srcSize),
+                    pixelScaleSize);
     }
 
-    void
-    FieldManager::renderPlateauCliff(const Vec2<int> &matPos, const Vec2<int> &screenPos, const IAppState *appState,
-                                     Graph *image, const Vec2<int> &srcSize, const Vec2<double> &pixelScaleSize,
-                                     const std::function<bool(int, int)>& isNeighbor)
-    {
-        static Vec2<int> srcStartingPoints[4] = {
-                Vec2{PixelPerChip * 0, PixelPerChip * 2}, //
-                Vec2{PixelPerChip * 1, PixelPerChip * 2}, //   R
-                Vec2{PixelPerChip * 3, PixelPerChip * 2}, // L
-                Vec2{PixelPerChip * 2, PixelPerChip * 2}, // L R
-        };
-
-        const int srcStartingIndex =
-                (int(isNeighbor(matPos.X - 1, matPos.Y)) << 1) +
-                (int(isNeighbor(matPos.X + 1, matPos.Y)) << 0);
-
-        const auto& srcStarting = srcStartingPoints[srcStartingIndex];
-
-        image->RenderGraph(
-                appState->GetRenderer(),
-                screenPos, Rect<int>{srcStarting, srcSize},
-                pixelScaleSize);
-    }
 }

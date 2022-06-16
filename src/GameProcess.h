@@ -2,11 +2,11 @@
 // Created by sashi0034 on 2022/05/04.
 //
 
-#ifndef FILL_TILES_GAMETASK_H
-#define FILL_TILES_GAMETASK_H
+#ifndef FILL_TILES_GAMEPROCESS_H
+#define FILL_TILES_GAMEPROCESS_H
 
 
-class GameTask {
+class GameProcess {
 private:
     static const int pixelPerUnit = 3;
     static const int screenWidth = 416;
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //FILL_TILES_GAMETASK_H
+#endif //FILL_TILES_GAMEPROCESS_H

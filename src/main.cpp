@@ -1,13 +1,13 @@
 
 
-#include "GameTask.h"
+#include "GameProcess.h"
 
 
 int main(int argc, char* argv[]) {
     (void) argc;
     (void) argv;
 
-    int res = GameTask::RunGame();
+    int res = GameProcess::RunGame();
 
     return res;
 }

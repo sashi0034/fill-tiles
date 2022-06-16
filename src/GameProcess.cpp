@@ -7,11 +7,11 @@
 #include <SDL_image.h>
 
 #include <memory>
-#include "GameTask.h"
+#include "GameProcess.h"
 #include "inGame/gameLooper.h"
 #include "gameEngine/gameEngine.h"
 
-int GameTask::RunGame()
+int GameProcess::RunGame()
 {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)

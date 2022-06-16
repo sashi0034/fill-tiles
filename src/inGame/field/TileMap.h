@@ -14,7 +14,13 @@
 
 namespace inGame::field
 {
-    class TileMap
+    class ITileMap
+    {
+    public:
+        virtual Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) = 0;
+    };
+
+    class TileMap : public ITileMap
     {
     private:
         static inline const std::string tileMapDirectory = "./assets/tilemaps/";
@@ -24,7 +30,7 @@ namespace inGame::field
         Vec2<int> GetMatSize() const;
         ITileMapMatElement * GetElementAt(const Vec2<int>& pos);
         bool IsInRange(const Vec2<int>& pos) const;
-        Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind);
+        Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) override;
         Graph& GetTilesetImage() const;
     private:
         unique_ptr<Graph> m_TilesetImage{};
