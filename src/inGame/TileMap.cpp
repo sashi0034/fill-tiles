@@ -100,11 +100,20 @@ namespace inGame
 
     void TileMap::initMatElements()
     {
-        for (int x = 0; x < m_MatSize.X; ++x)
+        for (int x=0; x<m_MatSize.X; ++x)
             for (int y = 0; y < m_MatSize.Y; ++y)
-                getElementAt(Vec2{x, y})->UpdateChipList();
+            {
+                initMatElementAt(Vec2{x, y});
+            }
+    }
 
-        // @todo: 崖などの情報を登録する
+    void TileMap::initMatElementAt(const Vec2<int> &pos)
+    {
+        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
+            HasChipAt(pos + Vec2{0, -1}, ETileKind::normal_plateau) == Boolean::True)
+        {
+            getElementAt(pos)->AddChip(staticTileset.GetOf(ETileKind::normal_plateau_cliff));
+        }
     }
 
 
@@ -223,6 +232,19 @@ namespace inGame
         const TileMapMatElement* element = &m_Mat[index];
 
         return const_cast<TileMapMatElement*>(element);
+    }
+
+    bool TileMap::IsInRange(const Vec2<int>& pos) const
+    {
+        return Range<int>(0, m_MatSize.X-1).IsBetween(pos.X)
+        && Range<int>(0, m_MatSize.Y-1).IsBetween(pos.Y);
+    }
+
+    Boolean TileMap::HasChipAt(const Vec2<int> &pos, ETileKind checkingKind)
+    {
+        if (!IsInRange(pos)) return Boolean::Null;
+        const auto element = getElementAt(pos);
+        return static_cast<Boolean>(element->HasChip(checkingKind));
     }
 
 

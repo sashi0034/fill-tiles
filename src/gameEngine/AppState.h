@@ -34,7 +34,7 @@ namespace gameEngine
     public:
         AppState();
         ~AppState();
-        AppState(Vec2<int> screenSize, int pixelPerUnit, SDL_Window* window);
+        AppState(const Vec2<int> &screenSize, const int pixelPerUnit, SDL_Window* window);
 
         void UpdateFrame();
         void RenderFrame();

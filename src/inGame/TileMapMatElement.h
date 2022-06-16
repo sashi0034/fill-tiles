@@ -14,6 +14,7 @@ namespace inGame
         none,
         grass,
         normal_plateau,
+        normal_plateau_cliff,
     };
 
     struct TilePropertyChip
@@ -32,11 +33,11 @@ namespace inGame
     class TileMapMatElement : public ITileMapMatElement
     {
     public:
-        TileMapMatElement() = default;
+        TileMapMatElement();
 
         void AddChip(TilePropertyChip *chip);
 
-        void UpdateChipList();
+        bool HasChip(ETileKind kind);
 
         [[nodiscard]] const std::vector<const TilePropertyChip *> &GetChipList() const override;
 

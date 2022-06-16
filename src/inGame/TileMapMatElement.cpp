@@ -7,22 +7,27 @@
 
 namespace inGame{
 
-    void TileMapMatElement::AddChip(TilePropertyChip *chip)
-    {
-        m_ChipList.push_back(chip);
-    }
-
-    void TileMapMatElement::UpdateChipList()
+    TileMapMatElement::TileMapMatElement()
     {
         int numKind = magic_enum::enum_count<ETileKind>();
         m_HasChip.resize(numKind, std::byte(0));
+    }
 
-        for (auto &chip : m_ChipList)
-            m_HasChip[static_cast<int>(chip->Kind)] = std::byte(1);
+    void TileMapMatElement::AddChip(TilePropertyChip *chip)
+    {
+        m_ChipList.push_back(chip);
+        // @todo: フラグ管理をlong longで行うクラスを作りたい
+        m_HasChip[static_cast<int>(chip->Kind)] = std::byte(1);
     }
 
     const std::vector<const TilePropertyChip *> &TileMapMatElement::GetChipList() const
     {
         return m_ChipList;
     }
+
+    bool TileMapMatElement::HasChip(ETileKind kind)
+    {
+        return m_HasChip[static_cast<int>(kind)]!=std::byte{0};
+    }
+
 }

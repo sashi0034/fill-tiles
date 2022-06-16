@@ -52,6 +52,9 @@ namespace inGame
                                   const TilePropertyChip *chip)
     {
         // @todo: tileKindでswitch
+        // @todo: まずはnormal_plateau_16x16.pngを描画したい
+        // @todo: https://github.com/sashi0034/min-rpg/blob/master/ingame_manager.cpp#:~:text=FieldLayerBase%3A%3AdrawingAutoTile
+
         (void)matPos;
 
         auto srcStarting = chip->SrcPoint;

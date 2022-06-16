@@ -9,6 +9,8 @@
 #include "TileMapMatElement.h"
 #include <boost/tokenizer.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include "Boolean.h"
+#include "StaticTileset.h"
 
 namespace inGame
 {
@@ -21,10 +23,13 @@ namespace inGame
         void LoadMapFile(const std::string &fileName);
         Vec2<int> GetMatSize() const;
         ITileMapMatElement * GetElementAt(const Vec2<int>& pos);
+        bool IsInRange(const Vec2<int>& pos) const;
+        Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind);
         Graph& GetTilesetImage() const;
     private:
         unique_ptr<Graph> m_TilesetImage{};
         std::unordered_map<int, TilePropertyChip> m_Tileset;
+        const StaticTileset staticTileset{};
         Vec2<int> m_MatSize{};
         std::vector<TileMapMatElement> m_Mat{};
 
@@ -48,6 +53,8 @@ namespace inGame
         void initMatElements();
 
         TileMapMatElement* getElementAt(const Vec2<int>& pos);
+
+        void initMatElementAt(const Vec2<int> &pos);
     };
 }
 

@@ -1,7 +1,7 @@
 //
 // Created by sashi0034 on 2022/04/29.
 //
-
+#include "log.h"
 #include "Time.h"
 
 namespace gameEngine
@@ -18,7 +18,7 @@ namespace gameEngine
         m_OldTime = std::chrono::system_clock::now();
     }
 
-    void Time::Update()
+    void Time::Update(bool isPrintDebugFps)
     {
         auto cur = std::chrono::system_clock::now();
         auto dur = cur - m_OldTime;
@@ -27,7 +27,7 @@ namespace gameEngine
         m_DeltaSec = milli / 1000.0;
         m_OldTime = cur;
 
-        countFps();
+        countFps(isPrintDebugFps);
 
     }
 
@@ -41,7 +41,7 @@ namespace gameEngine
         return m_DeltaSec;
     }
 
-    void Time::countFps()
+    void Time::countFps(bool isPrintDebugFps)
     {
         m_FpsBuffer += GetDeltaMilli();
         m_FpsCount++;
@@ -51,6 +51,7 @@ namespace gameEngine
             int ret = m_FpsCount;
             m_FpsCount = 0;
             m_Fps= Fps{ret};
+            if (isPrintDebugFps) LOG_INFO << m_Fps.Value << std::endl;
         }
     }
 

@@ -12,12 +12,12 @@ namespace gameEngine
     AppState::AppState()
     {}
 
-    AppState::AppState(Vec2<int> screenSize, int pixelPerUnit, SDL_Window* window)
+    AppState::AppState(const Vec2<int> &screenSize, const int pixelPerUnit, SDL_Window* window)
         : IAppState(), m_ScreenSize(screenSize), m_PixelPerUnit(pixelPerUnit)
     {
         m_Time = std::make_unique<Time>();
         m_Window = window;
-        m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     }
 
     int AppState::GetPixelPerUnit() const
