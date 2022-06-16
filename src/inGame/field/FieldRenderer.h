@@ -15,12 +15,12 @@ namespace inGame::field
     class FieldRenderer
     {
     public:
-        FieldRenderer(const int pixelPerChip, const resource::Image *image, const Vec2<int> &matPos,
-                      const Vec2<int> &screenPos, SDL_Renderer *renderer, const Vec2<int> &srcSize,
-                      const Vec2<double> &pixelScaleSize, ITileMap *tileMap);
+        FieldRenderer(const resource::Image *image, const Vec2<int> &matPos, const Vec2<int> &screenPos,
+                      SDL_Renderer *renderer, const Vec2<int> &srcSize, const Vec2<double> &pixelScaleSize,
+                      ITileMap *tileMap);
         bool RenderChip(ETileKind kind);
     private:
-        const int pixelPerChip;
+        static const int pixelPerChip;
         const resource::Image* m_ResImage;
         const Vec2<int>& m_MatPos;
         const Vec2<int>& m_ScreenPos;
@@ -29,6 +29,8 @@ namespace inGame::field
         const Vec2<double>& m_PixelScaleSize;
         ITileMap* m_TileMapPtr;
 
+        void renderAutoTile(Graph *image, const std::function<bool(int, int)> &isNeighbor,
+                            const Vec2<int> &targetSrcOrigin=Vec2{0, 0});
         void renderPlateauCliff(Graph* image, const std::function<bool(int, int)>& isNeighbor);
         bool isNeighbor(int x, int y, ETileKind kind) const;
     };

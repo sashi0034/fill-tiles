@@ -51,14 +51,14 @@ namespace inGame
                 const double pixelPerUnit = appState->GetPixelPerUnit();
                 const auto pixelScaleSize = Vec2<double>{pixelPerUnit, pixelPerUnit};
 
-                FieldRenderer renderer = FieldRenderer(PixelPerChip,
-                                                       GameRoot::GetInstance().ResImage.get(),
-                                                       chipPos,
-                                                       renderingScreenPos,
-                                                       appState->GetRenderer(),
-                                                       srcSize,
-                                                       pixelScaleSize,
-                                                       &m_TileMap);
+                FieldRenderer renderer = FieldRenderer(
+                        GameRoot::GetInstance().ResImage.get(),
+                        chipPos,
+                        renderingScreenPos,
+                        appState->GetRenderer(),
+                        srcSize,
+                        pixelScaleSize,
+                        &m_TileMap);
 
                 for (const auto chip : chipList)
                     renderChip(chip, renderer, appState, renderingScreenPos);
