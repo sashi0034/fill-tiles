@@ -25,7 +25,7 @@ namespace inGame
 
         auto& mainRoot = GameRoot::GetInstance();
         auto appState = mainRoot.GetAppState();
-        auto screenSize = appState->GetScreenSize().EachTo<double>();
+        auto screenSize = appState->GetScreenSize().CopyBy<double>();
         self->m_Pos = screenSize/2.0;
         self->m_Texture->SetPosition(self->m_Pos);
 

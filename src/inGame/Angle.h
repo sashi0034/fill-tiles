@@ -24,6 +24,7 @@ namespace inGame
         Angle(EAngle angle);
         Vec2<int> ToXY();
         EAngle GetKind();
+        bool IsValid() const;
         static Angle ConvertFrom(Vec2<double> pos);
     private:
         const EAngle m_Angle;

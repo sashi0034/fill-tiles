@@ -18,7 +18,7 @@ namespace inGame{
         m_FieldManager = std::make_unique<FieldManager>(&m_ChildrenPool, appState);
 
         m_ChildrenPool.Birth(new BackGround(&m_ChildrenPool));
-        m_ChildrenPool.Birth(new Player(&m_ChildrenPool));
+        m_ChildrenPool.Birth(new Player(&m_ChildrenPool, m_FieldManager.get()));
         m_ChildrenPool.Birth(new AnimTest(&m_ChildrenPool));
 
     }

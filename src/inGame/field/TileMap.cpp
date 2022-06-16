@@ -94,7 +94,6 @@ namespace inGame::field
         m_MatSize = Vec2{mapWidth, mapHeight};
         m_Mat.resize(mapWidth*mapHeight, TileMapMatElement());
 
-
     }
 
 

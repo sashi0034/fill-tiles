@@ -12,7 +12,8 @@ namespace inGame::field
     enum class ETileKind
     {
         none,
-        grass,
+        base_green,
+        normal_plain,
         normal_plateau,
         normal_plateau_cliff,
     };
@@ -28,6 +29,7 @@ namespace inGame::field
     {
     public:
         [[nodiscard]] virtual const std::vector<const TilePropertyChip *> &GetChipList() const = 0;
+        [[nodiscard]] virtual bool IsWall() const = 0;
     };
 
     class TileMapMatElement : public ITileMapMatElement
@@ -40,6 +42,8 @@ namespace inGame::field
         bool HasChip(ETileKind kind);
 
         [[nodiscard]] const std::vector<const TilePropertyChip *> &GetChipList() const override;
+
+        bool IsWall() const override;
 
     private:
         std::vector<const TilePropertyChip *> m_ChipList;

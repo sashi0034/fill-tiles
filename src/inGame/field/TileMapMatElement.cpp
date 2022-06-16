@@ -17,6 +17,10 @@ namespace inGame::field{
     {
         m_ChipList.push_back(chip);
         // @todo: フラグ管理をlong longで行うクラスを作りたい
+
+        if (chip->Kind==ETileKind::normal_plateau_cliff) m_IsWall = true;
+
+
         m_HasChip[static_cast<int>(chip->Kind)] = std::byte(1);
     }
 
@@ -28,6 +32,11 @@ namespace inGame::field{
     bool TileMapMatElement::HasChip(ETileKind kind)
     {
         return m_HasChip[static_cast<int>(kind)]!=std::byte{0};
+    }
+
+    bool TileMapMatElement::IsWall() const
+    {
+        return m_IsWall;
     }
 
 }

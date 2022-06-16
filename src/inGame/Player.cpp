@@ -12,8 +12,8 @@ using namespace boost::coroutines2;
 
 namespace inGame
 {
-    Player::Player(IChildrenPool<ActorBase> *belonging)
-            : ActorBase(belonging), m_State(inGame::EPlayerState::Walk)
+    Player::Player(IChildrenPool<ActorBase> *belonging, FieldManager *field)
+            : ActorBase(belonging), m_State(inGame::EPlayerState::Walk), m_Field(field)
     {
         m_Image = GameRoot::GetInstance().ResImage->kisaragi_32x32.get();
 
@@ -33,6 +33,10 @@ namespace inGame
         m_ViewTexture = SpriteTexture::Create(m_Image);
         m_ViewTexture->SetSrcRect(Rect<int>{0, 0, CellSize.X, CellSize.Y});
         m_ViewTexture->SetPositionParent(m_ViewModelTexture);
+        const double pixelPerMat = FieldManager::PixelPerMat;
+        m_ViewTexture->SetPosition(Vec2<double>{
+                (pixelPerMat - CellSize.X) / 2.0,
+                pixelPerMat - CellSize.Y} + FieldManager::CharacterPadding);
     }
 
     CoroTask Player::wait(CoroTaskYield &yield, Player *self, IAppState *appState)
@@ -46,7 +50,12 @@ namespace inGame
         while (goingAngle == EAngle::None)
         {
             auto keyState = appState->GetKeyboardState();
-            goingAngle = getInputAngle(keyState);
+            auto inputAngle = Angle(getInputAngle(keyState));
+
+            if (inputAngle.IsValid() &&
+            self->m_Field->CanMoveTo(self->GetMatPos() + MatPos(inputAngle.ToXY())))
+                goingAngle = inputAngle.GetKind();
+
             yield();
         }
 
@@ -73,7 +82,7 @@ namespace inGame
     {
         yield();
 
-        auto moveVector = Angle(goingAngle).ToXY().EachTo<double>() * FieldManager::PixelPerChip;
+        auto moveVector = Angle(goingAngle).ToXY().CopyBy<double>() * FieldManager::PixelPerMat;
         bool isDash = isDashing(appState->GetKeyboardState());
         double movingTIme = isDash ? 0.2 : 0.4;
 
@@ -90,6 +99,8 @@ namespace inGame
 
         coroUtils::WaitForExpire<>(yield, moveAnim);
 
+        LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
+
         if (self->getInputAngle(appState->GetKeyboardState())==self->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
             self->changeStateToWalk(appState, goingAngle, false);
 
@@ -97,12 +108,12 @@ namespace inGame
 
     Vec2<double> Player::GetPos()
     {
-        return m_ViewTexture->GetPosition();
+        return m_ViewModelTexture->GetPosition();
     }
 
     void Player::setPos(Vec2<double> newPos)
     {
-        m_ViewTexture->SetPosition(newPos);
+        m_ViewModelTexture->SetPosition(newPos);
     }
 
     bool Player::isDashing(const Uint8 *keyState)
@@ -182,6 +193,12 @@ namespace inGame
     {
         m_State.ChangeState(EPlayerState::Walk,
                                   new CoroTaskCall(std::bind(walk, std::placeholders::_1, this, appState, newAngle, canChangeAnim)));
+    }
+
+    MatPos Player::GetMatPos()
+    {
+        auto pixelPos = GetPos().CopyBy<int>();
+        return MatPos((pixelPos + FieldManager::MatPixelSize / 2) / FieldManager::PixelPerMat);
     }
 
 

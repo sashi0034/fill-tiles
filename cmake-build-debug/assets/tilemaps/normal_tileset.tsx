@@ -3,12 +3,17 @@
  <image source="normal_tileset.png" width="256" height="256"/>
  <tile id="18">
   <properties>
-   <property name="kind" value="grass"/>
+   <property name="kind" value="normal_plain"/>
   </properties>
  </tile>
  <tile id="19">
   <properties>
    <property name="kind" value="normal_plateau"/>
+  </properties>
+ </tile>
+ <tile id="33">
+  <properties>
+   <property name="kind" value="base_green"/>
   </properties>
  </tile>
 </tileset>

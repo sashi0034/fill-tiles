@@ -10,6 +10,7 @@
 #include "field/TileMapMatElement.h"
 #include "resource/Image.h"
 #include "field/FieldRenderer.h"
+#include "MatPos.h"
 
 namespace inGame
 {
@@ -18,8 +19,12 @@ namespace inGame
     public:
         explicit FieldManager(IChildrenPool<ActorBase> *parentPool, IAppState *app);
 
-        static inline const int PixelPerChip = 16;
-        const Vec2<int> ScreenChipSize;
+        bool CanMoveTo(const MatPos& pos);
+
+        static inline const int PixelPerMat = 16;
+        static inline const Vec2<int> MatPixelSize = {PixelPerMat, PixelPerMat};
+        static inline const Vec2<double> CharacterPadding{0, -PixelPerMat / 4.0};
+        const Vec2<int> ScreenMatSize;
     private:
         void renderTileMap(IAppState *appState);
         void renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &renderer, IAppState *appState,

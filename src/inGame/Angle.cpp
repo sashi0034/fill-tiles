@@ -62,4 +62,9 @@ namespace inGame{
         }
     }
 
+    bool Angle::IsValid() const
+    {
+        return m_Angle!=EAngle::None;
+    }
+
 }

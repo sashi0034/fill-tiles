@@ -19,12 +19,12 @@ namespace gameEngine
             Y = y;
         }
 
-        Vec2<T> operator+(Vec2<T> other) const
+        Vec2<T> operator+(const Vec2<T>& other) const
         {
             return Vec2<T>{this->X + other.X, this->Y + other.Y};
         }
 
-        Vec2<T> operator-(Vec2<T> other) const
+        Vec2<T> operator-(const Vec2<T>& other) const
         {
             return Vec2<T>{this->X - other.X, this->Y - other.Y};
         }
@@ -50,7 +50,7 @@ namespace gameEngine
         }
 
         template<typename U>
-        Vec2<U> EachTo() const
+        Vec2<U> CopyBy() const
         {
             return Vec2<U>{static_cast<U>(this->X), static_cast<U>(this->Y)};
         }

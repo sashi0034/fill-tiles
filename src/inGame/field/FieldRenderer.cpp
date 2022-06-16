@@ -7,7 +7,7 @@
 
 namespace inGame::field
 {
-    const int FieldRenderer::pixelPerChip = FieldManager::PixelPerChip;
+    const int FieldRenderer::pixelPerMat = FieldManager::PixelPerMat;
 
     FieldRenderer::FieldRenderer(const resource::Image *image, const Vec2<int> &matPos,
                                  const Vec2<int> &screenPos, SDL_Renderer *renderer, const Vec2<int> &srcSize,
@@ -30,6 +30,11 @@ namespace inGame::field
 
         switch (kind)
         {
+            case ETileKind::normal_plain:
+                renderAutoTile(m_ResImage->normal_plain_16x16.get(), [&](int x, int y) {
+                    return isNeighbor(x, y, ETileKind::normal_plain);
+                });
+                break;
             case ETileKind::normal_plateau:
                 renderAutoTile(m_ResImage->normal_plateau_16x16.get(), [&](int x, int y) {
                     return isNeighbor(x, y, ETileKind::normal_plateau);
@@ -51,22 +56,22 @@ namespace inGame::field
     void FieldRenderer::renderAutoTile(Graph *image, const std::function<bool(int, int)> &isNeighbor,  const Vec2<int> &targetSrcOrigin)
     {
         static const Vec2<int> srcStartingPoints[16] = {
-                Vec2{0, 0} * pixelPerChip, //
-                Vec2{0, 1} * pixelPerChip, //       D
-                Vec2{2, 3} * pixelPerChip, //     U
-                Vec2{2, 2} * pixelPerChip, //     U D
-                Vec2{1, 0} * pixelPerChip, //   R
-                Vec2{1, 1} * pixelPerChip, //   R   D
-                Vec2{1, 3} * pixelPerChip, //   R U
-                Vec2{1, 2} * pixelPerChip, //   R U D
-                Vec2{3, 0} * pixelPerChip, // L
-                Vec2{3, 1} * pixelPerChip, // L     D
-                Vec2{3, 3} * pixelPerChip, // L   U
-                Vec2{3, 2} * pixelPerChip, // L   U D
-                Vec2{2, 0} * pixelPerChip, // L R
-                Vec2{2, 1} * pixelPerChip, // L R   D
-                Vec2{2, 3} * pixelPerChip, // L R U
-                Vec2{2, 2} * pixelPerChip, // L R U D
+                Vec2{0, 0} * pixelPerMat, //
+                Vec2{0, 1} * pixelPerMat, //       D
+                Vec2{2, 3} * pixelPerMat, //     U
+                Vec2{2, 2} * pixelPerMat, //     U D
+                Vec2{1, 0} * pixelPerMat, //   R
+                Vec2{1, 1} * pixelPerMat, //   R   D
+                Vec2{1, 3} * pixelPerMat, //   R U
+                Vec2{1, 2} * pixelPerMat, //   R U D
+                Vec2{3, 0} * pixelPerMat, // L
+                Vec2{3, 1} * pixelPerMat, // L     D
+                Vec2{3, 3} * pixelPerMat, // L   U
+                Vec2{3, 2} * pixelPerMat, // L   U D
+                Vec2{2, 0} * pixelPerMat, // L R
+                Vec2{2, 1} * pixelPerMat, // L R   D
+                Vec2{2, 3} * pixelPerMat, // L R U
+                Vec2{2, 2} * pixelPerMat, // L R U D
         };
 
         const int srcStartingIndex =
@@ -86,10 +91,10 @@ namespace inGame::field
     void FieldRenderer::renderPlateauCliff(Graph *image, const std::function<bool(int, int)> &isNeighbor)
     {
         static const Vec2<int> srcStartingPoints[4] = {
-                Vec2{0, 4} * pixelPerChip, //
-                Vec2{1, 4} * pixelPerChip, //   R
-                Vec2{3, 4} * pixelPerChip, // L
-                Vec2{2, 4} * pixelPerChip, // L R
+                Vec2{0, 4} * pixelPerMat, //
+                Vec2{1, 4} * pixelPerMat, //   R
+                Vec2{3, 4} * pixelPerMat, // L
+                Vec2{2, 4} * pixelPerMat, // L R
         };
 
         const int srcStartingIndex =

@@ -30,7 +30,7 @@ namespace gameEngine::renderingProcess
         Vec2<double> scalingDeltaPos(
                 (1.0 - sprScale.X) * srcRect.Width / (double(pixelPerUnit) / baseScale) / 2.0,
                 (1.0 - sprScale.Y) * srcRect.Height / (double(pixelPerUnit) / baseScale) / 2.0);
-        const Vec2<int> screenPos = ((globalPos + scalingDeltaPos) * pixelPerUnit).EachTo<int>();
+        const Vec2<int> screenPos = ((globalPos + scalingDeltaPos) * pixelPerUnit).CopyBy<int>();
 
         SDL_Renderer *renderer = appState->GetRenderer();
 

@@ -8,6 +8,7 @@
 #include "ActorBase.h"
 #include "PlayerState.h"
 #include "Angle.h"
+#include "FieldManager.h"
 
 
 namespace inGame
@@ -15,9 +16,10 @@ namespace inGame
     class Player final : public ActorBase
     {
     public:
-        explicit Player(IChildrenPool<ActorBase> *belonging);
+        explicit Player(IChildrenPool<ActorBase> *belonging, FieldManager *field);
         void Update(IAppState *appState) override;
         Vec2<double> GetPos();
+        MatPos GetMatPos();
         static inline const Vec2<int> CellSize{32, 32};
     private:
         void setPos(Vec2<double> newPos);
@@ -36,6 +38,7 @@ namespace inGame
         TextureAnimator m_PlayerAnimator{};
         PlayerState m_State = PlayerState(EPlayerState::Walk);
         EAngle m_Angle = EAngle::Down;
+        FieldManager* m_Field;
 
         static EAngle getInputAngle(const Uint8 *keyState);
         void animWait(EAngle angle);

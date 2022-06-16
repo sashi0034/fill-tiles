@@ -20,6 +20,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(dango_wolf_24x24);
         REGISTER_RESOURCE_PNG(test_room_floor_32x32);
         REGISTER_RESOURCE_PNG(normal_plateau_16x16);
+        REGISTER_RESOURCE_PNG(normal_plain_16x16);
 
         explicit Image(IAppState* appState);
     private:

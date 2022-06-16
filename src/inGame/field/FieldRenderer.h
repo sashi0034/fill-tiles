@@ -20,7 +20,7 @@ namespace inGame::field
                       ITileMap *tileMap);
         bool RenderChip(ETileKind kind);
     private:
-        static const int pixelPerChip;
+        static const int pixelPerMat;
         const resource::Image* m_ResImage;
         const Vec2<int>& m_MatPos;
         const Vec2<int>& m_ScreenPos;
