@@ -8,7 +8,7 @@
 #include "ActorBase.h"
 #include "../gameEngine/ChildBase.h"
 #include "resource/Image.h"
-#include "TileMap.h"
+#include "field/TileMap.h"
 #include "FieldManager.h"
 
 namespace inGame

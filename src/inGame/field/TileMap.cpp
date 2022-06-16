@@ -10,10 +10,10 @@
 #include <sstream>
 #include <regex>
 #include "magic_enum.h"
-#include "GameRoot.h"
+#include "../GameRoot.h"
 
 
-namespace inGame
+namespace inGame::field
 {
 
     TileMap::TileMap()

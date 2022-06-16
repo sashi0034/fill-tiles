@@ -8,7 +8,7 @@
 #include "BackGround.h"
 #include "Player.h"
 #include "AnimTest.h"
-#include "TileMap.h"
+#include "field/TileMap.h"
 
 namespace inGame{
     MainScene::MainScene(IAppState *appState, IChildrenPool<ActorBase> *parent)

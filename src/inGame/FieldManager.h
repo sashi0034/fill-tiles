@@ -6,8 +6,8 @@
 #define FILL_TILES_FIELDMANAGER_H
 
 #include "ActorBase.h"
-#include "TileMap.h"
-#include "TileMapMatElement.h"
+#include "field/TileMap.h"
+#include "field/TileMapMatElement.h"
 
 namespace inGame
 {
@@ -21,9 +21,9 @@ namespace inGame
     private:
         void renderTileMap(IAppState *appState);
         void renderChip(const Vec2<int> &matPos, const Vec2<int> &screenPos, IAppState *appState,
-                        const TilePropertyChip *chip);
+                        const field::TilePropertyChip *chip);
 
-        TileMap m_TileMap{};
+        field::TileMap m_TileMap{};
         shared_ptr<SpriteTexture> m_Texture;
     };
 }

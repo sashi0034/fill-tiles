@@ -7,7 +7,7 @@
 
 #include "ActorBase.h"
 #include "resource/Image.h"
-#include "TileMap.h"
+#include "field/TileMap.h"
 
 namespace inGame
 {

@@ -6,6 +6,8 @@
 
 namespace inGame
 {
+    using namespace field;
+
     FieldManager::FieldManager(IChildrenPool<ActorBase> *parentPool, IAppState *app) :
             ActorBase(parentPool),
             ScreenChipSize(app->GetScreenSize() / PixelPerChip)
