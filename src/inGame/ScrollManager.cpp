@@ -6,7 +6,7 @@
 
 namespace inGame
 {
-    ScrollManager::ScrollManager(IFieldViewDebugScene *parentScene)
+    ScrollManager::ScrollManager(IMainScene *parentScene)
             : m_ParentScene(parentScene)
     {
         m_ViewModel = SpriteTexture::Create(nullptr);

@@ -40,7 +40,7 @@ namespace inGame
         PlayerState m_State = PlayerState(EPlayerState::Walk);
         EAngle m_Angle = EAngle::Down;
         IMainScene* m_ParentalScene;
-        FieldManager& m_Field;
+        IFieldManager* m_Field;
 
         static EAngle getInputAngle(const Uint8 *keyState);
         void animWait(EAngle angle);

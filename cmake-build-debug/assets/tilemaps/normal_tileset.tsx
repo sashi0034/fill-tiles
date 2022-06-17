@@ -16,4 +16,9 @@
    <property name="kind" value="base_green"/>
   </properties>
  </tile>
+ <tile id="65">
+  <properties>
+   <property name="kind" value="small_tree"/>
+  </properties>
+ </tile>
 </tileset>

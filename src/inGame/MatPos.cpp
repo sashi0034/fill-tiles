@@ -4,6 +4,7 @@
 
 #include "MatPos.h"
 #include "sstream"
+#include "FieldManager.h"
 
 namespace inGame
 {
@@ -40,6 +41,11 @@ namespace inGame
         std::stringstream stream{};
         stream << "(" << m_Pos.X << ", " << m_Pos.Y << ")";
         return stream.str();
+    }
+
+    Vec2<double> MatPos::ToPixelPos() const
+    {
+        return (m_Pos*FieldManager::PixelPerMat).CopyBy<double>();
     }
 
 }

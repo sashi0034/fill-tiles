@@ -9,19 +9,19 @@
 
 namespace inGame
 {
-    class IFieldViewDebugScene;
+    class IMainScene;
 
     class ScrollManager final
     {
     public:
-        explicit ScrollManager(IFieldViewDebugScene* parentScene);
+        explicit ScrollManager(IMainScene* parentScene);
         void RegisterSprite(shared_ptr<SpriteTexture>& target);
 
         Vec2<double> GetScroll();
         void SetScroll(const Vec2<double> &amount);
     private:
         shared_ptr<SpriteTexture> m_ViewModel;
-        IFieldViewDebugScene* m_ParentScene;
+        IMainScene* m_ParentScene;
     };
 }
 

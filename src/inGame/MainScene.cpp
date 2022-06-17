@@ -18,6 +18,8 @@ namespace inGame{
         m_FieldManager = std::make_unique<FieldManager>(this);
 
         m_ChildrenPool.Birth(new Player(&m_ChildrenPool, this));
+
+        m_FieldManager->Init();
     }
 
     MainScene::~MainScene()
@@ -41,9 +43,9 @@ namespace inGame{
         return m_Root;
     }
 
-    FieldManager & MainScene::GetFieldManager()
+    IFieldManager* MainScene::GetFieldManager()
     {
-        return *m_FieldManager;
+        return m_FieldManager.get();
     }
 
     ScrollManager *MainScene::GetScrollManager()

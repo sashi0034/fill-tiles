@@ -11,12 +11,14 @@
 #include <regex>
 #include "magic_enum.h"
 #include "../GameRoot.h"
+#include "../character/Tree.h"
 
 
 namespace inGame::field
 {
 
-    TileMap::TileMap()
+    TileMap::TileMap(IMainScene *mainScene)
+    : m_MainScene(mainScene)
     {}
 
 
@@ -76,7 +78,7 @@ namespace inGame::field
 
         readLayersAndObjects(treeMap);
 
-        initMatElements();
+        initMatElementsAfterLoaded();
     }
 
     void TileMap::readLayersAndObjects(
@@ -97,22 +99,41 @@ namespace inGame::field
     }
 
 
-    void TileMap::initMatElements()
+    void TileMap::initMatElementsAfterLoaded()
     {
         for (int x=0; x<m_MatSize.X; ++x)
             for (int y = 0; y < m_MatSize.Y; ++y)
             {
-                initMatElementAt(Vec2{x, y});
+                initMatElementAfterLoadedAt(Vec2{x, y});
             }
     }
 
-    void TileMap::initMatElementAt(const Vec2<int> &pos)
+    void TileMap::initMatElementAfterLoadedAt(const Vec2<int> &pos)
     {
         if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
             HasChipAt(pos + Vec2{0, -1}, ETileKind::normal_plateau) == Boolean::True)
         {
             getElementAt(pos)->AddChip(staticTileset.GetOf(ETileKind::normal_plateau_cliff));
         }
+    }
+
+    bool TileMap::summonCharacterByChip(const Vec2<int> &pos, ETileKind kind)
+    {
+        const auto matPos = MatPos(pos);
+        const auto field = m_MainScene->GetFieldManager()->GetCharacterPool();
+
+        switch (kind)
+        {
+            case ETileKind::small_tree:
+                field->Birth(new character::Tree(m_MainScene, matPos));
+                break;
+            case ETileKind::big_tree:
+                break;
+            default:
+                return false;
+        }
+
+        return true;
     }
 
 
@@ -140,7 +161,8 @@ namespace inGame::field
                 if (m_Tileset.count(chipId) != 0)
                 {
                     TilePropertyChip *chipPtr = &m_Tileset[chipId];
-                    getElementAt(Vec2{x, y})->AddChip(chipPtr);
+                    bool isSummoned = summonCharacterByChip(Vec2<int>{x, y}, chipPtr->Kind);
+                    if (!isSummoned) getElementAt(Vec2{x, y})->AddChip(chipPtr);
                 } else
                 {
                     assert(false);

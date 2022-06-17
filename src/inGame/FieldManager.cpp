@@ -6,22 +6,28 @@
 #include "GameRoot.h"
 #include "field/FieldRenderer.h"
 #include "MainScene.h"
+#include "ZIndex.h"
 
 namespace inGame
 {
     using namespace field;
 
-    FieldManager::FieldManager(IFieldViewDebugScene *parentalScene) :
+    FieldManager::FieldManager(IMainScene *parentalScene) :
             ScreenMatSize(GameRoot::GetInstance().GetAppState()->GetScreenSize() / PixelPerMat),
-            m_ParentalScene(parentalScene)
+            m_ParentalScene(parentalScene), m_TileMap(parentalScene)
     {
-        m_TileMap.LoadMapFile("field_00.tmx");
-
         m_Texture = SpriteTexture::Create(nullptr);
         m_Texture->SetRenderingProcess([this](IAppState *appState) { renderTileMap(appState); });
+        m_Texture->SetZ(ZIndexBackGround().GetZ());
 
         m_ParentalScene->GetScrollManager()->RegisterSprite(m_Texture);
     }
+
+    void FieldManager::Init()
+    {
+        m_TileMap.LoadMapFile("field_00.tmx");
+    }
+
 
     void FieldManager::renderTileMap(IAppState *appState)
     {
@@ -92,6 +98,12 @@ namespace inGame
         auto element = m_TileMap.GetElementAt(pos.GetVec());
         return !element->IsWall();
     }
+
+    IChildrenPool<character::CharacterBase> *FieldManager::GetCharacterPool()
+    {
+        return &m_ChildrenPool;
+    }
+
 
 
 }

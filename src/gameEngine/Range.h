@@ -16,10 +16,10 @@ namespace gameEngine
         const T m_Min;
         const T m_Max;
     public:
-        Range(T min, T max)
-        : m_Min(min), m_Max(max)
+        Range(T minInclusive, T maxInclusive)
+        : m_Min(minInclusive), m_Max(maxInclusive)
         {
-            assert(min<=max);
+            assert(minInclusive <= maxInclusive);
         }
         T GetDiff() const{
             return m_Max - m_Min;
@@ -28,6 +28,17 @@ namespace gameEngine
         {
             return m_Min <= targetValue && targetValue <= m_Max;
         }
+
+        T MakeInRange(T targetValue) const
+        {
+            return std::max(m_Min, std::min(targetValue, m_Max));
+        }
+        T MakeInRangeWithAssert(T targetValue) const
+        {
+            assert(IsBetween(targetValue));
+            return MakeInRange(targetValue);
+        }
+
     };
 }
 

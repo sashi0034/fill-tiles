@@ -10,17 +10,18 @@
 #include "resource/Image.h"
 #include "field/TileMap.h"
 #include "FieldManager.h"
-#include "FieldViewDebugScene.h"
 #include "ScrollManager.h"
 
 namespace inGame
 {
     class GameRoot;
 
-    class IMainScene : public IFieldViewDebugScene
+    class IMainScene
     {
     public:
-        virtual FieldManager & GetFieldManager() = 0;
+        virtual GameRoot* GetRoot() = 0;
+        virtual ScrollManager* GetScrollManager() = 0;
+        virtual IFieldManager* GetFieldManager() = 0;
     };
 
     class MainScene: public ActorBase, public IMainScene
@@ -32,7 +33,7 @@ namespace inGame
         GameRoot *GetRoot() override;
     public:
         void Update(IAppState* appState) override;
-        FieldManager & GetFieldManager() override;
+        IFieldManager* GetFieldManager() override;
         ScrollManager *GetScrollManager() override;
     private:
         GameRoot* m_Root;

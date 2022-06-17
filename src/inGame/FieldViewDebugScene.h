@@ -8,17 +8,12 @@
 
 #include "GameRoot.h"
 #include "ScrollManager.h"
+#include "MainScene.h"
 
 namespace inGame
 {
-    class IFieldViewDebugScene
-    {
-    public:
-        virtual GameRoot* GetRoot() = 0;
-        virtual ScrollManager* GetScrollManager() = 0;
-    };
 
-    class FieldViewDebugScene : public IFieldViewDebugScene
+    class FieldViewDebugScene : public IMainScene
     {
 
     };

@@ -12,6 +12,11 @@
 #include "../Boolean.h"
 #include "StaticTileset.h"
 
+namespace inGame{
+    class IMainScene;
+    class IFieldManager;
+}
+
 namespace inGame::field
 {
     class ITileMap
@@ -25,7 +30,7 @@ namespace inGame::field
     private:
         static inline const std::string tileMapDirectory = "./assets/tilemaps/";
     public:
-        TileMap();
+        TileMap(IMainScene *mainScene);
         void LoadMapFile(const std::string &fileName);
         Vec2<int> GetMatSize() const;
         ITileMapMatElement * GetElementAt(const Vec2<int>& pos);
@@ -33,6 +38,7 @@ namespace inGame::field
         Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) override;
         Graph& GetTilesetImage() const;
     private:
+        IMainScene* m_MainScene;
         unique_ptr<Graph> m_TilesetImage{};
         std::unordered_map<int, TilePropertyChip> m_Tileset;
         const StaticTileset staticTileset{};
@@ -56,11 +62,13 @@ namespace inGame::field
         void readLayersAndObjects(
                 boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> treeMap);
 
-        void initMatElements();
-
         TileMapMatElement* getElementAt(const Vec2<int>& pos);
 
-        void initMatElementAt(const Vec2<int> &pos);
+        bool summonCharacterByChip(const Vec2<int> &pos, ETileKind kind);
+
+        void initMatElementsAfterLoaded();
+
+        void initMatElementAfterLoadedAt(const Vec2<int> &pos);
     };
 }
 

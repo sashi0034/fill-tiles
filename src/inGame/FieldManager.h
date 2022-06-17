@@ -11,30 +11,46 @@
 #include "resource/Image.h"
 #include "field/FieldRenderer.h"
 #include "MatPos.h"
+#include "character/CharacterBase.h"
 
 namespace inGame
 {
-    class IFieldViewDebugScene;
+    namespace character{
+        class CharacterBase;
+    }
 
-    class FieldManager
+    class IMainScene;
+
+    class IFieldManager
     {
     public:
-        explicit FieldManager(IFieldViewDebugScene *parentalScene);
+        virtual bool CanMoveTo(const MatPos& pos) = 0;
+        virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
+    };
 
-        bool CanMoveTo(const MatPos& pos);
+    class FieldManager : public IFieldManager
+    {
+    public:
+        IChildrenPool<character::CharacterBase> *GetCharacterPool() override;
+
+        explicit FieldManager(IMainScene *parentalScene);
+        void Init();
+
+        bool CanMoveTo(const MatPos& pos) override;
 
         static inline const int PixelPerMat = 16;
         static inline const Vec2<int> MatPixelSize = {PixelPerMat, PixelPerMat};
-        static inline const Vec2<double> CharacterPadding{0, -PixelPerMat / 4.0};
+        static inline const Vec2<double> CharacterPadding{0, -PixelPerMat/4};
         const Vec2<int> ScreenMatSize;
+
     private:
         void renderTileMap(IAppState *appState);
         void renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &renderer, IAppState *appState,
                         const Vec2<int> &screenPos);
-        IFieldViewDebugScene* m_ParentalScene;
-        field::TileMap m_TileMap{};
+        IMainScene* m_ParentalScene;
+        field::TileMap m_TileMap;
         shared_ptr<SpriteTexture> m_Texture;
-
+        ChildrenPool<character::CharacterBase> m_ChildrenPool{};
     };
 }
 

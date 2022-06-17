@@ -16,6 +16,8 @@ namespace inGame::field
         normal_plain,
         normal_plateau,
         normal_plateau_cliff,
+        small_tree,
+        big_tree,
     };
 
     struct TilePropertyChip
