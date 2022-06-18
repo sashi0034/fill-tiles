@@ -11,7 +11,7 @@
 #include <regex>
 #include "magic_enum.h"
 #include "../GameRoot.h"
-#include "../character/Tree.h"
+#include "../character/SmallTree.h"
 
 
 namespace inGame::field
@@ -125,7 +125,7 @@ namespace inGame::field
         switch (kind)
         {
             case ETileKind::small_tree:
-                field->Birth(new character::Tree(m_MainScene, matPos));
+                field->Birth(new character::SmallTree(m_MainScene, matPos));
                 break;
             case ETileKind::big_tree:
                 break;
