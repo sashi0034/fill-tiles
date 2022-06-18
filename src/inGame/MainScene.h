@@ -36,10 +36,12 @@ namespace inGame
         IFieldManager* GetFieldManager() override;
         ScrollManager *GetScrollManager() override;
     private:
+        void init();
+
         GameRoot* m_Root;
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
-        unique_ptr<FieldManager> m_FieldManager{};
+        FieldManager* m_FieldManager{};
         unique_ptr<ScrollManager> m_ScrollManager{};
     };
 }

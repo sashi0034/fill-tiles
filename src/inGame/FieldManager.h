@@ -26,15 +26,20 @@ namespace inGame
     public:
         virtual bool CanMoveTo(const MatPos& pos) = 0;
         virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
+        virtual ITextureAnimator* GetCharacterAnimator() = 0;
     };
 
-    class FieldManager : public IFieldManager
+    class FieldManager : public IFieldManager, public ActorBase
     {
     public:
         IChildrenPool<character::CharacterBase> *GetCharacterPool() override;
 
-        explicit FieldManager(IMainScene *parentalScene);
-        void Init();
+        explicit FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene);
+
+        ITextureAnimator* GetCharacterAnimator() override;
+
+        void Init() override;
+        void Update(IAppState* app) override;
 
         bool CanMoveTo(const MatPos& pos) override;
 
@@ -51,6 +56,7 @@ namespace inGame
         field::TileMap m_TileMap;
         shared_ptr<SpriteTexture> m_Texture;
         ChildrenPool<character::CharacterBase> m_ChildrenPool{};
+        TextureAnimator m_CharacterAnimator{};
     };
 }
 

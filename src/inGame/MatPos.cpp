@@ -48,4 +48,9 @@ namespace inGame
         return (m_Pos*FieldManager::PixelPerMat).CopyBy<double>();
     }
 
+    int MatPos::GetSumXY() const
+    {
+        return m_Pos.X+m_Pos.Y;
+    }
+
 }

@@ -21,6 +21,7 @@ namespace inGame
         MatPos operator-(const MatPos& other) const;
         MatPos operator*(int times) const;
 
+        int GetSumXY() const;
         std::string ToString() const;
     private:
         const Vec2<int> m_Pos;

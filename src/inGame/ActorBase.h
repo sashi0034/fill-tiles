@@ -13,6 +13,7 @@ namespace inGame
     {
     public:
         explicit ActorBase(IChildrenPool<ActorBase>* parentPool);
+        virtual void Init();
         virtual void Update(IAppState* appState);
     };
 }

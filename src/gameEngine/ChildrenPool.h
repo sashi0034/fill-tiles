@@ -62,6 +62,12 @@ namespace gameEngine
             m_Pool.push_back(product);
             return product;
         };
+        template<class CastedType> CastedType* BirthAs(T* child)
+        {
+            Birth(child);
+            auto casted = dynamic_cast<CastedType*>(child);
+            return casted;
+        }
         void Register(shared_ptr<T>& child) override
         {
             m_Pool.template emplace_back(child);

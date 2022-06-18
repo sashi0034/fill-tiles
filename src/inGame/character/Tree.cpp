@@ -19,6 +19,15 @@ namespace inGame::character{
 
         m_View.GetView()->SetPosition(FieldManager::CharacterPadding);
 
+        mainScene->GetFieldManager()->GetCharacterAnimator()->TargetTo(m_View.GetViewShared())
+                ->VirtualDelay([]() {}, (matPos.GetSumXY() % 4) * 0.2)
+                ->Then()
+                ->AnimGraph(Vec2{16, 16})->SetFrameLoopEndless(true)
+                ->AddFrame(Vec2{0, 0}, 0.2)
+                ->AddFrame(Vec2{1, 0}, 0.2)
+                ->AddFrame(Vec2{2, 0}, 0.2)
+                ->AddFrame(Vec2{3, 0}, 0.4);
+
         ZIndexCharacter(m_View).ApplyZ();
     }
 }

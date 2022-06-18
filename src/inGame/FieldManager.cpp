@@ -12,7 +12,8 @@ namespace inGame
 {
     using namespace field;
 
-    FieldManager::FieldManager(IMainScene *parentalScene) :
+    FieldManager::FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene) :
+            ActorBase(belonging),
             ScreenMatSize(GameRoot::GetInstance().GetAppState()->GetScreenSize() / PixelPerMat),
             m_ParentalScene(parentalScene), m_TileMap(parentalScene)
     {
@@ -104,6 +105,15 @@ namespace inGame
         return &m_ChildrenPool;
     }
 
+    ITextureAnimator* FieldManager::GetCharacterAnimator()
+    {
+        return &m_CharacterAnimator;
+    }
+
+    void FieldManager::Update(IAppState* app)
+    {
+        m_CharacterAnimator.Update(app->GetTime().GetDeltaSec());
+    }
 
 
 }

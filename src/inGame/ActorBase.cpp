@@ -12,4 +12,7 @@ namespace inGame{
     {
         (void)appState;
     }
+
+    void ActorBase::Init()
+    {}
 }

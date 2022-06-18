@@ -15,11 +15,12 @@ namespace inGame{
             : ActorBase(parent), m_Root(root)
     {
         m_ScrollManager = std::make_unique<ScrollManager>(this);
-        m_FieldManager = std::make_unique<FieldManager>(this);
+
+        m_FieldManager = m_ChildrenPool.BirthAs<FieldManager>(new FieldManager(&m_ChildrenPool, this));
 
         m_ChildrenPool.Birth(new Player(&m_ChildrenPool, this));
 
-        m_FieldManager->Init();
+        init();
     }
 
     MainScene::~MainScene()
@@ -35,6 +36,7 @@ namespace inGame{
     void MainScene::Update(IAppState* appState)
     {
         m_ChildrenPool.ProcessEach([&](auto child){ child->Update(appState);});
+
         m_TextureAnimator.Update(appState->GetTime().GetDeltaSec());
     }
 
@@ -45,12 +47,17 @@ namespace inGame{
 
     IFieldManager* MainScene::GetFieldManager()
     {
-        return m_FieldManager.get();
+        return m_FieldManager;
     }
 
     ScrollManager *MainScene::GetScrollManager()
     {
         return m_ScrollManager.get();
+    }
+
+    void MainScene::init()
+    {
+        m_ChildrenPool.ProcessEach([&](auto child){ child->Init();});
     }
 
 }
