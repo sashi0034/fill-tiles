@@ -33,6 +33,8 @@ namespace gameEngine
     {
         auto product = shared_ptr<SpriteTexture>(new SpriteTexture(graph, srcRect));
 
+        product->m_SelfPtr = product;
+
         spriteTexturePool.push_back(product);
 
         return shared_ptr<SpriteTexture>(product);

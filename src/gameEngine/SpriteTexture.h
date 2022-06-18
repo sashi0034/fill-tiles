@@ -26,6 +26,7 @@ namespace gameEngine
         static std::vector<weak_ptr<SpriteTexture>> spriteTexturePool;
 
         Vec2<double> m_Position{0, 0};
+        weak_ptr<SpriteTexture> m_SelfPtr;
         weak_ptr<SpriteTexture> m_PositionParent{};
         double m_Z{};
         Graph* m_Graph{};
