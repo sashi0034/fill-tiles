@@ -10,6 +10,7 @@
 #include "Angle.h"
 #include "FieldManager.h"
 #include "MainScene.h"
+#include "CharacterViewModel.h"
 
 
 namespace inGame
@@ -25,15 +26,12 @@ namespace inGame
     private:
         void setPos(Vec2<double> newPos);
         void initViewModel();
-        void initView();
 
         void initAction();
 
         static bool isDashing(const Uint8 *keyState);
 
-        shared_ptr<SpriteTexture> m_ViewModelTexture;
-
-        shared_ptr<SpriteTexture> m_ViewTexture;
+        CharacterViewModel m_View{};
         Graph* m_Image;
 
         TextureAnimator m_PlayerAnimator{};

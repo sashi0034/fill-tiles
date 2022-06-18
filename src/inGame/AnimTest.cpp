@@ -61,7 +61,7 @@ namespace inGame
 //            yield(CoroTask::RespondPending());
 //
 //        }
-//        self->m_ViewTexture->SetRotationDeg(45);
+//        self->m_View->SetRotationDeg(45);
 
     }
 

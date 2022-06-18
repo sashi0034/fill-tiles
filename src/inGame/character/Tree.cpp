@@ -13,8 +13,12 @@ namespace inGame::character{
     {
         m_View.GetView()->SetSrcRect(Rect{0, 0, 16, 16});;
 
-        m_View.SetViewModelPos(matPos);
+        m_View.SetModelPos(matPos);
 
         m_View.GetView()->SetSrcRect(Rect{0, 0, 16, 16});
+
+        m_View.GetView()->SetPosition(FieldManager::CharacterPadding);
+
+        ZIndexCharacter(m_View).ApplyZ();
     }
 }

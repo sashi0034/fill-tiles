@@ -3,14 +3,31 @@
 //
 
 #include "ZIndex.h"
+#include "CharacterViewModel.h"
+
 namespace inGame{
 
 
-    ZIndexBackGround::ZIndexBackGround()
+    ZIndexBackGround::ZIndexBackGround(SpriteTexture *texture)
+    : m_Texture(texture)
     {}
 
-    double ZIndexBackGround::GetZ()
+    void ZIndexBackGround::ApplyZ()
     {
-        return 2000;
+        m_Texture->SetZ(baseBackGroundZ);
+    }
+
+    ZIndexCharacter::ZIndexCharacter(CharacterViewModel &character)
+    : m_Character(character)
+    {}
+
+    void ZIndexCharacter::ApplyZ()
+    {
+        double modelY = m_Character.GetModel()->GetPosition().Y;
+
+        double normalizedZ = Range(infinityMinus, infinity)
+                .Normalize(-modelY, Range(baseCharacterZ, baseCharacterZ + baseRange));
+
+        m_Character.GetView()->SetZ(normalizedZ);
     }
 }

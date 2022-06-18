@@ -9,7 +9,7 @@
 #include "../MatPos.h"
 #include "../MainScene.h"
 #include "../FieldManager.h"
-#include "ViewModelTexture.h"
+#include "../CharacterViewModel.h"
 
 namespace inGame::character
 {
@@ -18,7 +18,7 @@ namespace inGame::character
     public:
         Tree(IMainScene *mainScene, const MatPos &matPos);
 
-        ViewModelTexture m_View;
+        CharacterViewModel m_View;
     };
 }
 

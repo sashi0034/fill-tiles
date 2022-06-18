@@ -7,6 +7,7 @@
 #include <memory>
 #include "GameRoot.h"
 #include "FieldManager.h"
+#include "ZIndex.h"
 
 using namespace boost::coroutines2;
 
@@ -18,27 +19,21 @@ namespace inGame
         m_Image = mainScene->GetRoot()->ResImage->kisaragi_32x32.get();
 
         initViewModel();
-        initView();
 
         initAction();
     }
 
     void Player::initViewModel()
     {
-        m_ViewModelTexture = SpriteTexture::Create(nullptr);
-        m_ParentalScene->GetScrollManager()->RegisterSprite(m_ViewModelTexture);
-    }
-
-    void Player::initView()
-    {
-        m_ViewTexture = SpriteTexture::Create(m_Image);
-        m_ViewTexture->SetSrcRect(Rect<int>{0, 0, CellSize.X, CellSize.Y});
-        m_ViewTexture->SetPositionParent(m_ViewModelTexture);
+        m_View = CharacterViewModel(m_ParentalScene->GetScrollManager(), m_Image);
+        m_View.GetView()->SetSrcRect(Rect<int>{0, 0, CellSize.X, CellSize.Y});
         const double pixelPerMat = FieldManager::PixelPerMat;
-        m_ViewTexture->SetPosition(Vec2<double>{
+        m_View.GetView()->SetPosition(Vec2<double>{
                 (pixelPerMat - CellSize.X) / 2.0,
                 pixelPerMat - CellSize.Y} + FieldManager::CharacterPadding);
     }
+
+
 
     CoroTask Player::wait(CoroTaskYield &yield, Player *self, IAppState *appState)
     {
@@ -75,7 +70,7 @@ namespace inGame
                                                        (m_ParentalScene->GetRoot()->GetAppState()->GetScreenSize() /
                                                         2).CopyBy<double>());
 
-
+        ZIndexCharacter(m_View).ApplyZ();
 
     }
 
@@ -101,7 +96,7 @@ namespace inGame
 
         self->m_Angle = goingAngle;
 
-        auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_ViewModelTexture)
+        auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_View.GetModelShared())
             ->AnimPosition(moveVector, movingTIme)->SetEase(EAnimEase::Linear)->SetRelative(true)
             ->GetWeakPtr();
 
@@ -117,12 +112,12 @@ namespace inGame
 
     Vec2<double> Player::GetPos()
     {
-        return m_ViewModelTexture->GetPosition();
+        return m_View.GetModel()->GetPosition();
     }
 
     void Player::setPos(Vec2<double> newPos)
     {
-        m_ViewModelTexture->SetPosition(newPos);
+        m_View.GetModel()->SetPosition(newPos);
     }
 
     bool Player::isDashing(const Uint8 *keyState)
@@ -139,21 +134,21 @@ namespace inGame
         switch (angle)
         {
             case EAngle::Up:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 5}, baseTemp)->AddFrame(Vec2{1, 5}, baseTemp)->AddFrame(Vec2{2, 5}, baseTemp)->AddFrame(Vec2{3, 5}, baseTemp);
                 break;
             case EAngle::Right:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 4}, baseTemp)->AddFrame(Vec2{1, 4}, baseTemp)->AddFrame(Vec2{2, 4}, baseTemp*1.5)
                         ->AddFrame(Vec2{3, 4}, baseTemp)->AddFrame(Vec2{4, 4}, baseTemp)->AddFrame(Vec2{5, 4}, baseTemp);
                 break;
             case EAngle::Left:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrameFlipped(Vec2{0, 4}, baseTemp)->AddFrameFlipped(Vec2{1, 4}, baseTemp)->AddFrameFlipped(Vec2{2, 4}, baseTemp*1.5)
                         ->AddFrameFlipped(Vec2{3, 4}, baseTemp)->AddFrameFlipped(Vec2{4, 4}, baseTemp)->AddFrameFlipped(Vec2{5, 4}, baseTemp);
                 break;
             case EAngle::Down:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 3}, baseTemp)->AddFrame(Vec2{1, 3}, baseTemp)->AddFrame(Vec2{2, 3}, baseTemp)->AddFrame(Vec2{3, 3}, baseTemp);
                 break;
             default:
@@ -169,19 +164,19 @@ namespace inGame
         switch (angle)
         {
             case EAngle::Up:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 2}, baseTemp)->AddFrame(Vec2{1, 2}, baseTemp)->AddFrame(Vec2{2, 2}, baseTemp)->AddFrame(Vec2{3, 2}, baseTemp);
                 break;
             case EAngle::Right:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp);
                 break;
             case EAngle::Left:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp);
                 break;
             case EAngle::Down:
-                m_PlayerAnimator.TargetTo(m_ViewTexture)->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View.GetViewShared())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp);
                 break;
             default:

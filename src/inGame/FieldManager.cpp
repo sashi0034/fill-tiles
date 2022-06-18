@@ -18,7 +18,7 @@ namespace inGame
     {
         m_Texture = SpriteTexture::Create(nullptr);
         m_Texture->SetRenderingProcess([this](IAppState *appState) { renderTileMap(appState); });
-        m_Texture->SetZ(ZIndexBackGround().GetZ());
+        ZIndexBackGround(m_Texture.get()).ApplyZ();
 
         m_ParentalScene->GetScrollManager()->RegisterSprite(m_Texture);
     }

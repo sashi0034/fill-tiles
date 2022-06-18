@@ -39,6 +39,14 @@ namespace gameEngine
             return MakeInRange(targetValue);
         }
 
+        T Normalize(T targetValue, const Range<T>&afterRange)
+        {
+            assert(this->IsBetween(targetValue));
+            T normalizedRate = (targetValue - this->m_Min) / (this->m_Max - this->m_Min);
+            T result = afterRange.m_Min + (afterRange.m_Max - afterRange.m_Min) * normalizedRate;
+            return result;
+        }
+
     };
 }
 
