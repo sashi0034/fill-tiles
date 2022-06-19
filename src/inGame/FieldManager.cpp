@@ -152,5 +152,10 @@ namespace inGame
         OverwriteWallFlag(pos, Vec2<int>{1, 1}, isWall);
     }
 
+    field::ITileMap* FieldManager::GetTileMap()
+    {
+        return &m_TileMap;
+    }
+
 
 }

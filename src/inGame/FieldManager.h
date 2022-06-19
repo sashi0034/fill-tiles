@@ -52,6 +52,8 @@ namespace inGame
         void OverwriteWallFlag(const MatPos &pos, bool isWall) override;
         void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &fillSize, bool isWall) override;
 
+        field::ITileMap* GetTileMap();
+
         static inline const int PixelPerMat = 16;
         static inline const Vec2<int> MatPixelSize = {PixelPerMat, PixelPerMat};
         static inline const Vec2<double> CharacterPadding{0, -PixelPerMat/4};

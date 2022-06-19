@@ -27,6 +27,11 @@ namespace inGame
         TextureAnimator m_TextureAnimator{};
         FieldManager* m_FieldManager{};
         unique_ptr<ScrollManager> m_ScrollManager{};
+
+        Vec2<double> m_PosOnClicked;
+        bool m_IsClickedBefore = false;
+
+        void scrollByMouse(const IAppState *appState);
     };
 }
 

@@ -20,16 +20,43 @@ namespace inGame{
     {
         m_ChildrenPool.ProcessEach([&](auto child){ child->Update(appState);});
 
-        auto pos = appState->GetMouseState()->GetPosition();
-        std::cout << pos.X << "," << pos.Y << std::endl;
+        scrollByMouse(appState);
+    }
 
-        if (appState->GetMouseState()->GetPushed(EMouseButton::Right))
+    void FieldViewDebugScene::scrollByMouse(const IAppState *appState)
+    {
+        auto mouse = appState->GetMouseState();
+        if (mouse->GetPushed(EMouseButton::Left))
         {
-            std::cout << "R" << std::endl;
+            const auto mousePos = mouse->GetPosition();
+
+            if (!m_IsClickedBefore)
+            {
+                m_PosOnClicked = mousePos;
+                m_IsClickedBefore = true;
+            }
+
+            const auto diff = mousePos - m_PosOnClicked;
+            const double vel = -0.1;
+            auto newPos = m_ScrollManager->GetScroll() + diff * vel;
+
+            auto matSize = m_FieldManager->GetTileMap()->GetMatSize();
+            const double margin = 32;
+
+            const double maxX = margin;
+            const double maxY = margin;
+
+            const double minX = -matSize.X * FieldManager::PixelPerMat+appState->GetScreenSize().X-margin;
+            const double minY = -matSize.Y * FieldManager::PixelPerMat+appState->GetScreenSize().Y-margin;
+
+            newPos.X = Range<double>(minX, maxX).MakeInRange(newPos.X);
+            newPos.Y = Range<double>(minY, maxY).MakeInRange(newPos.Y);
+
+            m_ScrollManager->SetScroll(newPos);
         }
-        if (appState->GetMouseState()->GetPushed(EMouseButton::Left))
+        else
         {
-            std::cout << "L" << std::endl;
+            m_IsClickedBefore = false;
         }
     }
 

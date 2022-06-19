@@ -23,6 +23,7 @@ namespace inGame::field
     {
     public:
         virtual Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) = 0;
+        virtual Vec2<int> GetMatSize() const = 0;
     };
 
     class TileMap : public ITileMap
@@ -32,7 +33,7 @@ namespace inGame::field
     public:
         TileMap(IMainScene *mainScene);
         void LoadMapFile(const std::string &fileName);
-        Vec2<int> GetMatSize() const;
+        Vec2<int> GetMatSize() const override;
         ITileMapMatElement * GetElementAt(const Vec2<int>& pos);
         bool IsInRange(const Vec2<int>& pos) const;
         Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) override;
