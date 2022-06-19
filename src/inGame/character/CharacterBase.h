@@ -8,7 +8,6 @@
 #include "../../gameEngine/gameEngine.h"
 #include "../GameRoot.h"
 
-
 namespace inGame{
     class IFieldManager;
 }

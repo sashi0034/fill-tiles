@@ -97,7 +97,8 @@ namespace inGame
     {
         if (!m_TileMap.IsInRange(pos.GetVec())) return false;
         auto element = m_TileMap.GetElementAt(pos.GetVec());
-        return !element->IsWall();
+        bool result = !element->IsWall() && !m_DynamicCharacterCollider.IsHitWith(pos.ToPixelPos()+(MatPixelSize/2).CopyBy<double>());
+        return result;
     }
 
     IChildrenPool<character::CharacterBase> *FieldManager::GetCharacterPool()
@@ -113,6 +114,11 @@ namespace inGame
     void FieldManager::Update(IAppState* app)
     {
         m_CharacterAnimator.Update(app->GetTime().GetDeltaSec());
+    }
+
+    TextureColliderManager *FieldManager::GetCharacterCollider()
+    {
+        return &m_DynamicCharacterCollider;
     }
 
 

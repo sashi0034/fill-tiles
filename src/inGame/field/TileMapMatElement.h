@@ -6,6 +6,7 @@
 #define FILL_TILES_TILEMAPMATELEMENT_H
 
 #include "../ActorBase.h"
+#include "../character/CharacterBase.h"
 
 namespace inGame::field
 {

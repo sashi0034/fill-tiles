@@ -28,6 +28,8 @@ namespace inGame::character{
                 ->AddFrame(Vec2{2, 0}, 0.2)
                 ->AddFrame(Vec2{3, 0}, 0.4);
 
+        m_View.SetCollider(mainScene->GetFieldManager(), Rect<int>{0, 0, 16, 16});
+
         ZIndexCharacter(m_View).ApplyZ();
     }
 }

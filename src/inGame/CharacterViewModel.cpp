@@ -50,4 +50,10 @@ namespace inGame
     {
         return m_View;
     }
+
+    void CharacterViewModel::SetCollider(IFieldManager *field, const Rect<int> &collider)
+    {
+        m_Collider = TextureCollider::Create(collider, m_ViewModel.get());
+        field->GetCharacterCollider()->AddCollider(m_Collider);
+    }
 }

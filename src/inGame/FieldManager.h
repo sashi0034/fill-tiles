@@ -27,12 +27,15 @@ namespace inGame
         virtual bool CanMoveTo(const MatPos& pos) = 0;
         virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
         virtual ITextureAnimator* GetCharacterAnimator() = 0;
+        virtual TextureColliderManager* GetCharacterCollider() = 0;
     };
 
     class FieldManager : public IFieldManager, public ActorBase
     {
     public:
         IChildrenPool<character::CharacterBase> *GetCharacterPool() override;
+
+        TextureColliderManager *GetCharacterCollider() override;
 
         explicit FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene);
 
@@ -57,6 +60,7 @@ namespace inGame
         shared_ptr<SpriteTexture> m_Texture;
         ChildrenPool<character::CharacterBase> m_ChildrenPool{};
         TextureAnimator m_CharacterAnimator{};
+        TextureColliderManager m_DynamicCharacterCollider{};
     };
 }
 

@@ -25,6 +25,8 @@
 #include "coroUtils.h"
 #include "TextureAnimator.h"
 #include "Range.h"
+#include "TextureCollider.h"
+#include "TextureColliderManager.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

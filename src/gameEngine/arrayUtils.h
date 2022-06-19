@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <algorithm>
+#include "assert.h"
 
 namespace gameEngine
 {
@@ -33,6 +34,21 @@ namespace gameEngine
             if (index == -1) return -1;
             (*arr).erase((*arr).begin() + index);
             return 0;
+        }
+
+        template<typename T>
+        void RemoveList(std::vector<T> *targetArray, const std::vector<int> &upwardIndexes)
+        {
+            int beforeIndex = INT32_MAX;
+            for (int i = upwardIndexes.size() - 1; i >= 0; --i)
+            {
+                int index = upwardIndexes[i];
+
+                assert(beforeIndex > index);
+                beforeIndex = index;
+
+                targetArray->erase(targetArray->begin() + index);
+            }
         }
     }
 }

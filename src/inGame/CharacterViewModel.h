@@ -8,6 +8,7 @@
 #include "../gameEngine/gameEngine.h"
 #include "ScrollManager.h"
 #include "MatPos.h"
+#include "FieldManager.h"
 
 namespace inGame
 {
@@ -18,6 +19,7 @@ namespace inGame
         CharacterViewModel(ScrollManager* scrollManager, Graph* graph);
         void SetModelPos(const Vec2<double>& pos);
         void SetModelPos(const MatPos& pos);
+        void SetCollider(IFieldManager *field, const Rect<int> &collider);
         SpriteTexture * GetModel();
         SpriteTexture * GetView();
         shared_ptr<SpriteTexture>& GetModelShared();
@@ -26,6 +28,7 @@ namespace inGame
     private:
         shared_ptr<SpriteTexture> m_ViewModel{};
         shared_ptr<SpriteTexture> m_View{};
+        shared_ptr<TextureCollider> m_Collider{};
     };
 }
 

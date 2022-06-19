@@ -13,7 +13,7 @@ namespace inGame{
 
         m_Spr = SpriteTexture::Create(nullptr);
         m_Spr->SetZ(1000);
-        m_Spr->SetRenderingProcess([=](IAppState* app){ render(app);});
+        m_Spr->SetRenderingProcess([this](IAppState* app){ render(app);});
     }
 
     void BackGroundTest::render(IAppState *appState)

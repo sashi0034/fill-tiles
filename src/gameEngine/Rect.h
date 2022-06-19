@@ -42,6 +42,12 @@ namespace gameEngine
         {
             return Vec2<T>{Width, Height};
         }
+
+        bool IsIntersectWith(const Rect<T>& other) const
+        {
+            return std::abs(other.X + other.Width / 2.0 - (this->X + this->Width / 2.0)) < (this->Width + other.Width) / 2.0
+            && std::abs(other.Y + other.Height / 2.0 - (this->Y + this->Height / 2.0)) < (this->Height + other.Height) / 2.0;
+        }
     };
 }
 
