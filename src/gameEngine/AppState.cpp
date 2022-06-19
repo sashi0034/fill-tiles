@@ -70,15 +70,37 @@ namespace gameEngine
     {
         SDL_Event e;
         while (SDL_PollEvent(&e))
+            processEvent(e);
+    }
+
+    void AppState::processEvent(SDL_Event &e)
+    {
+        switch (e.type)
         {
-            if (e.type == SDL_QUIT)
+            case SDL_QUIT:
                 m_CanQuitApp = true;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                m_Mouse.SetPushed(e.button.button, true);
+                break;
+            case SDL_MOUSEBUTTONUP:
+                m_Mouse.SetPushed(e.button.button, false);
+                break;
+            case SDL_MOUSEMOTION:
+                m_Mouse.SetPosition(Vec2<double>(double(e.motion.x), double(e.motion.y)) / m_PixelPerUnit);
+            default:
+                break;
         }
     }
 
     bool AppState::CanQuitApp() const
     {
         return m_CanQuitApp;
+    }
+
+    const IMouseState *AppState::GetMouseState() const
+    {
+        return &m_Mouse;
     }
 
     AppState::~AppState() = default;

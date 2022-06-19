@@ -9,6 +9,7 @@
 #include <SDL_image.h>
 #include "Time.h"
 #include "Vec2.h"
+#include "MouseState.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -26,6 +27,7 @@ namespace gameEngine
         [[nodiscard]] virtual SDL_Window* GetWindow() const = 0;
         [[nodiscard]] virtual SDL_Renderer* GetRenderer() const = 0;
         [[nodiscard]] virtual const Uint8* GetKeyboardState() const = 0;
+        virtual const IMouseState* GetMouseState() const = 0;
     };
 
 
@@ -49,6 +51,8 @@ namespace gameEngine
         const Uint8* m_KeyboardState{};
         bool m_CanQuitApp = false;
         void pollEvent();
+        void processEvent(SDL_Event &e);
+        MouseState m_Mouse{};
     public:
         [[nodiscard]] int GetPixelPerUnit() const override;
         [[nodiscard]] const Vec2<int> & GetScreenSize() const override;
@@ -56,6 +60,7 @@ namespace gameEngine
         [[nodiscard]] SDL_Window* GetWindow() const override;
         [[nodiscard]] SDL_Renderer* GetRenderer() const override;
         [[nodiscard]] const Uint8* GetKeyboardState() const override;
+        const IMouseState *GetMouseState() const override;
     };
 }
 

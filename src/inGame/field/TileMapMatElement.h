@@ -14,6 +14,7 @@ namespace inGame::field
     {
         none,
         base_green,
+        fines,
         normal_plain,
         normal_plateau,
         normal_plateau_cliff,
@@ -42,6 +43,9 @@ namespace inGame::field
         TileMapMatElement();
 
         void AddChip(const TilePropertyChip *chip);
+
+        bool RemoveChip(const TilePropertyChip *chip);
+        bool RemoveChip(const ETileKind kind);
 
         bool HasChip(ETileKind kind);
 

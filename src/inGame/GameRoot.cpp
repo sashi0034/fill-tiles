@@ -7,13 +7,19 @@
 #include <memory>
 #include "BackGroundTest.h"
 #include "MainScene.h"
+#include "FieldViewDebugScene.h"
+#include "../debug.h"
 
 namespace inGame{
     GameRoot::GameRoot(IAppState *appState)
     : ResImage(std::make_unique<resource::Image>(appState)), m_AppState(appState)
     {
         createSelfSpr();
+#ifdef INGAME_DEBUG_FIELDVIEW
+        m_ChildrenPool.Birth(new FieldViewDebugScene(&m_ChildrenPool, this));
+#else
         m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this));
+#endif
     }
 
     GameRoot::~GameRoot()

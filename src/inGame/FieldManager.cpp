@@ -130,15 +130,15 @@ namespace inGame
         if (nonNegativeSize.X < 0)
         {
             nonNegativeSize.X *= -1;
-            startPos.X = startPos.X - nonNegativeSize.X;
+            startPos.X = startPos.X - nonNegativeSize.X + 1;
         }
         if (nonNegativeSize.Y < 0)
         {
             nonNegativeSize.Y *= -1;
-            startPos.Y = startPos.Y - nonNegativeSize.Y;
+            startPos.Y = startPos.Y - nonNegativeSize.Y + 1;
         }
 
-        for (int x=0; x < fillSize.X; ++x)
+        for (int x=0; x < nonNegativeSize.X; ++x)
             for (int y=0; y<nonNegativeSize.Y; ++y)
             {
                 auto targetPos = startPos + Vec2<int>{x, y};

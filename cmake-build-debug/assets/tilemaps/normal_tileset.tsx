@@ -21,4 +21,29 @@
    <property name="kind" value="small_tree"/>
   </properties>
  </tile>
+ <tile id="66">
+  <properties>
+   <property name="kind" value="big_tree"/>
+  </properties>
+ </tile>
+ <tile id="101">
+  <properties>
+   <property name="kind" value="fines"/>
+  </properties>
+ </tile>
+ <tile id="102">
+  <properties>
+   <property name="kind" value="fines"/>
+  </properties>
+ </tile>
+ <tile id="117">
+  <properties>
+   <property name="kind" value="fines"/>
+  </properties>
+ </tile>
+ <tile id="118">
+  <properties>
+   <property name="kind" value="fines"/>
+  </properties>
+ </tile>
 </tileset>

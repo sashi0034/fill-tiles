@@ -30,9 +30,8 @@ namespace inGame
         explicit MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root);
         ~MainScene();
         TextureAnimator& GetTextureAnimator();
-        GameRoot *GetRoot() override;
-    public:
         void Update(IAppState* appState) override;
+        GameRoot *GetRoot() override;
         IFieldManager* GetFieldManager() override;
         ScrollManager *GetScrollManager() override;
     private:

@@ -13,9 +13,20 @@
 namespace inGame
 {
 
-    class FieldViewDebugScene : public IMainScene
+    class FieldViewDebugScene : public ActorBase, public IMainScene
     {
-
+    public:
+        FieldViewDebugScene(IChildrenPool<ActorBase> *parent, GameRoot *root);
+        void Update(IAppState* appState) override;
+        GameRoot *GetRoot() override;
+        IFieldManager* GetFieldManager() override;
+        ScrollManager *GetScrollManager() override;
+    private:
+        GameRoot* m_Root;
+        ChildrenPool<ActorBase> m_ChildrenPool{};
+        TextureAnimator m_TextureAnimator{};
+        FieldManager* m_FieldManager{};
+        unique_ptr<ScrollManager> m_ScrollManager{};
     };
 }
 

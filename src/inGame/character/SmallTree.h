@@ -17,8 +17,9 @@ namespace inGame::character
     {
     public:
         SmallTree(IMainScene *mainScene, const MatPos &matPos);
-
         CharacterViewModel m_View;
+    private:
+        static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
     };
 }
 

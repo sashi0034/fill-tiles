@@ -12,6 +12,7 @@
 #include "magic_enum.h"
 #include "../GameRoot.h"
 #include "../character/SmallTree.h"
+#include "../character/BigTree.h"
 
 
 namespace inGame::field
@@ -114,6 +115,7 @@ namespace inGame::field
             HasChipAt(pos + Vec2{0, -1}, ETileKind::normal_plateau) == Boolean::True)
         {
             getElementAt(pos)->AddChip(staticTileset.GetOf(ETileKind::normal_plateau_cliff));
+            getElementAt(pos)->RemoveChip(ETileKind::normal_plain);
         }
     }
 
@@ -128,6 +130,7 @@ namespace inGame::field
                 field->Birth(new character::SmallTree(m_MainScene, matPos));
                 break;
             case ETileKind::big_tree:
+                field->Birth(new character::BigTree(m_MainScene, matPos));
                 break;
             default:
                 return false;

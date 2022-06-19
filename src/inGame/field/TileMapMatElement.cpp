@@ -24,6 +24,27 @@ namespace inGame::field{
         m_HasChip[static_cast<int>(chip->Kind)] = std::byte(1);
     }
 
+    bool TileMapMatElement::RemoveChip(const TilePropertyChip *chip)
+    {
+        if (m_ChipList.size()==0) return false;
+        auto iter = std::find(m_ChipList.begin(), m_ChipList.end(), chip);
+        if (iter==m_ChipList.end()) return false;
+        m_ChipList.erase(iter);
+        m_HasChip[static_cast<int>(chip->Kind)] = std::byte(0);
+        return true;
+    }
+
+    bool TileMapMatElement::RemoveChip(const ETileKind kind)
+    {
+        if (m_ChipList.size() == 0) return false;
+        auto iter = std::find_if(m_ChipList.begin(), m_ChipList.end(),
+                                 [kind](const TilePropertyChip *chip) { return chip->Kind == kind; });
+        if (iter == m_ChipList.end()) return false;
+        m_ChipList.erase(iter);
+        m_HasChip[static_cast<int>(kind)] = std::byte(0);
+        return true;
+    }
+
     const std::vector<const TilePropertyChip *> &TileMapMatElement::GetChipList() const
     {
         return m_ChipList;
