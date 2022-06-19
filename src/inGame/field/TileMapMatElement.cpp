@@ -13,12 +13,12 @@ namespace inGame::field{
         m_HasChip.resize(numKind, std::byte(0));
     }
 
-    void TileMapMatElement::AddChip(TilePropertyChip *chip)
+    void TileMapMatElement::AddChip(const TilePropertyChip *chip)
     {
         m_ChipList.push_back(chip);
         // @todo: フラグ管理をlong longで行うクラスを作りたい
 
-        if (chip->Kind==ETileKind::normal_plateau_cliff) m_IsWall = true;
+        m_IsWall = chip->IsWall;
 
 
         m_HasChip[static_cast<int>(chip->Kind)] = std::byte(1);
@@ -37,6 +37,11 @@ namespace inGame::field{
     bool TileMapMatElement::IsWall() const
     {
         return m_IsWall;
+    }
+
+    void TileMapMatElement::OverwriteIsWall(bool isWall)
+    {
+        m_IsWall = isWall;
     }
 
 }

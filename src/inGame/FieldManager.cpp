@@ -97,7 +97,8 @@ namespace inGame
     {
         if (!m_TileMap.IsInRange(pos.GetVec())) return false;
         auto element = m_TileMap.GetElementAt(pos.GetVec());
-        bool result = !element->IsWall() && !m_DynamicCharacterCollider.IsHitWith(pos.ToPixelPos()+(MatPixelSize/2).CopyBy<double>());
+        bool result = !element->IsWall()
+                && !m_DynamicCharacterCollider.IsHitWith(pos.ToPixelPos()+(MatPixelSize/2).CopyBy<double>());
         return result;
     }
 
@@ -119,6 +120,36 @@ namespace inGame
     TextureColliderManager *FieldManager::GetCharacterCollider()
     {
         return &m_DynamicCharacterCollider;
+    }
+
+    void FieldManager::OverwriteWallFlag(const MatPos &pos, const Vec2<int> &fillSize, bool isWall)
+    {
+        Vec2<int> startPos = pos.GetVec();
+        Vec2<int> nonNegativeSize = fillSize;
+
+        if (nonNegativeSize.X < 0)
+        {
+            nonNegativeSize.X *= -1;
+            startPos.X = startPos.X - nonNegativeSize.X;
+        }
+        if (nonNegativeSize.Y < 0)
+        {
+            nonNegativeSize.Y *= -1;
+            startPos.Y = startPos.Y - nonNegativeSize.Y;
+        }
+
+        for (int x=0; x < fillSize.X; ++x)
+            for (int y=0; y<nonNegativeSize.Y; ++y)
+            {
+                auto targetPos = startPos + Vec2<int>{x, y};
+                if (m_TileMap.IsInRange(targetPos))
+                    m_TileMap.GetElementAt(targetPos)->OverwriteIsWall(isWall);
+            }
+    }
+
+    void FieldManager::OverwriteWallFlag(const MatPos &pos, bool isWall)
+    {
+        OverwriteWallFlag(pos, Vec2<int>{1, 1}, isWall);
     }
 
 

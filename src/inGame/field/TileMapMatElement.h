@@ -33,6 +33,7 @@ namespace inGame::field
     public:
         [[nodiscard]] virtual const std::vector<const TilePropertyChip *> &GetChipList() const = 0;
         [[nodiscard]] virtual bool IsWall() const = 0;
+        virtual void OverwriteIsWall(bool isWall) = 0;
     };
 
     class TileMapMatElement : public ITileMapMatElement
@@ -40,14 +41,15 @@ namespace inGame::field
     public:
         TileMapMatElement();
 
-        void AddChip(TilePropertyChip *chip);
+        void AddChip(const TilePropertyChip *chip);
 
         bool HasChip(ETileKind kind);
 
         [[nodiscard]] const std::vector<const TilePropertyChip *> &GetChipList() const override;
 
-        bool IsWall() const override;
+        [[nodiscard]] bool IsWall() const override;
 
+        void OverwriteIsWall(bool isWall) override;
     private:
         std::vector<const TilePropertyChip *> m_ChipList;
         std::vector<std::byte> m_HasChip{};
