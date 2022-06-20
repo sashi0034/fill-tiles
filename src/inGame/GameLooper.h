@@ -10,7 +10,7 @@
 #include "../gameEngine/gameEngine.h"
 
 namespace inGame {
-    class gameLooper {
+    class GameLooper {
 
     public:
         static void Loop(unique_ptr<AppState>& appState);

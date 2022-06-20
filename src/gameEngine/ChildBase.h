@@ -15,8 +15,8 @@ namespace gameEngine
     private:
         IChildrenPool<T>* m_BelongingPool{};
     public:
-        explicit ChildBase(IChildrenPool<T>* belongingPool) : m_BelongingPool(belongingPool)
-        {};
+        explicit ChildBase(IChildrenPool<T>* belongingPool) : m_BelongingPool(belongingPool){};
+        virtual ~ChildBase() = default;
     protected:
         [[nodiscard]] IChildrenPool<T>* getBelongingPool() const{
             return m_BelongingPool;

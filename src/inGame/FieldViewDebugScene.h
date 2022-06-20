@@ -13,10 +13,11 @@
 namespace inGame
 {
 
-    class FieldViewDebugScene : public ActorBase, public IMainScene
+    class FieldViewDebugScene final: public ActorBase, public IMainScene
     {
     public:
-        FieldViewDebugScene(IChildrenPool<ActorBase> *parent, GameRoot *root);
+        FieldViewDebugScene(IChildrenPool<ActorBase> *parent, GameRoot *root, Vec2<double> startScrollPos= Vec2<double>{0, 0});
+        ~FieldViewDebugScene() override;
         void Update(IAppState* appState) override;
         GameRoot *GetRoot() override;
         IFieldManager* GetFieldManager() override;
@@ -30,6 +31,8 @@ namespace inGame
 
         Vec2<double> m_PosOnClicked;
         bool m_IsClickedBefore = false;
+        FileChangeDetector m_FileDetector;
+        unique_ptr<ProcessTimer> m_ProcessUntilFileChanged{};
 
         void scrollByMouse(const IAppState *appState);
     };

@@ -41,6 +41,7 @@ namespace inGame
         TextureColliderManager *GetCharacterCollider() override;
 
         explicit FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene);
+        ~FieldManager();
 
         ITextureAnimator* GetCharacterAnimator() override;
 

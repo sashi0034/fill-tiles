@@ -16,7 +16,7 @@ namespace inGame{
     {
         createSelfSpr();
 #ifdef INGAME_DEBUG_FIELDVIEW
-        m_ChildrenPool.Birth(new FieldViewDebugScene(&m_ChildrenPool, this));
+        m_ChildrenPool.Birth(new FieldViewDebugScene(&m_ChildrenPool, this, Vec2{0.0, 0.0}));
 #else
         m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this));
 #endif
@@ -31,7 +31,7 @@ namespace inGame{
     {
         m_Spr = SpriteTexture::Create(nullptr);
         m_Spr->SetUpdateProcess([&](IAppState* app){
-            m_ChildrenPool.ProcessEach([&](auto child){ child->Update(app);});
+            m_ChildrenPool.ProcessEach([&](shared_ptr<ActorBase>& child){ child->Update(app);});
             m_TextureAnimator.Update(app->GetTime().GetDeltaSec());
         });
     }

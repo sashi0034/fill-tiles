@@ -4,23 +4,42 @@
 
 #include "FieldViewDebugScene.h"
 
+#include <memory>
+#include "field/TileMap.h"
+
 namespace inGame{
 
-    FieldViewDebugScene::FieldViewDebugScene(IChildrenPool<ActorBase> *parent, GameRoot *root)
-            : ActorBase(parent), m_Root(root)
+    FieldViewDebugScene::FieldViewDebugScene(IChildrenPool<ActorBase> *parent, GameRoot *root, Vec2<double> startScrollPos)
+            : ActorBase(parent), m_Root(root), m_FileDetector(field::TileMap::TileMapDirectory)
     {
         m_ScrollManager = std::make_unique<ScrollManager>(this);
+        m_ScrollManager->SetScroll(startScrollPos);
 
         m_FieldManager = m_ChildrenPool.BirthAs<FieldManager>(new FieldManager(&m_ChildrenPool, this));
 
-        m_ChildrenPool.ProcessEach([&](auto child){ child->Init();});
+        m_ChildrenPool.ProcessEach([&](auto& child){ child->Init();});
+
+        m_ProcessUntilFileChanged = std::make_unique<ProcessTimer>([&](){
+            bool changed = m_FileDetector.CheckChanged();
+            if (changed) return EProcessStatus::Dead;
+            return EProcessStatus::Running;
+        }, 0.5);
     }
 
     void FieldViewDebugScene::Update(IAppState *appState)
     {
-        m_ChildrenPool.ProcessEach([&](auto child){ child->Update(appState);});
+        m_ChildrenPool.ProcessEach([&](auto& child){ child->Update(appState);});
 
         scrollByMouse(appState);
+
+        m_ProcessUntilFileChanged->Update(appState->GetTime().GetDeltaSec());
+        if (m_ProcessUntilFileChanged->GetStatus()==EProcessStatus::Dead)
+        {
+            auto pool = getBelongingPool();
+            auto scroll = m_ScrollManager->GetScroll();
+            pool->Destroy(this);
+            pool->Birth(new FieldViewDebugScene(pool, m_Root, scroll));
+        }
     }
 
     void FieldViewDebugScene::scrollByMouse(const IAppState *appState)
@@ -73,5 +92,10 @@ namespace inGame{
     ScrollManager *FieldViewDebugScene::GetScrollManager()
     {
         return m_ScrollManager.get();
+    }
+
+    FieldViewDebugScene::~FieldViewDebugScene()
+    {
+        m_ChildrenPool.Release();
     }
 }

@@ -35,7 +35,7 @@ namespace inGame{
 
     void MainScene::Update(IAppState* appState)
     {
-        m_ChildrenPool.ProcessEach([&](auto child){ child->Update(appState);});
+        m_ChildrenPool.ProcessEach([&](auto& child){ child->Update(appState);});
 
         m_TextureAnimator.Update(appState->GetTime().GetDeltaSec());
     }
@@ -57,7 +57,7 @@ namespace inGame{
 
     void MainScene::init()
     {
-        m_ChildrenPool.ProcessEach([&](auto child){ child->Init();});
+        m_ChildrenPool.ProcessEach([&](auto& child){ child->Init();});
     }
 
 }

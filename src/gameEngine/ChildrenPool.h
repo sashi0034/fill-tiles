@@ -80,7 +80,9 @@ namespace gameEngine
 
             if (iter==m_Pool.end()) return false;
 
-            *iter = nullptr;
+            assert(iter->use_count()==1);
+
+            iter->reset();
 
             return true;
         }

@@ -15,4 +15,7 @@ namespace inGame{
 
     void ActorBase::Init()
     {}
+
+    ActorBase::~ActorBase()
+    = default;
 }

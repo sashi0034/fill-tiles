@@ -63,7 +63,7 @@ namespace inGame::field
     {
         using namespace boost::property_tree;
 
-        const std::string filePath = tileMapDirectory + fileName;
+        const std::string filePath = TileMapDirectory + fileName;
         ptree xmlMap;
         read_xml(filePath, xmlMap);
 
@@ -179,7 +179,7 @@ namespace inGame::field
     {
         using namespace boost::property_tree;
 
-        const std::string filePath = tileMapDirectory + fileName;
+        const std::string filePath = TileMapDirectory + fileName;
         ptree xmlTileset;
         read_xml(filePath, xmlTileset);
 
@@ -190,7 +190,7 @@ namespace inGame::field
         const std::string imageName = treeTileset.get<std::string>("image.<xmlattr>.source");
 
         m_TilesetImage.reset(Graph::CreateFromFilePath(GameRoot::GetInstance().GetAppState()->GetRenderer(),
-                                                       tileMapDirectory + imageName));
+                                                       TileMapDirectory + imageName));
 
         for (const auto &tile: treeTileset)
         {

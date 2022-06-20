@@ -4,14 +4,14 @@
 
 #include <iostream>
 #include <SDL_ttf.h>
-#include "gameLooper.h"
+#include "GameLooper.h"
 #include "MoveTest.h"
 #include "FontTest.h"
 #include "LibraryTest.h"
 #include "../gameEngine/gameEngine.h"
 #include "GameRoot.h"
 
-void inGame::gameLooper::Loop(unique_ptr<AppState>& appState) {
+void inGame::GameLooper::Loop(unique_ptr<AppState>& appState) {
     LOG_INFO << "Start Game Loop." << std::endl;
 
     GameRoot mainRoot(appState.get());

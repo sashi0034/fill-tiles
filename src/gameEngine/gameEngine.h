@@ -27,6 +27,8 @@
 #include "Range.h"
 #include "TextureCollider.h"
 #include "TextureColliderManager.h"
+#include "FileChangeDetector.h"
+#include "ProcessTimer.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

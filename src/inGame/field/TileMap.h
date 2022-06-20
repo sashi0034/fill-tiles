@@ -28,8 +28,6 @@ namespace inGame::field
 
     class TileMap : public ITileMap
     {
-    private:
-        static inline const std::string tileMapDirectory = "./assets/tilemaps/";
     public:
         TileMap(IMainScene *mainScene);
         void LoadMapFile(const std::string &fileName);
@@ -38,6 +36,8 @@ namespace inGame::field
         bool IsInRange(const Vec2<int>& pos) const;
         Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) override;
         Graph& GetTilesetImage() const;
+
+        static inline const std::string TileMapDirectory = "./assets/tilemaps/";
     private:
         IMainScene* m_MainScene;
         unique_ptr<Graph> m_TilesetImage{};

@@ -8,7 +8,7 @@
 
 #include <memory>
 #include "GameProcess.h"
-#include "inGame/gameLooper.h"
+#include "inGame/GameLooper.h"
 #include "gameEngine/gameEngine.h"
 
 int GameProcess::RunGame()
@@ -41,7 +41,7 @@ int GameProcess::RunGame()
     auto renderer = appState->GetRenderer();
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, 255);
 
-    inGame::gameLooper::Loop(appState);
+    inGame::GameLooper::Loop(appState);
 
     IMG_Quit();
     SDL_DestroyRenderer(renderer);

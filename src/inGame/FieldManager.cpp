@@ -157,5 +157,10 @@ namespace inGame
         return &m_TileMap;
     }
 
+    FieldManager::~FieldManager()
+    {
+        m_ChildrenPool.Release();
+    }
+
 
 }
