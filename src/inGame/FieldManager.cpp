@@ -93,12 +93,21 @@ namespace inGame
                     pixelScaleSize);
     }
 
-    bool FieldManager::CanMoveTo(const MatPos &pos)
+    bool FieldManager::CanMoveTo(const MatPos &currMatPos, EAngle goingAngle)
     {
-        if (!m_TileMap.IsInRange(pos.GetVec())) return false;
-        auto element = m_TileMap.GetElementAt(pos.GetVec());
-        bool result = !element->IsWall()
-                && !m_DynamicCharacterCollider.IsHitWith(pos.ToPixelPos()+(MatPixelSize/2).CopyBy<double>());
+        const auto diffVec = Angle(goingAngle).ToXY();
+        const auto currPos = currMatPos.GetVec();
+        const auto nextPos = currPos + diffVec;
+        if (!m_TileMap.IsInRange(nextPos)) return false;
+
+        const auto currPosEle = m_TileMap.GetElementAt(currPos);
+        const auto nextPosEle = m_TileMap.GetElementAt(nextPos);
+
+        bool result =
+                !currPosEle->GetCliffFlag(goingAngle) &&
+                !nextPosEle->IsWall() &&
+                !m_DynamicCharacterCollider.IsHitWith((nextPos * PixelPerMat + MatPixelSize / 2).CopyBy<double>());
+
         return result;
     }
 

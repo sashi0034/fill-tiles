@@ -7,6 +7,8 @@
 
 #include "../ActorBase.h"
 #include "../character/CharacterBase.h"
+#include <bitset>
+#include "../Angle.h"
 
 namespace inGame::field
 {
@@ -20,6 +22,8 @@ namespace inGame::field
         normal_plateau_cliff,
         small_tree,
         big_tree,
+
+        max,
     };
 
     struct TilePropertyChip
@@ -34,6 +38,7 @@ namespace inGame::field
     public:
         [[nodiscard]] virtual const std::vector<const TilePropertyChip *> &GetChipList() const = 0;
         [[nodiscard]] virtual bool IsWall() const = 0;
+        virtual bool GetCliffFlag(EAngle aspect) = 0;
         virtual void OverwriteIsWall(bool isWall) = 0;
     };
 
@@ -45,20 +50,27 @@ namespace inGame::field
         void AddChip(const TilePropertyChip *chip);
 
         bool RemoveChip(const TilePropertyChip *chip);
-        bool RemoveChip(const ETileKind kind);
+        bool RemoveChip(ETileKind kind);
 
         bool HasChip(ETileKind kind);
 
         [[nodiscard]] const std::vector<const TilePropertyChip *> &GetChipList() const override;
 
+        bool GetCliffFlag(EAngle aspect) override;
+
         [[nodiscard]] bool IsWall() const override;
+
+        void SetCliffFlag(EAngle aspect, bool flag);
 
         void OverwriteIsWall(bool isWall) override;
     private:
         std::vector<const TilePropertyChip *> m_ChipList;
-        std::vector<std::byte> m_HasChip{};
+
+        std::bitset<int(ETileKind::max)> m_HasChip{};
+
         bool m_IsWall = false;
-        bool m_IsStep[4] = {false, false, false, false};
+
+        std::bitset<4> m_CliffAspect{};
     };
 }
 

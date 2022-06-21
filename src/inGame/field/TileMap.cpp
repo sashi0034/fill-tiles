@@ -111,6 +111,34 @@ namespace inGame::field
 
     void TileMap::initMatElementAfterLoadedAt(const Vec2<int> &pos)
     {
+
+        checkCliffFlag(pos);
+
+    }
+
+    void TileMap::checkCliffFlag(const Vec2<int> &pos)
+    {
+        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
+            HasChipAt(pos + Vec2{1, 0}, ETileKind::normal_plateau) == Boolean::True)
+        {
+            getElementAt(pos)->SetCliffFlag(EAngle::Right, true);
+            getElementAt(pos + Vec2{1, 0})->SetCliffFlag(EAngle::Left, true);
+        }
+
+        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
+            HasChipAt(pos + Vec2{-1, 0}, ETileKind::normal_plateau) == Boolean::True)
+        {
+            getElementAt(pos)->SetCliffFlag(EAngle::Left, true);
+            getElementAt(pos + Vec2{-1, 0})->SetCliffFlag(EAngle::Right, true);
+        }
+
+        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
+            HasChipAt(pos + Vec2{0, 1}, ETileKind::normal_plateau) == Boolean::True)
+        {
+            getElementAt(pos)->SetCliffFlag(EAngle::Down, true);
+            getElementAt(pos + Vec2{0, 1})->SetCliffFlag(EAngle::Up, true);
+        }
+
         if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
             HasChipAt(pos + Vec2{0, -1}, ETileKind::normal_plateau) == Boolean::True)
         {

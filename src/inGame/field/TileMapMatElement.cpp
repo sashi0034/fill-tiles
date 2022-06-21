@@ -8,20 +8,16 @@
 namespace inGame::field{
 
     TileMapMatElement::TileMapMatElement()
-    {
-        int numKind = magic_enum::enum_count<ETileKind>();
-        m_HasChip.resize(numKind, std::byte(0));
-    }
+    {}
 
     void TileMapMatElement::AddChip(const TilePropertyChip *chip)
     {
         m_ChipList.push_back(chip);
-        // @todo: フラグ管理をlong longで行うクラスを作りたい
 
         m_IsWall = chip->IsWall;
 
 
-        m_HasChip[static_cast<int>(chip->Kind)] = std::byte(1);
+        m_HasChip[static_cast<int>(chip->Kind)] = true;
     }
 
     bool TileMapMatElement::RemoveChip(const TilePropertyChip *chip)
@@ -30,7 +26,7 @@ namespace inGame::field{
         auto iter = std::find(m_ChipList.begin(), m_ChipList.end(), chip);
         if (iter==m_ChipList.end()) return false;
         m_ChipList.erase(iter);
-        m_HasChip[static_cast<int>(chip->Kind)] = std::byte(0);
+        m_HasChip[static_cast<int>(chip->Kind)] = false;
         return true;
     }
 
@@ -41,7 +37,7 @@ namespace inGame::field{
                                  [kind](const TilePropertyChip *chip) { return chip->Kind == kind; });
         if (iter == m_ChipList.end()) return false;
         m_ChipList.erase(iter);
-        m_HasChip[static_cast<int>(kind)] = std::byte(0);
+        m_HasChip[static_cast<int>(kind)] = false;
         return true;
     }
 
@@ -52,7 +48,7 @@ namespace inGame::field{
 
     bool TileMapMatElement::HasChip(ETileKind kind)
     {
-        return m_HasChip[static_cast<int>(kind)]!=std::byte{0};
+        return m_HasChip[static_cast<int>(kind)];
     }
 
     bool TileMapMatElement::IsWall() const
@@ -64,5 +60,16 @@ namespace inGame::field{
     {
         m_IsWall = isWall;
     }
+
+    void TileMapMatElement::SetCliffFlag(EAngle aspect, bool flag)
+    {
+        m_CliffAspect[int(aspect)] = flag;
+    }
+
+    bool TileMapMatElement::GetCliffFlag(EAngle aspect)
+    {
+        return m_CliffAspect[int(aspect)];
+    }
+
 
 }

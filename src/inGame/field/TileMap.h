@@ -70,6 +70,8 @@ namespace inGame::field
         void initMatElementsAfterLoaded();
 
         void initMatElementAfterLoadedAt(const Vec2<int> &pos);
+
+        void checkCliffFlag(const Vec2<int> &pos);
     };
 }
 

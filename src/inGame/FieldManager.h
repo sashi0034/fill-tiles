@@ -24,7 +24,7 @@ namespace inGame
     class IFieldManager
     {
     public:
-        virtual bool CanMoveTo(const MatPos& pos) = 0;
+        virtual bool CanMoveTo(const MatPos &currPos, EAngle goingAngle) = 0;
         virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
         virtual ITextureAnimator* GetCharacterAnimator() = 0;
         virtual TextureColliderManager* GetCharacterCollider() = 0;
@@ -48,7 +48,7 @@ namespace inGame
         void Init() override;
         void Update(IAppState* app) override;
 
-        bool CanMoveTo(const MatPos& pos) override;
+        bool CanMoveTo(const MatPos &currMatPos, EAngle goingAngle) override;
 
         void OverwriteWallFlag(const MatPos &pos, bool isWall) override;
         void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &fillSize, bool isWall) override;

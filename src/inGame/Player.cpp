@@ -46,11 +46,10 @@ namespace inGame
         while (goingAngle == EAngle::None)
         {
             auto keyState = appState->GetKeyboardState();
-            auto inputAngle = Angle(getInputAngle(keyState));
+            auto inputAngle = getInputAngle(keyState);
 
-            if (inputAngle.IsValid() &&
-            self->m_Field->CanMoveTo(self->GetMatPos() + MatPos(inputAngle.ToXY())))
-                goingAngle = inputAngle.GetKind();
+            if (inputAngle!=EAngle::None && self->m_Field->CanMoveTo(self->GetMatPos(), inputAngle))
+                goingAngle = inputAngle;
 
             yield();
         }
@@ -105,7 +104,7 @@ namespace inGame
         LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
 
         if (self->getInputAngle(appState->GetKeyboardState())==self->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
-            if (self->m_Field->CanMoveTo(self->GetMatPos() + MatPos(Angle(self->m_Angle).ToXY())))
+            if (self->m_Field->CanMoveTo(self->GetMatPos(), goingAngle))
                 self->changeStateToWalk(appState, goingAngle, false);
 
     }
