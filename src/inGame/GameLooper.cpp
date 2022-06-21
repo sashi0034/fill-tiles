@@ -5,7 +5,6 @@
 #include <iostream>
 #include <SDL_ttf.h>
 #include "GameLooper.h"
-#include "MoveTest.h"
 #include "FontTest.h"
 #include "LibraryTest.h"
 #include "../gameEngine/gameEngine.h"

@@ -9,16 +9,15 @@ namespace inGame
 {
     CharacterViewModel::CharacterViewModel(ScrollManager *scrollManager, Graph *graph)
     {
-        m_ViewModel = SpriteTexture::Create(nullptr);
         scrollManager->RegisterSprite(m_ViewModel);
 
-        m_View = SpriteTexture::Create(graph);
-        m_View->SetPositionParent(m_ViewModel);
+        m_View.SetGraph(graph);
+        m_View.SetPositionParent(m_ViewModel);
     }
 
     void CharacterViewModel::SetModelPos(const Vec2<double> &pos)
     {
-        m_ViewModel->SetPosition(pos);
+        m_ViewModel.SetPosition(pos);
     }
 
     void CharacterViewModel::SetModelPos(const MatPos &pos)
@@ -26,14 +25,14 @@ namespace inGame
         SetModelPos(pos.ToPixelPos());
     }
 
-    SpriteTexture * CharacterViewModel::GetModel()
+    SpriteTexture& CharacterViewModel::GetModel()
     {
-        return m_ViewModel.get();
+        return m_ViewModel;
     }
 
-    SpriteTexture* CharacterViewModel::GetView()
+    SpriteTexture& CharacterViewModel::GetView()
     {
-        return m_View.get();
+        return m_View;
     }
 
     void CharacterViewModel::SetZ()
@@ -41,19 +40,9 @@ namespace inGame
 
     }
 
-    shared_ptr<SpriteTexture> &CharacterViewModel::GetModelShared()
-    {
-        return m_ViewModel;
-    }
-
-    shared_ptr<SpriteTexture> &CharacterViewModel::GetViewShared()
-    {
-        return m_View;
-    }
-
     void CharacterViewModel::SetCollider(IFieldManager *field, const Rect<int> &collider)
     {
-        m_Collider = TextureCollider::Create(collider, m_ViewModel.get());
-        field->GetCharacterCollider()->AddCollider(m_Collider);
+        m_Collider = TextureCollider::Create(collider, m_ViewModel.GetWeakPtr());
+        field->GetCharacterCollider()->AddCollider(m_Collider->GetWeakPtr());
     }
 }

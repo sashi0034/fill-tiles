@@ -11,18 +11,18 @@ namespace inGame::character{
             : CharacterBase(mainScene->GetFieldManager())
             , m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->ResImage->tree_48x48.get())
     {
-        m_View.GetView()->SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});;
+        m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});;
 
         m_View.SetModelPos(matPos);
 
-        m_View.GetView()->SetPosition(Vec2<double>{0, double(1 - cellMatSize.Y) * FieldManager::PixelPerMat}
+        m_View.GetView().SetPosition(Vec2<double>{0, double(1 - cellMatSize.Y) * FieldManager::PixelPerMat}
                                       + FieldManager::CharacterPadding);
 
         mainScene->GetFieldManager()->OverwriteWallFlag(matPos, Vec2<int>{cellMatSize.X, cellMatSize.Y * -1 + 1}, true);
 
         ZIndexCharacter(m_View).ApplyZ();
 
-        mainScene->GetFieldManager()->GetCharacterAnimator()->TargetTo(m_View.GetViewShared())
+        mainScene->GetFieldManager()->GetCharacterAnimator()->TargetTo(m_View.GetView().GetWeakPtr())
                 ->VirtualDelay([]() {}, (matPos.GetSumXY() % 12) * 0.2)
                 ->Then()
                 ->AnimGraph(cellMatSize * FieldManager::PixelPerMat)->SetFrameLoopEndless(true)

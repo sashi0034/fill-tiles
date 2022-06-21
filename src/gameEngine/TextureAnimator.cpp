@@ -5,17 +5,16 @@
 #include "TextureAnimator.h"
 
 namespace gameEngine{
-    detail::ITextureAnimationStarter* TextureAnimator::TargetTo(shared_ptr<SpriteTexture> &texture)
+    detail::ITextureAnimationStarter* TextureAnimator::TargetTo(const WeakPtr <SpriteTexture> &texture)
     {
-        weak_ptr<SpriteTexture> texturePtr = texture;
-        auto product = detail::TextureAnimationProcessor::Create(texturePtr, &m_Pool, nullptr);
-        m_Pool.Register(product);
-        return product.get();
+        auto product = new detail::TextureAnimationProcessor(texture, &m_Pool, nullptr);
+        m_Pool.Birth(product);
+        return product;
     }
 
     void TextureAnimator::Update(double deltaTime)
     {
-        m_Pool.ProcessEach([&deltaTime](shared_ptr<detail::TextureAnimationProcessor>& animation){ animation->Update(deltaTime);});
+        m_Pool.ProcessEach([&deltaTime](detail::TextureAnimationProcessor& animation){ animation.Update(deltaTime);});
     }
 
     TextureAnimator::~TextureAnimator()

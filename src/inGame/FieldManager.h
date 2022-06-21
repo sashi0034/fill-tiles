@@ -66,7 +66,7 @@ namespace inGame
                         const Vec2<int> &screenPos);
         IMainScene* m_ParentalScene;
         field::TileMap m_TileMap;
-        shared_ptr<SpriteTexture> m_Texture;
+        SpriteTexture m_Texture = SpriteTexture::Create(nullptr);
         ChildrenPool<character::CharacterBase> m_ChildrenPool{};
         TextureAnimator m_CharacterAnimator{};
         TextureColliderManager m_DynamicCharacterCollider{};

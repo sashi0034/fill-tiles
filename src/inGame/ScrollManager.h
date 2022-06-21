@@ -15,12 +15,12 @@ namespace inGame
     {
     public:
         explicit ScrollManager(IMainScene* parentScene);
-        void RegisterSprite(shared_ptr<SpriteTexture>& target);
+        void RegisterSprite(SpriteTexture &target);
 
         Vec2<double> GetScroll();
         void SetScroll(const Vec2<double> &amount);
     private:
-        shared_ptr<SpriteTexture> m_ViewModel;
+        SpriteTexture m_ViewModel = SpriteTexture::Create(nullptr);
         IMainScene* m_ParentScene;
     };
 }

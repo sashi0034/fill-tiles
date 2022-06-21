@@ -32,10 +32,10 @@ namespace gameEngine::detail::textureAnimation
 
 
 
-    Position::Position(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime)
+    Position::Position(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime)
     : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
-        if (auto texture = targetTexture.lock())
+        if (auto texture = targetTexture.GetPtr())
         {
             m_StartPos = texture->GetPosition();
             m_EndPos = endPos;
@@ -45,7 +45,7 @@ namespace gameEngine::detail::textureAnimation
     bool Position::UpdateAnimation(double deltaSecond)
     {
         m_Easer.Update(deltaSecond);
-        if (auto texture = m_Texture.lock())
+        if (auto texture = m_Texture.GetPtr())
         {
             auto pos = m_Easer.CalcProgressValue<Vec2<double>>(m_StartPos, m_EndPos);
             texture->SetPosition(pos);
@@ -58,10 +58,10 @@ namespace gameEngine::detail::textureAnimation
         return &m_Easer;
     }
 
-    Rotation::Rotation(const weak_ptr<SpriteTexture> &targetTexture, double endDeg, double endTime)
+    Rotation::Rotation(const WeakPtr<SpriteTexture> &targetTexture, double endDeg, double endTime)
             : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
-        if (auto texture = targetTexture.lock())
+        if (auto texture = targetTexture.GetPtr())
         {
             m_StartDeg = texture->GetRotationDeg();
             m_EndDeg = endDeg;
@@ -71,7 +71,7 @@ namespace gameEngine::detail::textureAnimation
     bool Rotation::UpdateAnimation(double deltaSecond)
     {
         m_Easer.Update(deltaSecond);
-        if (auto texture = m_Texture.lock())
+        if (auto texture = m_Texture.GetPtr())
             texture->SetRotationDeg(m_Easer.CalcProgressValue<double>(m_StartDeg, m_EndDeg));
         return !m_Easer.IsDead();
     }
@@ -81,10 +81,10 @@ namespace gameEngine::detail::textureAnimation
         return &m_Easer;
     }
 
-    Scale::Scale(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime)
+    Scale::Scale(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime)
             : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
-        if (auto texture = targetTexture.lock())
+        if (auto texture = targetTexture.GetPtr())
         {
             m_StartScale = texture->GetScale();
             m_EndScale = endScale;
@@ -94,7 +94,7 @@ namespace gameEngine::detail::textureAnimation
     bool Scale::UpdateAnimation(double deltaSecond)
     {
         m_Easer.Update(deltaSecond);
-        if (auto texture = m_Texture.lock())
+        if (auto texture = m_Texture.GetPtr())
             texture->SetScale(m_Easer.CalcProgressValue<Vec2<double>>(m_StartScale, m_EndScale));
         return !m_Easer.IsDead();
     }
@@ -105,10 +105,10 @@ namespace gameEngine::detail::textureAnimation
     }
 
 
-    Graph::Graph(const weak_ptr<SpriteTexture> &targetTexture, Vec2<int> cellSize)
+    Graph::Graph(const WeakPtr<SpriteTexture> &targetTexture, Vec2<int> cellSize)
         : m_Texture(targetTexture)
     {
-        if (auto texture = targetTexture.lock())
+        if (!targetTexture.IsNull())
         {
             m_CellSize = cellSize;
             m_LoopMax = 1;
@@ -147,7 +147,7 @@ namespace gameEngine::detail::textureAnimation
 
     void Graph::updateTexture()
     {
-        if (auto texture = m_Texture.lock())
+        if (auto texture = m_Texture.GetPtr())
         {
             const auto currFrame = m_FrameList[m_CurrentFrameIndex];
             const auto currCellPos = currFrame.CellPos;

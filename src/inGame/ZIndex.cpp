@@ -23,11 +23,11 @@ namespace inGame{
 
     void ZIndexCharacter::ApplyZ()
     {
-        double modelY = m_Character.GetModel()->GetPosition().Y;
+        double modelY = m_Character.GetModel().GetPosition().Y;
 
         double normalizedZ = Range(infinityMinus, infinity)
                 .Normalize(-modelY, Range(baseCharacterZ, baseCharacterZ + baseRange));
 
-        m_Character.GetView()->SetZ(normalizedZ);
+        m_Character.GetView().SetZ(normalizedZ);
     }
 }

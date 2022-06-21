@@ -26,13 +26,13 @@ namespace gameEngine
     class ITextureAnimator
     {
     public:
-        virtual detail::ITextureAnimationStarter * TargetTo(shared_ptr<SpriteTexture> &texture) = 0;
+        virtual detail::ITextureAnimationStarter * TargetTo(const WeakPtr <SpriteTexture> &texture) = 0;
     };
 
     class TextureAnimator : public ITextureAnimator
     {
     public:
-        detail::ITextureAnimationStarter * TargetTo(shared_ptr<SpriteTexture> &texture) override;
+        detail::ITextureAnimationStarter * TargetTo(const WeakPtr <SpriteTexture> &texture) override;
         //unique_ptr<TextureAnimationCreator> VirtualTo();
 
         void Update(double deltaTime);

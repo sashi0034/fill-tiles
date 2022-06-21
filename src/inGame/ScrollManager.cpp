@@ -8,22 +8,20 @@ namespace inGame
 {
     ScrollManager::ScrollManager(IMainScene *parentScene)
             : m_ParentScene(parentScene)
-    {
-        m_ViewModel = SpriteTexture::Create(nullptr);
-    }
+    {}
 
-    void ScrollManager::RegisterSprite(shared_ptr<SpriteTexture> &target)
+    void ScrollManager::RegisterSprite(SpriteTexture &target)
     {
-        target->SetPositionParent(m_ViewModel);
+        target.SetPositionParent(m_ViewModel);
     }
 
     Vec2<double> ScrollManager::GetScroll()
     {
-        return m_ViewModel->GetPosition();
+        return m_ViewModel.GetPosition();
     }
 
     void ScrollManager::SetScroll(const Vec2<double> &amount)
     {
-        m_ViewModel->SetPosition(amount);
+        m_ViewModel.SetPosition(amount);
     }
 }

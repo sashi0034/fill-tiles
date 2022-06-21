@@ -9,7 +9,7 @@
 
 namespace gameEngine
 {
-    std::vector<weak_ptr<SpriteTexture>> SpriteTexture::spriteTexturePool = {};
+    std::vector<WeakPtr<SpriteTexture>> SpriteTexture::spriteTexturePool = {};
 
     SpriteTexture::SpriteTexture(Graph *graph, Rect<int> &srcRect)
     {
@@ -21,25 +21,26 @@ namespace gameEngine
         };
     }
 
+    SpriteTexture SpriteTexture::Create()
+    {
+        return Create(nullptr);
+    }
 
-    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph)
+    SpriteTexture SpriteTexture::Create(Graph *graph)
     {
         auto srcRect = Rect<int>{0, 0, 0, 0};
 
         return Create(graph, srcRect);
     }
 
-    shared_ptr<SpriteTexture> SpriteTexture::Create(Graph *graph, Rect<int> &srcRect)
+    SpriteTexture SpriteTexture::Create(Graph *graph, Rect<int> &srcRect)
     {
-        auto product = shared_ptr<SpriteTexture>(new SpriteTexture(graph, srcRect));
+        auto product = SpriteTexture(graph, srcRect);
 
-        product->m_SelfPtr = product;
+        spriteTexturePool.push_back(product.GetWeakPtr());
 
-        spriteTexturePool.push_back(product);
-
-        return shared_ptr<SpriteTexture>(product);
+        return product;
     }
-
 
     void SpriteTexture::SetPosition(const Vec2<double> &pos)
     {
@@ -107,13 +108,12 @@ namespace gameEngine
         return m_IsFlip;
     }
 
-    void SpriteTexture::SetPositionParent(const shared_ptr<SpriteTexture>& parent)
+    void SpriteTexture::SetPositionParent(SpriteTexture &parent)
     {
-        assert(parent.get() != this);
-        m_PositionParent = parent;
+        m_PositionParent = parent.GetWeakPtr();
     }
 
-    weak_ptr<SpriteTexture> SpriteTexture::GetPositionParent() const
+    WeakPtr<SpriteTexture> SpriteTexture::GetPositionParent() const
     {
         return m_PositionParent;
     }
@@ -145,7 +145,7 @@ namespace gameEngine
 
     Vec2<double> SpriteTexture::GetParentalGlobalPosition()
     {
-        if (auto parent = m_PositionParent.lock())
+        if (auto parent = m_PositionParent.GetPtr())
         {
             auto parentPosition = parent->GetParentalGlobalPosition();
             return parent->m_Position + parentPosition;
@@ -158,7 +158,7 @@ namespace gameEngine
 
     bool SpriteTexture::GetParentalVisibility()
     {
-        if (auto parent = m_VisibilityParent.lock())
+        if (auto parent = m_PositionParent.GetPtr())
         {
             bool parentVisibility = parent->GetParentalVisibility();
             return parent->m_IsVisible && parentVisibility;
@@ -177,7 +177,7 @@ namespace gameEngine
         std::vector<int> garbageIndexes{};
 
         for (int i = 0; i < size; ++i)
-            if (auto updatingSpr = spriteTexturePool[i].lock())
+            if (auto updatingSpr = spriteTexturePool[i].GetPtr())
                 updatingSpr->m_UpdateProcess(appState);
             else
                 garbageIndexes.push_back(i);
@@ -187,15 +187,15 @@ namespace gameEngine
 
     void SpriteTexture::RenderAll(IAppState*appState)
     {
-        std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(), [](const weak_ptr<SpriteTexture> &left, const weak_ptr<SpriteTexture> &right) -> bool {
-            auto leftShared =left.lock();
-            auto rightShared = right.lock();
+        std::stable_sort(spriteTexturePool.begin(), spriteTexturePool.end(), [](const WeakPtr<SpriteTexture> &left, const WeakPtr<SpriteTexture> &right) -> bool {
+            auto leftShared =left.GetPtr();
+            auto rightShared = right.GetPtr();
             return (leftShared ? leftShared->GetZ() : 0.0) > (rightShared ? rightShared->GetZ() : 0.0); });
         std::vector<int> garbageIndexes{};
         int size = spriteTexturePool.size();
 
         for (int i=0; i < size ; ++i)
-            if (auto renderingSpr = spriteTexturePool[i].lock())
+            if (auto renderingSpr = spriteTexturePool[i].GetPtr())
             {
                 if (renderingSpr == nullptr) continue;
 
@@ -223,12 +223,12 @@ namespace gameEngine
         }
     }
 
-    void SpriteTexture::SetVisibilityParent(const shared_ptr<SpriteTexture> &parent)
+    void SpriteTexture::SetVisibilityParent(SpriteTexture &parent)
     {
-        m_VisibilityParent = parent;
+        m_VisibilityParent = parent.GetWeakPtr();
     }
 
-    weak_ptr<SpriteTexture> SpriteTexture::GetVisibilityParent() const
+    WeakPtr<SpriteTexture> SpriteTexture::GetVisibilityParent() const
     {
         return m_VisibilityParent;
     }

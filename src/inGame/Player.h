@@ -31,7 +31,7 @@ namespace inGame
 
         static bool isDashing(const Uint8 *keyState);
 
-        CharacterViewModel m_View{};
+        unique_ptr<CharacterViewModel> m_View{};
         Graph* m_Image;
 
         TextureAnimator m_PlayerAnimator{};

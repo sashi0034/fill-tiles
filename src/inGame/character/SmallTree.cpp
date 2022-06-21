@@ -11,17 +11,17 @@ namespace inGame::character{
             : CharacterBase(mainScene->GetFieldManager())
             , m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->ResImage->tree_16x16.get())
     {
-        m_View.GetView()->SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});
+        m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});
 
         m_View.SetModelPos(matPos);
 
-        m_View.GetView()->SetPosition(FieldManager::CharacterPadding);
+        m_View.GetView().SetPosition(FieldManager::CharacterPadding);
 
         mainScene->GetFieldManager()->OverwriteWallFlag(matPos, true);
 
         ZIndexCharacter(m_View).ApplyZ();
 
-        mainScene->GetFieldManager()->GetCharacterAnimator()->TargetTo(m_View.GetViewShared())
+        mainScene->GetFieldManager()->GetCharacterAnimator()->TargetTo(m_View.GetView().GetWeakPtr())
                 ->VirtualDelay([]() {}, (matPos.GetSumXY() % 4) * 0.2)
                 ->Then()
                 ->AnimGraph(cellMatSize * FieldManager::PixelPerMat)->SetFrameLoopEndless(true)

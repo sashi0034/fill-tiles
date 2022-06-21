@@ -13,7 +13,7 @@ namespace inGame
     {
         m_Image = GameRoot::GetInstance().ResImage->dango_wolf_24x24.get();
 
-        m_Texture = SpriteTexture::Create(m_Image);
+        //m_Texture = SpriteTexture::Create(m_Image);
         m_Texture->SetSrcRect(Rect<int>{0,0,24, 24});
 
         std::cout << "#1" << std::endl;
@@ -30,27 +30,27 @@ namespace inGame
         self->m_Texture->SetPosition(self->m_Pos);
 
         /* example */
-        mainRoot.GetTextureAnimator().TargetTo(self->m_Texture)
-                ->AnimGraph(Vec2<int>{24, 24})->SetFrameLoop(10)->SetCellSrcStart(Vec2<int>{0, 0})
-                ->AddFrame(Vec2<int>{0, 0}, 0.2)
-                ->AddFrame(Vec2<int>{1, 0}, 0.2)
-                ->AddFrame(Vec2<int>{2, 0}, 0.2)
-                ->AddFrame(Vec2<int>{3, 0}, 0.2);
-
-        mainRoot.GetTextureAnimator().TargetTo(self->m_Texture)
-                ->AnimScale(Vec2{3.0, 3.0}, 5.0)->SetLoop(1)
-                ->Then()
-                ->AnimPosition(Vec2<double>{64, 64}, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)->SetRelative(false)
-                ->With()
-                ->AnimRotation(60, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)
-                ->Then()
-                ->AnimPosition(Vec2<double>{32, 32}, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)->SetRelative(true)
-                ->Then()
-                ->VirtualDelay([]() { std::cout << "finished animation?" << std::endl; }, 1.0)
-                ->Then()
-                ->VirtualDelay([]() { std::cout << "yes!" << std::endl; }, 0)
-                ->Then()
-                ->VirtualDelay([]() { std::cout << "finished animation!" << std::endl; }, 0.5);
+//        mainRoot.GetTextureAnimator().TargetTo(self->m_Texture)
+//                ->AnimGraph(Vec2<int>{24, 24})->SetFrameLoop(10)->SetCellSrcStart(Vec2<int>{0, 0})
+//                ->AddFrame(Vec2<int>{0, 0}, 0.2)
+//                ->AddFrame(Vec2<int>{1, 0}, 0.2)
+//                ->AddFrame(Vec2<int>{2, 0}, 0.2)
+//                ->AddFrame(Vec2<int>{3, 0}, 0.2);
+//
+//        mainRoot.GetTextureAnimator().TargetTo(self->m_Texture)
+//                ->AnimScale(Vec2{3.0, 3.0}, 5.0)->SetLoop(1)
+//                ->Then()
+//                ->AnimPosition(Vec2<double>{64, 64}, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)->SetRelative(false)
+//                ->With()
+//                ->AnimRotation(60, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)
+//                ->Then()
+//                ->AnimPosition(Vec2<double>{32, 32}, 3.0)->SetEase(EAnimEase::Linear)->SetLoop(2)->SetRelative(true)
+//                ->Then()
+//                ->VirtualDelay([]() { std::cout << "finished animation?" << std::endl; }, 1.0)
+//                ->Then()
+//                ->VirtualDelay([]() { std::cout << "yes!" << std::endl; }, 0)
+//                ->Then()
+//                ->VirtualDelay([]() { std::cout << "finished animation!" << std::endl; }, 0.5);
 
 
         yield();

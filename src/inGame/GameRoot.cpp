@@ -5,7 +5,6 @@
 #include "GameRoot.h"
 
 #include <memory>
-#include "BackGroundTest.h"
 #include "MainScene.h"
 #include "FieldViewDebugScene.h"
 #include "../debug.h"
@@ -29,9 +28,8 @@ namespace inGame{
 
     void GameRoot::createSelfSpr()
     {
-        m_Spr = SpriteTexture::Create(nullptr);
-        m_Spr->SetUpdateProcess([&](IAppState* app){
-            m_ChildrenPool.ProcessEach([&](shared_ptr<ActorBase>& child){ child->Update(app);});
+        m_Spr.SetUpdateProcess([&](IAppState* app){
+            m_ChildrenPool.ProcessEach([&](ActorBase& child){ child.Update(app);});
             m_TextureAnimator.Update(app->GetTime().GetDeltaSec());
         });
     }
