@@ -42,6 +42,7 @@ namespace inGame::field
         IMainScene* m_MainScene;
         unique_ptr<Graph> m_TilesetImage{};
         std::unordered_map<int, TilePropertyChip> m_Tileset;
+        std::unordered_map<ETileKind, TilePropertyChip*> m_TilesetByKind{};
         const StaticTileset staticTileset{};
         Vec2<int> m_MatSize{};
         std::vector<TileMapMatElement> m_Mat{};
@@ -69,9 +70,13 @@ namespace inGame::field
 
         void initMatElementsAfterLoaded();
 
-        void initMatElementAfterLoadedAt(const Vec2<int> &pos);
+        void checkCliff(const Vec2<int> &pos);
+        void checkCliffShade(const Vec2<int> &pos);
 
-        void checkCliffFlag(const Vec2<int> &pos);
+        void
+        checkCliffShadeOf(const Vec2<int> &pos, ETileKind upperKind, ETileKind upperCliffKind, TilePropertyChip *lowerChip,
+                          TilePropertyChip *lowerShadeFace, TilePropertyChip *lowerShadeEdge);
+        void checkCliffFlagOf(const Vec2<int> &pos, ETileKind checkingKind, ETileKind cliffKind);
     };
 }
 

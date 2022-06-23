@@ -32,7 +32,11 @@ namespace inGame::field
         void renderAutoTile(Graph *image, const std::function<bool(int, int)> &isNeighbor,
                             const Vec2<int> &targetSrcOrigin=Vec2{0, 0});
         void renderPlateauCliff(Graph* image, const std::function<bool(int, int)>& isNeighbor);
-        bool isNeighbor(int x, int y, ETileKind kind) const;
+
+        template <class... A>
+        bool isNeighbor(int x, int y, A... kinds) const;
+
+        void renderCell(Graph* image, const Vec2<int> &cellPos);
     };
 }
 

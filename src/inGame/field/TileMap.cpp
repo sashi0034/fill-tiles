@@ -104,48 +104,97 @@ namespace inGame::field
     {
         for (int x=0; x<m_MatSize.X; ++x)
             for (int y = 0; y < m_MatSize.Y; ++y)
-            {
-                initMatElementAfterLoadedAt(Vec2{x, y});
-            }
+                checkCliff(Vec2{x, y});
+
+        for (int x=0; x<m_MatSize.X; ++x)
+            for (int y = 0; y < m_MatSize.Y; ++y)
+                checkCliffShade(Vec2{x, y});
     }
 
-    void TileMap::initMatElementAfterLoadedAt(const Vec2<int> &pos)
+
+    void TileMap::checkCliff(const Vec2<int> &pos)
     {
-
-        checkCliffFlag(pos);
-
+        checkCliffFlagOf(pos, ETileKind::high_plateau, ETileKind::high_plateau_cliff);
+        checkCliffFlagOf(pos, ETileKind::normal_plain, ETileKind::normal_plain_cliff);
     }
 
-    void TileMap::checkCliffFlag(const Vec2<int> &pos)
+    void
+    TileMap::checkCliffFlagOf(const Vec2<int> &pos, ETileKind checkingKind, ETileKind cliffKind)
     {
-        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
-            HasChipAt(pos + Vec2{1, 0}, ETileKind::normal_plateau) == Boolean::True)
+        if (HasChipAt(pos, checkingKind) == Boolean::False &&
+            HasChipAt(pos + Vec2{1, 0}, checkingKind) == Boolean::True)
         {
             getElementAt(pos)->SetCliffFlag(EAngle::Right, true);
             getElementAt(pos + Vec2{1, 0})->SetCliffFlag(EAngle::Left, true);
         }
 
-        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
-            HasChipAt(pos + Vec2{-1, 0}, ETileKind::normal_plateau) == Boolean::True)
+        if (HasChipAt(pos, checkingKind) == Boolean::False &&
+            HasChipAt(pos + Vec2{-1, 0}, checkingKind) == Boolean::True)
         {
             getElementAt(pos)->SetCliffFlag(EAngle::Left, true);
             getElementAt(pos + Vec2{-1, 0})->SetCliffFlag(EAngle::Right, true);
         }
 
-        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
-            HasChipAt(pos + Vec2{0, 1}, ETileKind::normal_plateau) == Boolean::True)
+        if (HasChipAt(pos, checkingKind) == Boolean::False &&
+            HasChipAt(pos + Vec2{0, 1}, checkingKind) == Boolean::True)
         {
             getElementAt(pos)->SetCliffFlag(EAngle::Down, true);
             getElementAt(pos + Vec2{0, 1})->SetCliffFlag(EAngle::Up, true);
         }
 
-        if (HasChipAt(pos, ETileKind::normal_plateau) == Boolean::False &&
-            HasChipAt(pos + Vec2{0, -1}, ETileKind::normal_plateau) == Boolean::True)
+        if (HasChipAt(pos, checkingKind) == Boolean::False &&
+            HasChipAt(pos + Vec2{0, -1}, checkingKind) == Boolean::True &&
+            HasChipAt(pos, ETileKind::stairs) != Boolean::True)
         {
-            getElementAt(pos)->AddChip(staticTileset.GetOf(ETileKind::normal_plateau_cliff));
-            getElementAt(pos)->RemoveChip(ETileKind::normal_plain);
+            getElementAt(pos)->AddChip(staticTileset.GetOf(cliffKind));
         }
     }
+
+    void TileMap::checkCliffShade(const Vec2<int> &pos)
+    {
+        checkCliffShadeOf(pos, ETileKind::high_plateau, ETileKind::high_plateau_cliff,
+                         m_TilesetByKind[ETileKind::normal_plain],
+                         staticTileset.GetOf(ETileKind::normal_plain_shade_face), staticTileset.GetOf(ETileKind::normal_plain_shade_edge));
+
+        checkCliffShadeOf(pos, ETileKind::normal_plain, ETileKind::normal_plain_cliff,
+                          m_TilesetByKind[ETileKind::low_basin],
+                          staticTileset.GetOf(ETileKind::low_basin_shade_face), staticTileset.GetOf(ETileKind::low_basin_shade_edge));
+    }
+
+
+    void
+    TileMap::checkCliffShadeOf(const Vec2<int> &pos, ETileKind upperKind, ETileKind upperCliffKind, TilePropertyChip *lowerChip,
+                               TilePropertyChip *lowerShadeFace, TilePropertyChip *lowerShadeEdge)
+    {
+        assert(lowerChip);
+        assert(lowerShadeFace);
+        assert(lowerShadeEdge);
+
+        const auto isUpper = [&](const Vec2<int> &position) {
+            return (HasChipAt(position, upperKind) == Boolean::True ||
+                    HasChipAt(position, upperCliffKind) == Boolean::True);
+        };
+
+        if ((isUpper(pos)) && HasChipAt(pos, lowerChip->Kind) == Boolean::True)
+        {
+            getElementAt(pos)->InsertChip(lowerChip, lowerShadeFace);
+
+            for (int y = -1; y <= 1; ++y)
+                for (int x = -1; x <= 1; ++x)
+                {
+                    if (x == 0 && y == 0) continue;
+
+                    const auto edgePos = pos + Vec2{x, y};
+                    if (!IsInRange(edgePos)) continue;
+                    if (isUpper(edgePos)) continue;
+                    if (getElementAt(edgePos)->HasChip(lowerShadeEdge->Kind)) continue;
+
+                    getElementAt(edgePos)->InsertChip(lowerChip, lowerShadeEdge);
+                }
+        }
+    }
+
+
 
     bool TileMap::summonCharacterByChip(const Vec2<int> &pos, ETileKind kind)
     {
@@ -237,6 +286,7 @@ namespace inGame::field
             assert(newTile.Kind != ETileKind::none);
 
             m_Tileset[id] = newTile;
+            m_TilesetByKind[newTile.Kind] = &m_Tileset[id];
         }
 
 

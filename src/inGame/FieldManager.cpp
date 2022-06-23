@@ -32,11 +32,11 @@ namespace inGame
     void FieldManager::renderTileMap(IAppState *appState)
     {
         const auto globalPos = m_Texture.GetParentalGlobalPosition();
-        const auto screenGlobalPos = (globalPos * appState->GetPixelPerUnit()).CopyBy<int>();
+        const auto screenGlobalPos = (globalPos * appState->GetPixelPerUnit()).CastTo<int>();
 
         const auto negativeCorrection = Vec2<int>{globalPos.X<0 ? -1 : 0, globalPos.Y<0 ? -1 : 0};
 
-        const Vec2<int> startingChipPoint = (globalPos * -1 / PixelPerMat).CopyBy<int>() + negativeCorrection;
+        const Vec2<int> startingChipPoint = (globalPos * -1 / PixelPerMat).CastTo<int>() + negativeCorrection;
 
         const Vec2<int> matSize = m_TileMap.GetMatSize();
 
@@ -105,7 +105,7 @@ namespace inGame
         bool result =
                 !currPosEle->GetCliffFlag(goingAngle) &&
                 !nextPosEle->IsWall() &&
-                !m_DynamicCharacterCollider.IsHitWith((nextPos * PixelPerMat + MatPixelSize / 2).CopyBy<double>());
+                !m_DynamicCharacterCollider.IsHitWith((nextPos * PixelPerMat + MatPixelSize / 2).CastTo<double>());
 
         return result;
     }

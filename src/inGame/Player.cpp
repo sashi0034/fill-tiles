@@ -66,8 +66,8 @@ namespace inGame
         m_PlayerAnimator.Update(appState->GetTime().GetDeltaSec());
 
         m_ParentalScene->GetScrollManager()->SetScroll(GetPos() * -1 +
-                                                       (m_ParentalScene->GetRoot()->GetAppState()->GetScreenSize() /
-                                                        2).CopyBy<double>());
+                                                               (m_ParentalScene->GetRoot()->GetAppState()->GetScreenSize() /
+                                                                2).CastTo<double>());
 
         ZIndexCharacter(*m_View).ApplyZ();
 
@@ -84,7 +84,7 @@ namespace inGame
     {
         yield();
 
-        auto moveVector = Angle(goingAngle).ToXY().CopyBy<double>() * FieldManager::PixelPerMat;
+        auto moveVector = Angle(goingAngle).ToXY().CastTo<double>() * FieldManager::PixelPerMat;
         bool isDash = isDashing(appState->GetKeyboardState());
         double movingTIme = isDash ? 0.2 : 0.4;
 
@@ -138,12 +138,12 @@ namespace inGame
                 break;
             case EAngle::Right:
                 m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 4}, baseTemp)->AddFrame(Vec2{1, 4}, baseTemp)->AddFrame(Vec2{2, 4}, baseTemp*1.5)
+                        ->AddFrame(Vec2{0, 4}, baseTemp)->AddFrame(Vec2{1, 4}, baseTemp)->AddFrame(Vec2{2, 4}, baseTemp)
                         ->AddFrame(Vec2{3, 4}, baseTemp)->AddFrame(Vec2{4, 4}, baseTemp)->AddFrame(Vec2{5, 4}, baseTemp);
                 break;
             case EAngle::Left:
                 m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrameFlipped(Vec2{0, 4}, baseTemp)->AddFrameFlipped(Vec2{1, 4}, baseTemp)->AddFrameFlipped(Vec2{2, 4}, baseTemp*1.5)
+                        ->AddFrameFlipped(Vec2{0, 4}, baseTemp)->AddFrameFlipped(Vec2{1, 4}, baseTemp)->AddFrameFlipped(Vec2{2, 4}, baseTemp)
                         ->AddFrameFlipped(Vec2{3, 4}, baseTemp)->AddFrameFlipped(Vec2{4, 4}, baseTemp)->AddFrameFlipped(Vec2{5, 4}, baseTemp);
                 break;
             case EAngle::Down:
@@ -200,7 +200,7 @@ namespace inGame
 
     MatPos Player::GetMatPos()
     {
-        auto pixelPos = GetPos().CopyBy<int>();
+        auto pixelPos = GetPos().CastTo<int>();
         return MatPos((pixelPos + FieldManager::MatPixelSize / 2) / FieldManager::PixelPerMat);
     }
 

@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_VEC_H
 #define FILL_TILES_VEC_H
 
+#include "sstream"
 
 namespace gameEngine
 {
@@ -50,9 +51,16 @@ namespace gameEngine
         }
 
         template<typename U>
-        Vec2<U> CopyBy() const
+        Vec2<U> CastTo() const
         {
             return Vec2<U>{static_cast<U>(this->X), static_cast<U>(this->Y)};
+        }
+
+        std::string ToString() const
+        {
+            std::stringstream stream{};
+            stream << "(" << X << ", " << Y << ")";
+            return stream.str();
         }
     };
 

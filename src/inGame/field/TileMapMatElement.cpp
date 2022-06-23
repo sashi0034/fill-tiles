@@ -12,12 +12,38 @@ namespace inGame::field{
 
     void TileMapMatElement::AddChip(const TilePropertyChip *chip)
     {
+        assert(!HasChip(chip->Kind));
         m_ChipList.push_back(chip);
 
         m_IsWall = chip->IsWall;
 
-
         m_HasChip[static_cast<int>(chip->Kind)] = true;
+    }
+
+
+
+    bool TileMapMatElement::InsertChip(const TilePropertyChip *frontChip, const TilePropertyChip *newBackChip)
+    {
+        assert(!HasChip(newBackChip->Kind));
+        if (m_ChipList.size()==0) return false;
+        auto iter = std::find(m_ChipList.begin(), m_ChipList.end(), frontChip);
+        if (iter==m_ChipList.end()) return false;
+        m_ChipList.insert(iter + 1, newBackChip);
+        m_HasChip[static_cast<int>(newBackChip->Kind)] = true;
+        return true;
+    }
+
+
+    bool TileMapMatElement::ReplaceChip(const TilePropertyChip *oldChip, const TilePropertyChip *newChip)
+    {
+        assert(!HasChip(newChip->Kind));
+        if (m_ChipList.size()==0) return false;
+        auto iter = std::find(m_ChipList.begin(), m_ChipList.end(), oldChip);
+        if (iter==m_ChipList.end()) return false;
+        *iter = newChip;
+        m_HasChip[static_cast<int>(oldChip->Kind)] = false;
+        m_HasChip[static_cast<int>(newChip->Kind)] = true;
+        return true;
     }
 
     bool TileMapMatElement::RemoveChip(const TilePropertyChip *chip)
