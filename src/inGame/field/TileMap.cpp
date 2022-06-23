@@ -177,8 +177,7 @@ namespace inGame::field
 
         if ((isUpper(pos)) && HasChipAt(pos, lowerChip->Kind) == Boolean::True)
         {
-            getElementAt(pos)->InsertChip(lowerChip, lowerShadeFace);
-
+            bool hasEdge = false;
             for (int y = -1; y <= 1; ++y)
                 for (int x = -1; x <= 1; ++x)
                 {
@@ -187,10 +186,15 @@ namespace inGame::field
                     const auto edgePos = pos + Vec2{x, y};
                     if (!IsInRange(edgePos)) continue;
                     if (isUpper(edgePos)) continue;
-                    if (getElementAt(edgePos)->HasChip(lowerShadeEdge->Kind)) continue;
 
+                    hasEdge = true;
+
+                    if (getElementAt(edgePos)->HasChip(lowerShadeEdge->Kind)) continue;
+                    
                     getElementAt(edgePos)->InsertChip(lowerChip, lowerShadeEdge);
                 }
+
+            if (hasEdge) getElementAt(pos)->InsertChip(lowerChip, lowerShadeFace);
         }
     }
 
