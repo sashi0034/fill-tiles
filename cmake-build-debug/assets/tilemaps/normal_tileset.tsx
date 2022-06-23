@@ -8,12 +8,12 @@
  </tile>
  <tile id="19">
   <properties>
-   <property name="kind" value="normal_plateau"/>
+   <property name="kind" value="high_plateau"/>
   </properties>
  </tile>
- <tile id="33">
+ <tile id="34">
   <properties>
-   <property name="kind" value="base_green"/>
+   <property name="kind" value="low_basin"/>
   </properties>
  </tile>
  <tile id="65">
@@ -44,6 +44,16 @@
  <tile id="118">
   <properties>
    <property name="kind" value="fines"/>
+  </properties>
+ </tile>
+ <tile id="129">
+  <properties>
+   <property name="kind" value="stairs"/>
+  </properties>
+ </tile>
+ <tile id="130">
+  <properties>
+   <property name="kind" value="stairs"/>
   </properties>
  </tile>
 </tileset>

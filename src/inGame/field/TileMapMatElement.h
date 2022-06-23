@@ -15,13 +15,19 @@ namespace inGame::field
     enum class ETileKind
     {
         none,
-        base_green,
         fines,
+        low_basin,
+        low_basin_shade_face,
+        low_basin_shade_edge,
         normal_plain,
-        normal_plateau,
-        normal_plateau_cliff,
+        normal_plain_cliff,
+        normal_plain_shade_face,
+        normal_plain_shade_edge,
+        high_plateau,
+        high_plateau_cliff,
         small_tree,
         big_tree,
+        stairs,
 
         max,
     };
@@ -48,7 +54,8 @@ namespace inGame::field
         TileMapMatElement();
 
         void AddChip(const TilePropertyChip *chip);
-
+        bool InsertChip(const TilePropertyChip *frontChip, const TilePropertyChip *newBackChip);
+        bool ReplaceChip(const TilePropertyChip *oldChip, const TilePropertyChip *newChip);
         bool RemoveChip(const TilePropertyChip *chip);
         bool RemoveChip(ETileKind kind);
 

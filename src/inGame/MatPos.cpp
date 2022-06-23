@@ -45,7 +45,7 @@ namespace inGame
 
     Vec2<double> MatPos::ToPixelPos() const
     {
-        return (m_Pos*FieldManager::PixelPerMat).CopyBy<double>();
+        return (m_Pos * FieldManager::PixelPerMat).CastTo<double>();
     }
 
     int MatPos::GetSumXY() const

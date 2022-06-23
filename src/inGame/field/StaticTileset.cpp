@@ -14,9 +14,23 @@ namespace inGame::field
     {
         auto tileset = std::unordered_map<ETileKind, TilePropertyChip>();
 
-        tileset[ETileKind::normal_plateau_cliff] = TilePropertyChip{ETileKind::normal_plateau_cliff, true, Vec2{0, 0}};
+        addStaticChip(&tileset, ETileKind::low_basin_shade_edge, false);
+        addStaticChip(&tileset, ETileKind::low_basin_shade_face, false);
+
+        addStaticChip(&tileset, ETileKind::normal_plain_cliff, true);
+        addStaticChip(&tileset, ETileKind::normal_plain_shade_edge, false);
+        addStaticChip(&tileset, ETileKind::normal_plain_shade_face, false);
+
+        addStaticChip(&tileset, ETileKind::high_plateau_cliff, true);
 
         return tileset;
+    }
+
+
+    void StaticTileset::addStaticChip(std::unordered_map<ETileKind, TilePropertyChip> *tileset, ETileKind kind, bool isWall)
+    {
+        assert((*tileset).count(kind) == 0);
+        (*tileset)[kind] = TilePropertyChip{kind, isWall, Vec2{0, 0}};
     }
 
     TilePropertyChip *StaticTileset::GetOf(ETileKind kind) const

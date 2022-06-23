@@ -23,10 +23,6 @@ namespace inGame::field
 
     bool FieldRenderer::RenderChip(ETileKind kind)
     {
-        // @todo: tileKindでswitch
-        // @todo: まずはnormal_plateau_16x16.pngを描画したい
-        // @todo: https://github.com/sashi0034/min-rpg/blob/master/ingame_manager.cpp#:~:text=FieldLayerBase%3A%3AdrawingAutoTile
-
         switch (kind)
         {
             case ETileKind::normal_plain:
@@ -34,14 +30,35 @@ namespace inGame::field
                     return isNeighbor(x, y, ETileKind::normal_plain);
                 });
                 break;
-            case ETileKind::normal_plateau:
-                renderAutoTile(m_ResImage->normal_plateau_16x16.get(), [&](int x, int y) {
-                    return isNeighbor(x, y, ETileKind::normal_plateau);
+            case ETileKind::low_basin_shade_face:
+                renderCell(m_ResImage->low_basin_16x16.get(), Vec2<int>{4, 4});
+                break;
+            case ETileKind::low_basin_shade_edge:
+                renderAutoTile(m_ResImage->low_basin_16x16.get(), [&](int x, int y) {
+                    return !isNeighbor(x, y, ETileKind::low_basin_shade_face);
+                }, Vec2<int>{4, 0} * pixelPerMat);
+                break;
+            case ETileKind::normal_plain_shade_face:
+                renderCell(m_ResImage->normal_plain_16x16.get(), Vec2<int>{4, 4});
+                break;
+            case ETileKind::normal_plain_shade_edge:
+                renderAutoTile(m_ResImage->normal_plain_16x16.get(), [&](int x, int y) {
+                    return !isNeighbor(x, y, ETileKind::normal_plain_shade_face);
+                }, Vec2<int>{4, 0} * pixelPerMat);
+                break;
+            case ETileKind::normal_plain_cliff:
+                renderPlateauCliff(m_ResImage->normal_plain_16x16.get(), [&](int x, int y) {
+                    return isNeighbor(x, y, ETileKind::normal_plain_cliff, ETileKind::normal_plain);
                 });
                 break;
-            case ETileKind::normal_plateau_cliff:
-                renderPlateauCliff(m_ResImage->normal_plateau_16x16.get(), [&](int x, int y) {
-                    return isNeighbor(x, y, ETileKind::normal_plateau_cliff);
+            case ETileKind::high_plateau:
+                renderAutoTile(m_ResImage->high_plateau_16x16.get(), [&](int x, int y) {
+                    return isNeighbor(x, y, ETileKind::high_plateau);
+                });
+                break;
+            case ETileKind::high_plateau_cliff:
+                renderPlateauCliff(m_ResImage->high_plateau_16x16.get(), [&](int x, int y) {
+                    return isNeighbor(x, y, ETileKind::high_plateau_cliff, ETileKind::high_plateau);
                 });
                 break;
             default:
@@ -108,9 +125,19 @@ namespace inGame::field
                 m_PixelScaleSize);
     }
 
-    bool FieldRenderer::isNeighbor(int x, int y, ETileKind kind) const
+
+    void FieldRenderer::renderCell(Graph *image, const Vec2<int> &cellPos)
     {
-        return m_TileMapPtr->HasChipAt(Vec2{x, y}, kind) == Boolean::True;
+        image->RenderGraph(m_Renderer, m_ScreenPos, Rect<int>{cellPos * pixelPerMat, m_SrcSize}, m_PixelScaleSize);
+    }
+
+    template<class... A>
+    bool FieldRenderer::isNeighbor(int x, int y, A... kinds) const
+    {
+        bool result = false;
+        for (ETileKind kind : std::initializer_list<ETileKind>{kinds...})
+            result = result ||  m_TileMapPtr->HasChipAt(Vec2{x, y}, kind) == Boolean::True;
+        return result;
     }
 
 

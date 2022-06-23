@@ -47,7 +47,7 @@ namespace gameEngine
             const GraphBlend &blend)
     {
         const auto srcRectSize = const_cast<Rect<int> &>(srcRect).GetSize();
-        const auto screenSize = Vec2<double>{srcRectSize.X * scale.X, srcRectSize.Y * scale.Y}.CopyBy<int>();
+        const auto screenSize = Vec2<double>{srcRectSize.X * scale.X, srcRectSize.Y * scale.Y}.CastTo<int>();
         SDL_Rect drawingToScreenRect = SDL_Rect{startPoint.X, startPoint.Y, screenSize.X, screenSize.Y};
         SDL_Rect cutSrcRect = SDL_Rect{srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height};
 

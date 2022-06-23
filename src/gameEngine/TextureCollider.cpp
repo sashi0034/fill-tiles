@@ -9,8 +9,8 @@
 
 namespace gameEngine{
     TextureCollider::TextureCollider(const Rect<int> &colliderRect, SpriteTexture *parentalLinkingPos)
-            : m_ColliderStartingPoint(colliderRect.GetStartingPoint().CopyBy<double>()),
-              m_ColliderSize(colliderRect.GetSize().CopyBy<double>()),
+            : m_ColliderStartingPoint(colliderRect.GetStartingPoint().CastTo<double>()),
+              m_ColliderSize(colliderRect.GetSize().CastTo<double>()),
               m_LinkingPosSpr(parentalLinkingPos)
     {}
 

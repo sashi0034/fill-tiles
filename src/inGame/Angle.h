@@ -9,8 +9,9 @@
 
 namespace inGame
 {
-    enum class EAngle{
-        None,
+    enum class EAngle
+    {
+        None = -1,
         Right,
         Up,
         Left,

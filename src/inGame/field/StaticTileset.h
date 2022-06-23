@@ -17,6 +17,7 @@ namespace inGame::field
     private:
         const std::unordered_map<ETileKind, TilePropertyChip> m_StaticTileset{};
         static std::unordered_map<ETileKind, TilePropertyChip> createStaticTileset();
+        static void addStaticChip(std::unordered_map<ETileKind, TilePropertyChip>* tileset, ETileKind kind, bool isWall);
     };
 }
 
