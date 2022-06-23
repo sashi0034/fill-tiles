@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_SPRITETEXTURE_H
 #define FILL_TILES_SPRITETEXTURE_H
 
+#include "WeakPtr.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Vec2.h"
@@ -16,18 +17,17 @@
 #include "renderingProcess.h"
 
 using std::unique_ptr;
-using std::shared_ptr;
-using std::weak_ptr;
 
 namespace gameEngine
 {
     class SpriteTexture
     {
-        static std::vector<weak_ptr<SpriteTexture>> spriteTexturePool;
+        DEF_WEAK_CONTROLLER(SpriteTexture);
+        
+        static std::vector<WeakPtr<SpriteTexture>> spriteTexturePool;
 
         Vec2<double> m_Position{0, 0};
-        weak_ptr<SpriteTexture> m_SelfPtr;
-        weak_ptr<SpriteTexture> m_PositionParent{};
+        WeakPtr<SpriteTexture> m_PositionParent{};
         double m_Z{};
         Graph* m_Graph{};
         Rect<int> m_SrcRect{0, 0, 0, 0};
@@ -36,7 +36,7 @@ namespace gameEngine
         double m_RotationDeg = 0;
         GraphBlend m_Blend{};
         bool m_IsVisible = true;
-        weak_ptr<SpriteTexture> m_VisibilityParent{};
+        WeakPtr<SpriteTexture> m_VisibilityParent{};
 
         std::function<void(IAppState*)> m_RenderingProcess;
         std::function<void(IAppState*)> m_UpdateProcess;
@@ -46,8 +46,9 @@ namespace gameEngine
         SpriteTexture();
         SpriteTexture(Graph *graph, Rect<int> &srcRect);
     public:
-        static shared_ptr<SpriteTexture> Create(Graph *graph);
-        static shared_ptr<SpriteTexture> Create(Graph *graph, Rect<int> &srcRect);
+        static SpriteTexture Create();
+        static SpriteTexture Create(Graph *graph);
+        static SpriteTexture Create(Graph *graph, Rect<int> &srcRect);
 
         void SetPosition(const Vec2<double>& pos);
         [[nodiscard]] Vec2<double> GetPosition() const;
@@ -68,14 +69,14 @@ namespace gameEngine
         void SetFlip(bool isFlip);
         [[nodiscard]] bool GetFlip() const;
 
-        void SetPositionParent(const shared_ptr<SpriteTexture>& parent);
-        [[nodiscard]] weak_ptr<SpriteTexture> GetPositionParent() const;
+        void SetPositionParent(SpriteTexture &parent);
+        [[nodiscard]] WeakPtr<SpriteTexture> GetPositionParent() const;
 
         void SetVisible(bool isVisible);
         [[nodiscard]] bool GetVisible() const;
 
-        void SetVisibilityParent(const shared_ptr<SpriteTexture>& parent);
-        [[nodiscard]] weak_ptr<SpriteTexture> GetVisibilityParent() const;
+        void SetVisibilityParent(SpriteTexture &parent);
+        [[nodiscard]] WeakPtr<SpriteTexture> GetVisibilityParent() const;
 
         void SetRotationDeg(double deg);
         [[nodiscard]] double GetRotationDeg() const;

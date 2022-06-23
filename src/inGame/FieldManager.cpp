@@ -17,9 +17,8 @@ namespace inGame
             ScreenMatSize(GameRoot::GetInstance().GetAppState()->GetScreenSize() / PixelPerMat),
             m_ParentalScene(parentalScene), m_TileMap(parentalScene)
     {
-        m_Texture = SpriteTexture::Create(nullptr);
-        m_Texture->SetRenderingProcess([this](IAppState *appState) { renderTileMap(appState); });
-        ZIndexBackGround(m_Texture.get()).ApplyZ();
+        m_Texture.SetRenderingProcess([this](IAppState *appState) { renderTileMap(appState); });
+        ZIndexBackGround(&m_Texture).ApplyZ();
 
         m_ParentalScene->GetScrollManager()->RegisterSprite(m_Texture);
     }
@@ -32,7 +31,7 @@ namespace inGame
 
     void FieldManager::renderTileMap(IAppState *appState)
     {
-        const auto globalPos = m_Texture->GetParentalGlobalPosition();
+        const auto globalPos = m_Texture.GetParentalGlobalPosition();
         const auto screenGlobalPos = (globalPos * appState->GetPixelPerUnit()).CopyBy<int>();
 
         const auto negativeCorrection = Vec2<int>{globalPos.X<0 ? -1 : 0, globalPos.Y<0 ? -1 : 0};

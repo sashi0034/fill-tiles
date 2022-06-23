@@ -19,7 +19,7 @@ namespace inGame
         IAppState* GetAppState();
         TextureAnimator& GetTextureAnimator();
     private:
-        shared_ptr<SpriteTexture> m_Spr{};
+        SpriteTexture m_Spr = SpriteTexture::Create();
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         IAppState* m_AppState;

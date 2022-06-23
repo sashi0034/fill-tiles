@@ -34,10 +34,10 @@ namespace gameEngine{
         return isIntersect;
     }
 
-    shared_ptr<TextureCollider>
+    unique_ptr<TextureCollider>
     TextureCollider::Create(const Rect<int> &colliderRect, SpriteTexture *parentalLinkingPos)
     {
-        auto product = shared_ptr<TextureCollider>(new TextureCollider(colliderRect, parentalLinkingPos));
+        auto product = unique_ptr<TextureCollider>(new TextureCollider(colliderRect, parentalLinkingPos));
         return product;
     }
 

@@ -7,31 +7,35 @@
 using namespace boost::coroutines2;
 namespace gameEngine{
 
-    weak_ptr<boost::coroutines2::coroutine<CoroTask>::pull_type> CoroutineManager::Start(boost::coroutines2::coroutine<CoroTask>::pull_type *task)
+    CoroutineElement::CoroutineElement(boost::coroutines2::coroutine<CoroTask>::pull_type * task) : m_Task(task)
+    {}
+
+    boost::coroutines2::coroutine<CoroTask>::pull_type& CoroutineElement::GetTask() const
     {
-        auto childPtr = m_Pool.Birth(task);
-        return childPtr;
+        return *m_Task;
     }
 
-    bool CoroutineManager::Destroy(boost::coroutines2::coroutine<CoroTask>::pull_type *task)
+
+    WeakPtr<CoroutineElement> CoroutineManager::Start(CoroutineElement *task)
+    {
+        return m_Pool.Birth(task)->GetWeakPtr();
+    }
+
+    bool CoroutineManager::Destroy(CoroutineElement *task)
     {
         return m_Pool.Destroy(task);
     }
 
     void CoroutineManager::UpdateEach()
     {
-        std::vector<coroutine<CoroTask>::pull_type*> garbageList{};
-
-        m_Pool.ProcessEach([&](shared_ptr<coroutine<CoroTask>::pull_type>& task){{
-            (*task)();
-            if (*task)
+        m_Pool.ProcessEach([&](CoroutineElement& element){{
+            auto& task = element.GetTask();
+            (task)();
+            if (task)
                 {}
             else
-                garbageList.push_back(task.get());
+                Destroy(&element);
         }});
-
-        for (auto garbage : garbageList)
-            Destroy(garbage);
     }
 
     CoroutineManager::~CoroutineManager()

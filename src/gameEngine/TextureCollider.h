@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_TEXTURECOLLIDER_H
 #define FILL_TILES_TEXTURECOLLIDER_H
 
+#include "WeakPtr.h"
 #include "SpriteTexture.h"
 #include "ChildrenPool.h"
 
@@ -12,8 +13,9 @@ namespace gameEngine
 {
     class TextureCollider
     {
+        DEF_WEAK_CONTROLLER(TextureCollider);
     public:
-        static shared_ptr<TextureCollider> Create(const Rect<int> &colliderRect, SpriteTexture *parentalLinkingPos);
+        static unique_ptr<TextureCollider> Create(const Rect<int> &colliderRect, SpriteTexture *parentalLinkingPos);
 
         bool IsIntersectWith(const Rect<double> &checkingRect);
 

@@ -17,7 +17,7 @@ namespace inGame{
 
         m_FieldManager = m_ChildrenPool.BirthAs<FieldManager>(new FieldManager(&m_ChildrenPool, this));
 
-        m_ChildrenPool.ProcessEach([&](auto& child){ child->Init();});
+        m_ChildrenPool.ProcessEach([&](auto& child){ child.Init();});
 
         m_ProcessUntilFileChanged = std::make_unique<ProcessTimer>([&](){
             bool changed = m_FileDetector.CheckChanged();
@@ -28,7 +28,7 @@ namespace inGame{
 
     void FieldViewDebugScene::Update(IAppState *appState)
     {
-        m_ChildrenPool.ProcessEach([&](auto& child){ child->Update(appState);});
+        m_ChildrenPool.ProcessEach([&](auto& child){ child.Update(appState);});
 
         scrollByMouse(appState);
 

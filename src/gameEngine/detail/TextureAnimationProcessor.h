@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_TEXTUREANIMATIONPROCESSOR_H
 #define FILL_TILES_TEXTUREANIMATIONPROCESSOR_H
 
+#include "../WeakPtr.h"
 #include "../SpriteTexture.h"
 #include "../ChildrenPool.h"
 
@@ -37,7 +38,7 @@ namespace gameEngine::detail
     class ITextureAnimationPointer
     {
     public:
-        virtual weak_ptr<ITextureAnimationPointer> GetWeakPtr() = 0;
+        virtual WeakPtr<ITextureAnimationPointer> ToWeakPtr() = 0;
         virtual void ForceDestroy() = 0;
     };
 
@@ -82,7 +83,10 @@ namespace gameEngine::detail
             public ITextureAnimationGraphProperty
     {
     public:
-        static shared_ptr<TextureAnimationProcessor> Create(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, weak_ptr<TextureAnimationProcessor> *beforeAnimation);
+        DEF_WEAK_CONTROLLER(TextureAnimationProcessor);
+        WeakPtr<ITextureAnimationPointer> ToWeakPtr() override;
+    public:
+        TextureAnimationProcessor(const WeakPtr <SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, WeakPtr<TextureAnimationProcessor> *beforeAnimation);
 
         ITextureAnimationEaseProperty * AnimPosition(Vec2<double> endPos, double duration) override;
         ITextureAnimationEaseProperty * AnimRotation(double endDeg, double duration) override;
@@ -93,7 +97,6 @@ namespace gameEngine::detail
         ITextureAnimationEaseProperty * SetEase(gameEngine::EAnimEase easeType) override;
         ITextureAnimationEaseProperty * SetLoop(int loop) override;
         ITextureAnimationEaseProperty * SetRelative(bool isRelative) override;
-        weak_ptr<ITextureAnimationPointer> GetWeakPtr() override;
 
         ITextureAnimationGraphProperty *AnimGraph(Vec2<int> cellSize) override;
         ITextureAnimationGraphProperty *SetCellSrcStart(Vec2<int> cellSrcStart) override;
@@ -109,18 +112,16 @@ namespace gameEngine::detail
         ITextureAnimationGraphProperty *SetFrameLoopEndless(bool isEndless) override;
 
     private:
-        TextureAnimationProcessor(weak_ptr<SpriteTexture> &texture, IChildrenPool <TextureAnimationProcessor> *parentalPool, weak_ptr<TextureAnimationProcessor> *beforeAnimation);
-
-        weak_ptr<TextureAnimationProcessor> m_SelfWeakPtr{};
+        WeakPtr<TextureAnimationProcessor> m_SelfWeakPtr{};
         unique_ptr<textureAnimation::AnimationBase> m_AnimationProcess{};
-        weak_ptr<SpriteTexture> m_TargetTexture;
+        WeakPtr<SpriteTexture> m_TargetTexture;
         IChildrenPool <TextureAnimationProcessor> * m_ParentalPool;
         double m_CountTime = 0;
 
         bool m_IsImmediatelyStepToNext = false;
         bool m_IsTriggered = false;
-        weak_ptr<TextureAnimationProcessor> m_BeforeAnimation{};
-        weak_ptr<TextureAnimationProcessor> m_NextAnimation{};
+        WeakPtr<TextureAnimationProcessor> m_BeforeAnimation{};
+        WeakPtr<TextureAnimationProcessor> m_NextAnimation{};
 
         void trigger();
         void stepToNextAnimation();

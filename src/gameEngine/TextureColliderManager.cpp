@@ -13,7 +13,7 @@ namespace gameEngine
     TextureColliderManager::TextureColliderManager()
     = default;
 
-    void TextureColliderManager::AddCollider(const shared_ptr<TextureCollider> &collider)
+    void TextureColliderManager::AddCollider(const WeakPtr<TextureCollider> &collider)
     {
         m_ColliderList.push_back(collider);
     }
@@ -36,7 +36,7 @@ namespace gameEngine
         bool result = false;
 
         for (int i = 0; i < size; ++i)
-            if (auto collider = m_ColliderList[i].lock())
+            if (auto collider = m_ColliderList[i].GetPtr())
             {
                 if (collider->IsIntersectWith(checkingOther)) result = true;
             }

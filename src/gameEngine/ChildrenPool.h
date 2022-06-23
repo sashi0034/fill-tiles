@@ -12,26 +12,23 @@
 #include <iostream>
 
 using std::unique_ptr;
-using std::shared_ptr;
-using std::weak_ptr;
 
 namespace gameEngine
 {
     template<typename T> class IChildrenPool
     {
     public:
-        virtual weak_ptr<T> Birth(T* child) = 0;
-        virtual void Register(shared_ptr<T>& child)=0;
+        virtual T* Birth(T* child) = 0;
         virtual bool Destroy(T* child) = 0;
     };
 
 
     template<typename T> class ChildrenPool : public IChildrenPool<T>
     {
-        std::vector<shared_ptr<T>> m_Pool{};
+        std::vector<unique_ptr<T>> m_Pool{};
         int currentProcessingIndex = 0;
 
-        typename std::vector<shared_ptr<T>>::iterator findIterator(T* target)
+        typename std::vector<unique_ptr<T>>::iterator findIterator(T* target)
         {
             assert(!m_Pool.empty());
             assert(currentProcessingIndex < int(m_Pool.size()));
@@ -40,7 +37,7 @@ namespace gameEngine
 
             auto iter = std::find_if(
                     m_Pool.begin(), m_Pool.end(),
-                    [target](shared_ptr<T> child) {
+                    [target](unique_ptr<T>& child) {
                         return child.get() == target;
                     });
 
@@ -56,11 +53,10 @@ namespace gameEngine
             }
         }
     public:
-        weak_ptr<T> Birth(T* child) override
+        T* Birth(T* child) override
         {
-            auto product = std::shared_ptr<T>(child);
-            m_Pool.push_back(product);
-            return product;
+            m_Pool.push_back(unique_ptr<T>(child));
+            return child;
         };
         template<class CastedType> CastedType* BirthAs(T* child)
         {
@@ -68,10 +64,6 @@ namespace gameEngine
             auto casted = dynamic_cast<CastedType*>(child);
             return casted;
         }
-        void Register(shared_ptr<T>& child) override
-        {
-            m_Pool.template emplace_back(child);
-        };
         bool Destroy(T* child) override
         {
             if (m_Pool.empty()) return false;
@@ -80,13 +72,11 @@ namespace gameEngine
 
             if (iter==m_Pool.end()) return false;
 
-            assert(iter->use_count()==1);
-
-            iter->reset();
+            *iter = nullptr;
 
             return true;
         }
-        void ProcessEach(std::function<void(shared_ptr<T>&)> process)
+        void ProcessEach(std::function<void(T&)> process)
         {
             int size =m_Pool.size();
             std::vector<int> garbage{};
@@ -95,7 +85,7 @@ namespace gameEngine
             {
                 currentProcessingIndex = i;
                 if (m_Pool[i] != nullptr)
-                    process(m_Pool[i]);
+                    process(*m_Pool[i]);
                 else
                     garbage.push_back(i);
             }
@@ -105,11 +95,12 @@ namespace gameEngine
         }
         void Release()
         {
-            m_Pool = std::vector<shared_ptr<T>>{};
+            m_Pool = std::vector<unique_ptr<T>>{};
         }
         ~ChildrenPool()
         {
             assert(m_Pool.size()==0);
+            Release();
         }
     };
 }

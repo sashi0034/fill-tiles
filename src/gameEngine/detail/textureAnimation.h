@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_TEXTUREANIMATION_H
 #define FILL_TILES_TEXTUREANIMATION_H
 
+#include "../WeakPtr.h"
 #include <functional>
 #include "../TextureAnimator.h"
 #include "TextureAnimationEaser.h"
@@ -40,12 +41,12 @@ namespace gameEngine::detail::textureAnimation
     class Position final: public EaseAbleAnimationBase
     {
     public:
-        Position(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime);
+        Position(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
         ~Position() override = default;
     private:
-        weak_ptr<SpriteTexture> m_Texture;
+        WeakPtr<SpriteTexture> m_Texture;
         Vec2<double> m_StartPos{};
         Vec2<double> m_EndPos{};
         TextureAnimationEaser m_Easer;
@@ -54,12 +55,12 @@ namespace gameEngine::detail::textureAnimation
     class Rotation final: public EaseAbleAnimationBase
     {
     public:
-        Rotation(const weak_ptr<SpriteTexture> &targetTexture, double endDeg, double endTime);
+        Rotation(const WeakPtr<SpriteTexture> &targetTexture, double endDeg, double endTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
         ~Rotation() override = default;
     private:
-        weak_ptr<SpriteTexture> m_Texture;
+        WeakPtr<SpriteTexture> m_Texture;
         double m_StartDeg=0;
         double m_EndDeg{};
         TextureAnimationEaser m_Easer;
@@ -68,12 +69,12 @@ namespace gameEngine::detail::textureAnimation
     class Scale final: public EaseAbleAnimationBase
     {
     public:
-        Scale(const weak_ptr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime);
+        Scale(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime);
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
         ~Scale() override = default;
     private:
-        weak_ptr<SpriteTexture> m_Texture;
+        WeakPtr<SpriteTexture> m_Texture;
         Vec2<double> m_StartScale{};
         Vec2<double> m_EndScale{};
         TextureAnimationEaser m_Easer;
@@ -82,7 +83,7 @@ namespace gameEngine::detail::textureAnimation
     class Graph final: public AnimationBase
     {
     public:
-        Graph(const weak_ptr<SpriteTexture> &targetTexture, Vec2<int> cellSize);
+        Graph(const WeakPtr<SpriteTexture> &targetTexture, Vec2<int> cellSize);
         bool UpdateAnimation(double deltaSecond) override;
         void AddFrame(Vec2<int> &cellPos, double duration, bool isFlip);
         void SetLoopMax(int loopMax);
@@ -102,7 +103,7 @@ namespace gameEngine::detail::textureAnimation
             const bool IsFlip;
         };
         std::vector<FrameElement> m_FrameList{};
-        weak_ptr<SpriteTexture> m_Texture;
+        WeakPtr<SpriteTexture> m_Texture;
         Vec2<int> m_CellSize{};
         Vec2<int> m_CellSrcStart{};
         double m_CurrentFrameTime = 0;

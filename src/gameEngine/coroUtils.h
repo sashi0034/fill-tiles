@@ -6,15 +6,16 @@
 #define FILL_TILES_COROUTILS_H
 
 #include "CoroTask.h"
+#include "WeakPtr.h"
 
 namespace gameEngine::coroUtils
     {
         template<typename T>
         static CoroTask WaitForExpire(
                 boost::coroutines2::coroutine<CoroTask>::push_type &yield,
-                std::weak_ptr<T> observer)
+                const WeakPtr <T> observer)
         {
-            while (!observer.expired())
+            while (!observer.IsNull())
                 yield();
         }
     }

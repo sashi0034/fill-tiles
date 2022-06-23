@@ -6,7 +6,7 @@
 #include "TextureAnimationEaser.h"
 namespace gameEngine::detail
 {
-    TextureAnimationEaser::TextureAnimationEaser(const weak_ptr<SpriteTexture> &mTargetTexture, double endSecond)
+    TextureAnimationEaser::TextureAnimationEaser(const WeakPtr<SpriteTexture> &mTargetTexture, double endSecond)
             : m_TargetTexture(mTargetTexture), m_EndTime(endSecond)
     {}
 

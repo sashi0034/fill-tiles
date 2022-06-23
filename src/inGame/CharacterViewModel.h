@@ -20,15 +20,13 @@ namespace inGame
         void SetModelPos(const Vec2<double>& pos);
         void SetModelPos(const MatPos& pos);
         void SetCollider(IFieldManager *field, const Rect<int> &collider);
-        SpriteTexture * GetModel();
-        SpriteTexture * GetView();
-        shared_ptr<SpriteTexture>& GetModelShared();
-        shared_ptr<SpriteTexture>& GetViewShared();
+        SpriteTexture& GetModel();
+        SpriteTexture& GetView();
         void SetZ();
     private:
-        shared_ptr<SpriteTexture> m_ViewModel{};
-        shared_ptr<SpriteTexture> m_View{};
-        shared_ptr<TextureCollider> m_Collider{};
+        SpriteTexture m_ViewModel= SpriteTexture::Create();
+        SpriteTexture m_View = SpriteTexture::Create();
+        unique_ptr<TextureCollider> m_Collider;
     };
 }
 

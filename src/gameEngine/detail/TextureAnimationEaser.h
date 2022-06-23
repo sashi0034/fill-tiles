@@ -14,7 +14,7 @@ namespace gameEngine::detail
     {
     private:
     public:
-        explicit TextureAnimationEaser(const weak_ptr<SpriteTexture> &mTargetTexture, double endSecond);
+        explicit TextureAnimationEaser(const WeakPtr<SpriteTexture> &mTargetTexture, double endSecond);
 
         void SetEase(EAnimEase ease);
         void SetLoop(int loopMax);
@@ -23,7 +23,7 @@ namespace gameEngine::detail
         bool IsDead();
 
     private:
-        weak_ptr<SpriteTexture> m_TargetTexture;
+        WeakPtr<SpriteTexture> m_TargetTexture;
         EAnimEase m_Ease = EAnimEase::Linear;
 
         const double m_EndTime = 0;

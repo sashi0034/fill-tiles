@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_CHILDBASE_H
 #define FILL_TILES_CHILDBASE_H
 
+#include "WeakPtr.h"
 #include "ChildrenPool.h"
 
 namespace gameEngine
@@ -12,6 +13,7 @@ namespace gameEngine
     template <typename T>
     class ChildBase
     {
+        DEF_WEAK_CONTROLLER(ChildBase);
     private:
         IChildrenPool<T>* m_BelongingPool{};
     public:
