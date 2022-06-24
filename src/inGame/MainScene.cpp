@@ -9,6 +9,7 @@
 #include "AnimTest.h"
 #include "field/TileMap.h"
 #include "GameRoot.h"
+#include "MineFlowerManager.h"
 
 namespace inGame{
     MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root)
@@ -18,7 +19,9 @@ namespace inGame{
 
         m_FieldManager = m_ChildrenPool.BirthAs<FieldManager>(new FieldManager(&m_ChildrenPool, this));
 
-        m_ChildrenPool.Birth(new Player(&m_ChildrenPool, this));
+        m_Player = m_ChildrenPool.BirthAs<Player>(new Player(&m_ChildrenPool, this));
+
+        m_ChildrenPool.Birth(new MineFlowerManager(&m_ChildrenPool, this));
 
         init();
     }
@@ -58,6 +61,11 @@ namespace inGame{
     void MainScene::init()
     {
         m_ChildrenPool.ProcessEach([&](auto& child){ child.Init();});
+    }
+
+    Player *MainScene::GetPlayer()
+    {
+        return m_Player;
     }
 
 }

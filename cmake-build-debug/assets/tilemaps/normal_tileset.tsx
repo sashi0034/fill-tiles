@@ -11,6 +11,11 @@
    <property name="kind" value="high_plateau"/>
   </properties>
  </tile>
+ <tile id="24">
+  <properties>
+   <property name="kind" value="mine_flower"/>
+  </properties>
+ </tile>
  <tile id="34">
   <properties>
    <property name="kind" value="low_basin"/>

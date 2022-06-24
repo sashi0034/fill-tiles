@@ -15,6 +15,7 @@
 namespace inGame
 {
     class GameRoot;
+    class Player;
 
     class IMainScene
     {
@@ -22,6 +23,7 @@ namespace inGame
         virtual GameRoot* GetRoot() = 0;
         virtual ScrollManager* GetScrollManager() = 0;
         virtual IFieldManager* GetFieldManager() = 0;
+        virtual Player* GetPlayer() = 0;
     };
 
     class MainScene: public ActorBase, public IMainScene
@@ -29,6 +31,9 @@ namespace inGame
     public:
         explicit MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root);
         ~MainScene();
+
+        Player *GetPlayer() override;
+
         TextureAnimator& GetTextureAnimator();
         void Update(IAppState* appState) override;
         GameRoot *GetRoot() override;
@@ -41,6 +46,7 @@ namespace inGame
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         FieldManager* m_FieldManager{};
+        Player* m_Player;
         unique_ptr<ScrollManager> m_ScrollManager{};
     };
 }

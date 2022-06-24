@@ -11,6 +11,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include "../Boolean.h"
 #include "StaticTileset.h"
+#include "../MatPos.h"
 
 namespace inGame{
     class IMainScene;

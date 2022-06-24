@@ -22,6 +22,9 @@ namespace inGame
         GameRoot *GetRoot() override;
         IFieldManager* GetFieldManager() override;
         ScrollManager *GetScrollManager() override;
+
+        Player *GetPlayer() override;
+
     private:
         GameRoot* m_Root;
         ChildrenPool<ActorBase> m_ChildrenPool{};

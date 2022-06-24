@@ -58,11 +58,11 @@ namespace gameEngine
             m_Pool.push_back(unique_ptr<T>(child));
             return child;
         };
-        template<class CastedType> CastedType* BirthAs(T* child)
+        template<class CastedType> CastedType* BirthAs(CastedType* child)
         {
+            static_assert(std::is_base_of<T, CastedType>::value, "Child type cannot cast to base type.");
             Birth(child);
-            auto casted = dynamic_cast<CastedType*>(child);
-            return casted;
+            return child;
         }
         bool Destroy(T* child) override
         {

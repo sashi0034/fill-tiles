@@ -28,6 +28,7 @@ namespace inGame
         virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
         virtual ITextureAnimator* GetCharacterAnimator() = 0;
         virtual TextureColliderManager* GetCharacterCollider() = 0;
+        virtual field::ITileMap* GetTileMap() = 0;
 
         virtual void OverwriteWallFlag(const MatPos &pos, bool isWal) = 0;
         virtual void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &size, bool isWal) = 0;
@@ -53,7 +54,7 @@ namespace inGame
         void OverwriteWallFlag(const MatPos &pos, bool isWall) override;
         void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &fillSize, bool isWall) override;
 
-        field::ITileMap* GetTileMap();
+        field::ITileMap* GetTileMap() override;
 
         static inline const int PixelPerMat = 16;
         static inline const Vec2<int> MatPixelSize = {PixelPerMat, PixelPerMat};

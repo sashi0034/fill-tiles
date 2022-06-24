@@ -48,7 +48,8 @@ namespace inGame::field
                 break;
             case ETileKind::normal_plain_cliff:
                 renderPlateauCliff(m_ResImage->normal_plain_16x16.get(), [&](int x, int y) {
-                    return isNeighbor(x, y, ETileKind::normal_plain_cliff, ETileKind::normal_plain);
+                    return isNeighbor(x, y, ETileKind::normal_plain_cliff);
+                    //return isNeighbor(x, y, ETileKind::normal_plain_cliff, ETileKind::normal_plain);
                 });
                 break;
             case ETileKind::high_plateau:
@@ -58,7 +59,8 @@ namespace inGame::field
                 break;
             case ETileKind::high_plateau_cliff:
                 renderPlateauCliff(m_ResImage->high_plateau_16x16.get(), [&](int x, int y) {
-                    return isNeighbor(x, y, ETileKind::high_plateau_cliff, ETileKind::high_plateau);
+                    return isNeighbor(x, y, ETileKind::high_plateau_cliff);
+                    //return isNeighbor(x, y, ETileKind::high_plateau_cliff, ETileKind::high_plateau);
                 });
                 break;
             default:

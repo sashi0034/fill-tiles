@@ -98,4 +98,9 @@ namespace inGame{
     {
         m_ChildrenPool.Release();
     }
+
+    Player *FieldViewDebugScene::GetPlayer()
+    {
+        return nullptr;
+    }
 }

@@ -11,7 +11,15 @@
 #include "FieldManager.h"
 #include "MainScene.h"
 #include "CharacterViewModel.h"
+#include "rxcpp/rx.hpp"
 
+namespace rx
+{
+    using namespace rxcpp;
+    using namespace rxcpp::subjects;
+    using namespace rxcpp::operators;
+    using namespace rxcpp::util;
+}
 
 namespace inGame
 {
@@ -22,6 +30,7 @@ namespace inGame
         void Update(IAppState *appState) override;
         Vec2<double> GetPos();
         MatPos GetMatPos();
+        [[nodiscard]] rx::observable<MatPos> OnMoveFinish() const;
         static inline const Vec2<int> CellSize{32, 32};
     private:
         void setPos(Vec2<double> newPos);
@@ -39,6 +48,8 @@ namespace inGame
         EAngle m_Angle = EAngle::Down;
         IMainScene* m_ParentalScene;
         IFieldManager* m_Field;
+
+        rx::subject<MatPos> m_OnMoveFinish;
 
         static EAngle getInputAngle(const Uint8 *keyState);
         void changeAnimation(const std::function<void()>& animation);

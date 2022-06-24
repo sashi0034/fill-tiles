@@ -28,6 +28,7 @@ namespace inGame::field
         small_tree,
         big_tree,
         stairs,
+        mine_flower,
 
         max,
     };

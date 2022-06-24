@@ -287,7 +287,7 @@ namespace inGame::field
                 readTileProperty(property.second, &newTile);
             }
 
-            assert(newTile.Kind != ETileKind::none);
+            assert(newTile.Kind != ETileKind::none && "Tile property may not be registered at ETileKind.");
 
             m_Tileset[id] = newTile;
             m_TilesetByKind[newTile.Kind] = &m_Tileset[id];
@@ -308,9 +308,10 @@ namespace inGame::field
         {
             ETileKind kind = magic_enum::enum_cast<ETileKind>(value).value_or(ETileKind::none);
             propertyRef->Kind = kind;
-        } else
+        }
+        else
         {
-            assert(false);
+            assert(!"Invalid chip property exit.");
         }
     }
 

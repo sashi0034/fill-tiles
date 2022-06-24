@@ -49,7 +49,6 @@ namespace inGame
         }
 
         self->changeStateToWalk(appState, goingAngle, true);
-
     }
 
     EAngle Player::waitForWalkUntilInput(Player *self, const IAppState *appState)
@@ -111,6 +110,8 @@ namespace inGame
                 ->ToWeakPtr();
 
         coroUtils::WaitForExpire<>(yield, moveAnim);
+
+        self->m_OnMoveFinish.get_subscriber().on_next(self->GetMatPos());
 
         LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
 
@@ -219,6 +220,11 @@ namespace inGame
     {
         this->m_PlayerAnimator.Release();
         animation();
+    }
+
+    rx::observable<MatPos> Player::OnMoveFinish() const
+    {
+        return m_OnMoveFinish.get_observable();
     }
 
 
