@@ -71,6 +71,7 @@ namespace inGame
                         pixelScaleSize,
                         &m_TileMap);
 
+                // @todo: テクスチャをバッファに格納して処理を減らす
                 for (const auto chip : chipList)
                     renderChip(chip, renderer, appState, renderingScreenPos);
             }

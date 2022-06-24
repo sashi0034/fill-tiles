@@ -39,23 +39,36 @@ namespace inGame
     {
         yield();
 
-        self->m_PlayerAnimator.Release();
-        self->animWait(self->m_Angle);
+        self->changeAnimation([&](){self->animWait(self->m_Angle);});
 
         EAngle goingAngle = EAngle::None;
         while (goingAngle == EAngle::None)
         {
-            auto keyState = appState->GetKeyboardState();
-            auto inputAngle = getInputAngle(keyState);
-
-            if (inputAngle!=EAngle::None && self->m_Field->CanMoveTo(self->GetMatPos(), inputAngle))
-                goingAngle = inputAngle;
-
+            goingAngle = waitForWalkUntilInput(self, appState);
             yield();
         }
 
         self->changeStateToWalk(appState, goingAngle, true);
 
+    }
+
+    EAngle Player::waitForWalkUntilInput(Player *self, const IAppState *appState)
+    {
+        EAngle goingAngle = EAngle::None;
+        auto keyState = appState->GetKeyboardState();
+        auto inputAngle = getInputAngle(keyState);
+
+        if (inputAngle!=EAngle::None)
+        {
+            if (self->m_Field->CanMoveTo(self->GetMatPos(), inputAngle))
+                goingAngle = inputAngle;
+            else if (self->m_Angle != inputAngle)
+            {
+                self->m_Angle = inputAngle;
+                self->changeAnimation([&](){self->animWait(self->m_Angle);});
+            }
+        }
+        return goingAngle;
     }
 
     void Player::Update(IAppState *appState)
@@ -88,10 +101,8 @@ namespace inGame
         bool isDash = isDashing(appState->GetKeyboardState());
         double movingTIme = isDash ? 0.2 : 0.4;
 
-        if (canChangeAnim){
-            self->m_PlayerAnimator.Release();
-            self->animWalk(goingAngle, isDash ? 0.5 : 1.0);
-        }
+        if (canChangeAnim)
+            self->changeAnimation([&](){self->animWalk(goingAngle, isDash ? 0.5 : 1.0);});
 
         self->m_Angle = goingAngle;
 
@@ -202,6 +213,12 @@ namespace inGame
     {
         auto pixelPos = GetPos().CastTo<int>();
         return MatPos((pixelPos + FieldManager::MatPixelSize / 2) / FieldManager::PixelPerMat);
+    }
+
+    void Player::changeAnimation(const std::function<void()>& animation)
+    {
+        this->m_PlayerAnimator.Release();
+        animation();
     }
 
 
