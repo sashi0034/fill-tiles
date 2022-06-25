@@ -27,6 +27,7 @@ namespace inGame
     {
     public:
         explicit Player(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene);
+        void Init() override;
         void Update(IAppState *appState) override;
         Vec2<double> GetPos();
         void SetPos(const Vec2<double> &pos);
@@ -39,6 +40,8 @@ namespace inGame
 
         void initAction();
 
+        void scrollByTracking(const Vec2<double> &trackingPos);
+
         static bool isDashing(const Uint8 *keyState);
 
         unique_ptr<CharacterViewModel> m_View{};
@@ -50,7 +53,9 @@ namespace inGame
         IMainScene* m_ParentalScene;
         IFieldManager* m_Field;
 
+        ChildrenPool<ProcessTimer> m_SubProcess{};
         rx::subject<MatPos> m_OnMoveFinish;
+        bool m_ShouldResetScroll = true;
 
         static EAngle getInputAngle(const Uint8 *keyState);
         void changeAnimation(const std::function<void()>& animation);

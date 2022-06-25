@@ -77,9 +77,7 @@ namespace inGame
 
         m_PlayerAnimator.Update(appState->GetTime().GetDeltaSec());
 
-        m_ParentalScene->GetScrollManager()->SetScroll(GetPos() * -1 +
-                                                               (m_ParentalScene->GetRoot()->GetAppState()->GetScreenSize() /
-                                                                2).CastTo<double>());
+        m_SubProcess.ProcessEach([&](ProcessTimer& process){process.Update(appState->GetTime().GetDeltaSec()); });
 
         ZIndexCharacter(*m_View).ApplyZ();
 
@@ -130,6 +128,7 @@ namespace inGame
     {
         LOG_INFO << "Player Position set to " << pos.ToString() << std::endl;
         m_View->GetModel().SetPosition(pos);
+        m_ShouldResetScroll = true;
     }
 
     void Player::setPos(Vec2<double> newPos)
@@ -231,6 +230,38 @@ namespace inGame
     rx::observable<MatPos> Player::OnMoveFinish() const
     {
         return m_OnMoveFinish.get_observable();
+    }
+
+    void Player::scrollByTracking(const Vec2<double> &trackingPos)
+    {
+        auto scrollManager = m_ParentalScene->GetScrollManager();
+
+        if (m_ShouldResetScroll)
+        {
+            m_ShouldResetScroll = false;
+            scrollManager->SetScroll(trackingPos);
+            return;
+        }
+
+        auto currPos = scrollManager->GetScroll();
+
+        const double deltaMovingRate = 0.02;
+        auto newPos = currPos * (1 - deltaMovingRate ) + trackingPos * deltaMovingRate;
+
+        scrollManager->SetScroll(newPos);
+    }
+
+    void Player::Init()
+    {
+        const double fps60 = 1.0 / 60;
+
+        m_SubProcess.Birth(new ProcessTimer([&]() {
+            scrollByTracking(GetPos() * -1 +
+                             (m_ParentalScene->GetRoot()->GetAppState()->GetScreenSize() /
+                              2).CastTo<double>());
+            return EProcessStatus::Running;
+        }, fps60));
+
     }
 
 
