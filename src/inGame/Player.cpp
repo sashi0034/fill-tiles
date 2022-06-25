@@ -126,6 +126,12 @@ namespace inGame
         return m_View->GetModel().GetPosition();
     }
 
+    void Player::SetPos(const Vec2<double> &pos)
+    {
+        LOG_INFO << "Player Position set to " << pos.ToString() << std::endl;
+        m_View->GetModel().SetPosition(pos);
+    }
+
     void Player::setPos(Vec2<double> newPos)
     {
         m_View->GetModel().SetPosition(newPos);

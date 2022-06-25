@@ -29,6 +29,7 @@ namespace inGame
         explicit Player(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene);
         void Update(IAppState *appState) override;
         Vec2<double> GetPos();
+        void SetPos(const Vec2<double> &pos);
         MatPos GetMatPos();
         [[nodiscard]] rx::observable<MatPos> OnMoveFinish() const;
         static inline const Vec2<int> CellSize{32, 32};

@@ -13,6 +13,7 @@
 #include "../GameRoot.h"
 #include "../character/SmallTree.h"
 #include "../character/BigTree.h"
+#include "../Player.h"
 
 
 namespace inGame::field
@@ -87,8 +88,11 @@ namespace inGame::field
     {
         for (const auto &treeLayer: treeMap.get_child(""))
         {
-            if (treeLayer.first != "layer") continue;
-            readLayerData(treeLayer.second.get_child("data"));
+            if (treeLayer.first == "layer")
+                readLayerData(treeLayer.second.get_child("data"));
+
+            if (treeLayer.first == "objectgroup")
+                readObjectGroup(treeLayer.second.get_child(""));
         }
     }
 
@@ -256,6 +260,58 @@ namespace inGame::field
     }
 
 
+
+    void TileMap::readObjectGroup(
+            const boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> &treeObjectGroup)
+    {
+        using namespace boost::property_tree;
+
+        for (const auto &treeLayer: treeObjectGroup.get_child(""))
+        {
+            if (treeLayer.first != "object") continue;
+
+            const auto treeObject = treeLayer.second.get_child("");
+            const std::string objectType = treeObject.get<std::string>("<xmlattr>.type");
+            const std::string objectName = treeObject.get<std::string>("<xmlattr>.name");
+            const int objectX = boost::lexical_cast<int>(treeObject.get<std::string>("<xmlattr>.x"));
+            const int objectY = boost::lexical_cast<int>(treeObject.get<std::string>("<xmlattr>.y"));
+
+            std::unordered_map<std::string, std::string> objectProperty{};
+            if (const auto properties = treeObject.get_child_optional("properties"))
+                for (const auto& property : properties.get())
+                {
+                    if (property.first != "property") continue;
+                    const std::string propertyName =  property.second.get<std::string>("<xmlattr>.name");
+                    const std::string propertyValue =  property.second.get<std::string>("<xmlattr>.value");
+                    objectProperty[propertyName] = propertyValue;
+                }
+
+            readObjectInObjectGroup(objectType, objectName, Vec2<int>{objectX, objectY}, objectProperty);
+        }
+    }
+
+    void
+    TileMap::readObjectInObjectGroup(const std::string &objectType, const std::string &objectName, const Vec2<int> &pos,
+                                     std::unordered_map<std::string, std::string> &objectProperty)
+    {
+        if (objectType=="player")
+        {
+            auto player = m_MainScene->GetPlayer();
+            if (player!= nullptr) player->SetPos(pos.CastTo<double>());
+        }
+        else if (objectType=="test")
+        {
+            std::cout << pos.ToString() << std::endl;
+        }
+        else
+        {
+            assert(!"Invalid Object Exits In objectgroup.");
+        }
+        (void)objectName;
+        (void)objectProperty;
+    }
+
+
     void TileMap::loadTilesetFile(const std::string &fileName)
     {
         using namespace boost::property_tree;
@@ -287,7 +343,7 @@ namespace inGame::field
                 readTileProperty(property.second, &newTile);
             }
 
-            assert(newTile.Kind != ETileKind::none && "Tile property may not be registered at ETileKind.");
+            LOG_ASSERT(newTile.Kind != ETileKind::none, "Tile property may not be registered at ETileKind.");
 
             m_Tileset[id] = newTile;
             m_TilesetByKind[newTile.Kind] = &m_Tileset[id];
