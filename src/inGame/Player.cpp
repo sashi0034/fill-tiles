@@ -41,6 +41,9 @@ namespace inGame
 
         self->changeAnimation([&](){self->animWait(self->m_Angle);});
 
+        // フィールド上でイベントが発生していたら待機する
+        coroUtils::WaitForTrue(yield, [self](){return !self->isRunningFieldEvent();});
+
         EAngle goingAngle = EAngle::None;
         while (goingAngle == EAngle::None)
         {
@@ -75,9 +78,10 @@ namespace inGame
         bool actionUpdating = m_State.UpdateAction();
         if (!actionUpdating) initAction();
 
+        m_SubProcess.ProcessEach([&](ProcessTimer& process){process.Update(appState->GetTime().GetDeltaSec()); });
+
         m_PlayerAnimator.Update(appState->GetTime().GetDeltaSec());
 
-        m_SubProcess.ProcessEach([&](ProcessTimer& process){process.Update(appState->GetTime().GetDeltaSec()); });
 
         ZIndexCharacter(*m_View).ApplyZ();
 
@@ -103,6 +107,7 @@ namespace inGame
 
         self->m_Angle = goingAngle;
 
+        // 歩行アニメーション
         auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_View->GetModel().GetWeakPtr())
                 ->AnimPosition(moveVector, movingTIme)->SetEase(EAnimEase::Linear)->SetRelative(true)
                 ->ToWeakPtr();
@@ -110,6 +115,9 @@ namespace inGame
         coroUtils::WaitForExpire<>(yield, moveAnim);
 
         self->m_OnMoveFinish.get_subscriber().on_next(self->GetMatPos());
+
+        // フィールドイベントが発生したら待機にする
+        if (self->isRunningFieldEvent()) return;
 
         LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
 
@@ -234,7 +242,7 @@ namespace inGame
 
     void Player::scrollByTracking(const Vec2<double> &trackingPos)
     {
-        if (m_ParentalScene->GetFieldEventManager()->IsRunning()) return;
+        if (isRunningFieldEvent()) return;
 
         auto scrollManager = m_ParentalScene->GetScrollManager();
 
@@ -253,14 +261,16 @@ namespace inGame
         scrollManager->SetScroll(newPos);
     }
 
+    bool Player::isRunningFieldEvent()
+    { return m_ParentalScene->GetFieldEventManager()->IsRunning(); }
+
+
     void Player::Init()
     {
         const double fps60 = 1.0 / 60;
 
         m_SubProcess.Birth(new ProcessTimer([&]() {
-            scrollByTracking(GetPos() * -1 +
-                             (m_ParentalScene->GetRoot()->GetAppState()->GetScreenSize() /
-                              2).CastTo<double>());
+            scrollByTracking(m_ParentalScene->GetScrollManager()->CalcScrollToCenter(GetPos()));
             return EProcessStatus::Running;
         }, fps60));
 

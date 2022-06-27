@@ -89,12 +89,14 @@ namespace inGame{
     CoroTask MineFlowerManager::driveClearingCheckpointBlocksEvent
         (CoroTaskYield &yield, MineFlowerManager *self, MineFlowerClass &mineClass)
     {
+        const auto app = self->m_MainScene->GetRoot()->GetAppState();
         auto eventInScope = self->m_MainScene->GetFieldEventManager()->UseEvent();
         eventInScope.StartFromHere();
 
         const auto field = self->m_MainScene->GetFieldManager();
         const auto matSize = field->GetTileMap()->GetMatSize();
 
+        std::vector<Vec2<int>> blockPosList{};
         Vec2<double> blockPosSum{};
         int numBlock = 0;
 
@@ -102,23 +104,36 @@ namespace inGame{
             for (int y = 0; y < matSize.Y; ++y)
                 if (field->GetTileMap()->HasChipAt(Vec2{x, y}, mineClass.BlockTile) == Boolean::True)
                 {
-                    auto writable = field->GetTileMap()->GetElementWritableAt(Vec2{x, y});
-                    writable->RemoveChip(mineClass.BlockTile);
-                    writable->SetWallByTopTile();
-
+                    blockPosList.emplace_back(x, y);
                     blockPosSum = blockPosSum + Vec2<double>{double(x), double(y)} * FieldManager::PixelPerMat;
                     numBlock++;
                 }
 
         const Vec2<double> centerPos = blockPosSum / numBlock;
-        const auto scrollPos = centerPos * -1 +
-                               (self->m_MainScene->GetRoot()->GetAppState()->GetScreenSize() /
-                                2).CastTo<double>();
+        const auto scrollPos = self->m_MainScene->GetScrollManager()->CalcScrollToCenter(centerPos);
 
+        // チェックポイントのブロックがあるところまで画面をスクロール
         auto animation = field->GetAnimator()->TargetTo(self->m_MainScene->GetScrollManager()->GetSprite())
                 ->AnimPosition(scrollPos, 2.0)->ToWeakPtr();
-
         coroUtils::WaitForExpire(yield, animation);
+
+        // スクロールが終わるまで待機
+        coroUtils::WaitForExpire(yield, animation);
+
+        // ちょっと待機
+        coroUtils::WaitForTime(yield, app->GetTime(), 0.5);
+
+        // ブロックを削除
+        for (auto&& pos : blockPosList)
+        {
+            auto writable = field->GetTileMap()->GetElementWritableAt(pos);
+            bool isRemoved = writable->RemoveChip(mineClass.BlockTile);
+            assert(isRemoved);
+            writable->SetWallByTopTile();
+        }
+
+        // ちょっと待機
+        coroUtils::WaitForTime(yield, app->GetTime(), 0.5);
     }
 
 }

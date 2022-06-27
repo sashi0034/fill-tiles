@@ -109,7 +109,8 @@ namespace inGame::field{
 
     void TileMapMatElement::SetWallByTopTile()
     {
-        m_IsWall = (*m_ChipList.end())->IsWall;
+        const auto &lastChip = *(m_ChipList.end() - 1);
+        m_IsWall = lastChip->IsWall;
     }
 
 

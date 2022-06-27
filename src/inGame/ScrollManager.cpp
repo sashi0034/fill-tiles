@@ -3,6 +3,7 @@
 //
 
 #include "ScrollManager.h"
+#include "MainScene.h"
 
 namespace inGame
 {
@@ -28,5 +29,12 @@ namespace inGame
     WeakPtr<SpriteTexture> ScrollManager::GetSprite()
     {
         return m_ViewModel.GetWeakPtr();
+    }
+
+    Vec2<double> ScrollManager::CalcScrollToCenter(const Vec2<double>& targetPos)
+    {
+        return targetPos * -1 +
+            (m_ParentScene->GetRoot()->GetAppState()->GetScreenSize() /
+            2).CastTo<double>();
     }
 }

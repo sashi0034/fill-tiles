@@ -7,18 +7,21 @@
 
 #include "CoroTask.h"
 #include "WeakPtr.h"
+#include "Time.h"
 
 namespace gameEngine::coroUtils
+{
+    template<typename T>
+    CoroTask WaitForExpire(CoroTaskYield &yield, const WeakPtr <T> observer)
     {
-        template<typename T>
-        static CoroTask WaitForExpire(
-                boost::coroutines2::coroutine<CoroTask>::push_type &yield,
-                const WeakPtr <T> observer)
-        {
-            while (!observer.IsNull())
-                yield();
-        }
+        while (!observer.IsNull())
+            yield();
     }
+
+    CoroTask WaitForTime(CoroTaskYield& yield, const Time &timeSystem, double waitSecond);
+
+    CoroTask WaitForTrue(CoroTaskYield& yield, const std::function<bool()>& discriminant);
+}
 
 
 #endif //FILL_TILES_COROUTILS_H

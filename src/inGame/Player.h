@@ -67,6 +67,8 @@ namespace inGame
         static CoroTask walk(CoroTaskYield &yield, Player *self, IAppState *appState, EAngle goingAngle, bool canChangeAnim);
 
         static EAngle waitForWalkUntilInput(Player *self, const IAppState *appState);
+
+        bool isRunningFieldEvent();
     };
 
 

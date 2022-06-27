@@ -20,6 +20,7 @@ namespace inGame
         Vec2<double> GetScroll();
         void SetScroll(const Vec2<double> &amount);
         WeakPtr<SpriteTexture> GetSprite();
+        Vec2<double> CalcScrollToCenter(const Vec2<double>& targetPos);
     private:
         SpriteTexture m_ViewModel = SpriteTexture::Create(nullptr);
         IMainScene* m_ParentScene;
