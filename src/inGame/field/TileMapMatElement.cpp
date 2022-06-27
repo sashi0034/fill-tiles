@@ -107,5 +107,10 @@ namespace inGame::field{
         m_IsBloomedMineFlower= flag;
     }
 
+    void TileMapMatElement::SetWallByTopTile()
+    {
+        m_IsWall = (*m_ChipList.end())->IsWall;
+    }
+
 
 }

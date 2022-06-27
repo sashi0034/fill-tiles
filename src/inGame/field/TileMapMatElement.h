@@ -64,6 +64,7 @@ namespace inGame::field
         virtual bool ReplaceChip(const TilePropertyChip *oldChip, const TilePropertyChip *newChip) = 0;
         virtual bool RemoveChip(const TilePropertyChip *chip) = 0;
         virtual bool RemoveChip(ETileKind kind)= 0;
+        virtual void SetWallByTopTile() = 0;
 
         virtual void OverwriteIsWall(bool isWall) = 0;
         virtual void SetIsBloomedMineFlower(bool flag) = 0;
@@ -83,6 +84,8 @@ namespace inGame::field
         bool ReplaceChip(const TilePropertyChip *oldChip, const TilePropertyChip *newChip) override;
         bool RemoveChip(const TilePropertyChip *chip) override;
         bool RemoveChip(ETileKind kind) override;
+
+        void SetWallByTopTile() override;
 
         bool HasChip(ETileKind kind);
 

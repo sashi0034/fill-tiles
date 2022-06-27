@@ -90,7 +90,7 @@ namespace inGame
                 std::bind(wait, std::placeholders::_1, this, app)));
     }
 
-    void Player::walk(CoroTaskYield &yield, Player *self, IAppState *appState, EAngle goingAngle, bool canChangeAnim)
+    CoroTask Player::walk(CoroTaskYield &yield, Player *self, IAppState *appState, EAngle goingAngle, bool canChangeAnim)
     {
         yield();
 
@@ -234,6 +234,8 @@ namespace inGame
 
     void Player::scrollByTracking(const Vec2<double> &trackingPos)
     {
+        if (m_ParentalScene->GetFieldEventManager()->IsRunning()) return;
+
         auto scrollManager = m_ParentalScene->GetScrollManager();
 
         if (m_ShouldResetScroll)

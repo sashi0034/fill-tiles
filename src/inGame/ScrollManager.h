@@ -19,6 +19,7 @@ namespace inGame
 
         Vec2<double> GetScroll();
         void SetScroll(const Vec2<double> &amount);
+        WeakPtr<SpriteTexture> GetSprite();
     private:
         SpriteTexture m_ViewModel = SpriteTexture::Create(nullptr);
         IMainScene* m_ParentScene;

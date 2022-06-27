@@ -71,7 +71,8 @@ namespace inGame{
         mineClass.DecreaseMineFlower();
 
         if (!mineClass.HasMineFlower())
-            std::cout << "all eliminated" << std::endl;
+            field->GetCoroutine()->Start(new CoroTaskCall(std::bind(driveClearingCheckpointBlocksEvent,
+                                                                    std::placeholders::_1, this, mineClass)));
     }
 
     void MineFlowerManager::initMineFlowerCount(MineFlowerClass &mineClass)
@@ -83,6 +84,41 @@ namespace inGame{
             for (int y = 0; y < matSize.Y; ++y)
                 if (field->GetTileMap()->HasChipAt(Vec2{x, y}, mineClass.MineFlowerTile) == Boolean::True)
                     mineClass.IncreaseMineFlower();
+    }
+
+    CoroTask MineFlowerManager::driveClearingCheckpointBlocksEvent
+        (CoroTaskYield &yield, MineFlowerManager *self, MineFlowerClass &mineClass)
+    {
+        auto eventInScope = self->m_MainScene->GetFieldEventManager()->UseEvent();
+        eventInScope.StartFromHere();
+
+        const auto field = self->m_MainScene->GetFieldManager();
+        const auto matSize = field->GetTileMap()->GetMatSize();
+
+        Vec2<double> blockPosSum{};
+        int numBlock = 0;
+
+        for (int x = 0; x < matSize.X; ++x)
+            for (int y = 0; y < matSize.Y; ++y)
+                if (field->GetTileMap()->HasChipAt(Vec2{x, y}, mineClass.BlockTile) == Boolean::True)
+                {
+                    auto writable = field->GetTileMap()->GetElementWritableAt(Vec2{x, y});
+                    writable->RemoveChip(mineClass.BlockTile);
+                    writable->SetWallByTopTile();
+
+                    blockPosSum = blockPosSum + Vec2<double>{double(x), double(y)} * FieldManager::PixelPerMat;
+                    numBlock++;
+                }
+
+        const Vec2<double> centerPos = blockPosSum / numBlock;
+        const auto scrollPos = centerPos * -1 +
+                               (self->m_MainScene->GetRoot()->GetAppState()->GetScreenSize() /
+                                2).CastTo<double>();
+
+        auto animation = field->GetAnimator()->TargetTo(self->m_MainScene->GetScrollManager()->GetSprite())
+                ->AnimPosition(scrollPos, 2.0)->ToWeakPtr();
+
+        coroUtils::WaitForExpire(yield, animation);
     }
 
 }

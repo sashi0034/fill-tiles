@@ -24,4 +24,9 @@ namespace inGame
     {
         m_ViewModel.SetPosition(amount);
     }
+
+    WeakPtr<SpriteTexture> ScrollManager::GetSprite()
+    {
+        return m_ViewModel.GetWeakPtr();
+    }
 }

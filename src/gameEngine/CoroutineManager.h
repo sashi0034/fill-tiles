@@ -22,11 +22,20 @@ namespace gameEngine
         std::unique_ptr<boost::coroutines2::coroutine<CoroTask>::pull_type> m_Task;
     };
 
-    class CoroutineManager
+    class ICoroutineManager
     {
     public:
-        WeakPtr<CoroutineElement> Start(CoroutineElement *task);
-        bool Destroy(CoroutineElement *task);
+        virtual WeakPtr<CoroutineElement> Start(boost::coroutines2::coroutine<CoroTask>::pull_type *Task) = 0;
+        virtual WeakPtr<CoroutineElement> Start(CoroutineElement *task) = 0;
+        virtual bool Destroy(CoroutineElement *task) = 0;
+    };
+
+    class CoroutineManager : public ICoroutineManager
+    {
+    public:
+        WeakPtr<CoroutineElement> Start(boost::coroutines2::coroutine<CoroTask>::pull_type *task) override;
+        WeakPtr<CoroutineElement> Start(CoroutineElement *task) override;
+        bool Destroy(CoroutineElement *task) override;
         void UpdateEach();
         ~CoroutineManager();
     private:

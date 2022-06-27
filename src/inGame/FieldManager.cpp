@@ -116,14 +116,15 @@ namespace inGame
         return &m_ChildrenPool;
     }
 
-    ITextureAnimator* FieldManager::GetCharacterAnimator()
+    ITextureAnimator* FieldManager::GetAnimator()
     {
-        return &m_CharacterAnimator;
+        return &m_Animator;
     }
 
     void FieldManager::Update(IAppState* app)
     {
-        m_CharacterAnimator.Update(app->GetTime().GetDeltaSec());
+        m_Animator.Update(app->GetTime().GetDeltaSec());
+        m_CoroutineManager.UpdateEach();
     }
 
     TextureColliderManager *FieldManager::GetCharacterCollider()
@@ -169,6 +170,11 @@ namespace inGame
     FieldManager::~FieldManager()
     {
         m_ChildrenPool.Release();
+    }
+
+    ICoroutineManager* FieldManager::GetCoroutine()
+    {
+        return &m_CoroutineManager;
     }
 
 

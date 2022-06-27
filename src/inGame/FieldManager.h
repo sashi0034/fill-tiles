@@ -26,9 +26,10 @@ namespace inGame
     public:
         virtual bool CanMoveTo(const MatPos &currPos, EAngle goingAngle) = 0;
         virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
-        virtual ITextureAnimator* GetCharacterAnimator() = 0;
+        virtual ITextureAnimator* GetAnimator() = 0;
         virtual TextureColliderManager* GetCharacterCollider() = 0;
         virtual field::ITileMap* GetTileMap() = 0;
+        virtual ICoroutineManager * GetCoroutine() = 0;
 
         virtual void OverwriteWallFlag(const MatPos &pos, bool isWal) = 0;
         virtual void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &size, bool isWal) = 0;
@@ -44,7 +45,9 @@ namespace inGame
         explicit FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene);
         ~FieldManager();
 
-        ITextureAnimator* GetCharacterAnimator() override;
+        ITextureAnimator* GetAnimator() override;
+
+        ICoroutineManager* GetCoroutine() override;
 
         void Init() override;
         void Update(IAppState* app) override;
@@ -69,8 +72,9 @@ namespace inGame
         field::TileMap m_TileMap;
         SpriteTexture m_Texture = SpriteTexture::Create(nullptr);
         ChildrenPool<character::CharacterBase> m_ChildrenPool{};
-        TextureAnimator m_CharacterAnimator{};
+        TextureAnimator m_Animator{};
         TextureColliderManager m_DynamicCharacterCollider{};
+        CoroutineManager m_CoroutineManager{};
     };
 }
 

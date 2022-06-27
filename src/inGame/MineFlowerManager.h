@@ -37,6 +37,8 @@ namespace inGame
         std::vector<MineFlowerClass> m_MineFlowerClass{};
         void initMineFlowerCount(MineFlowerClass& mineClass);
         void checkBloomMineFlower(const MatPos& matPos, MineFlowerClass& mineClass);
+
+        static CoroTask driveClearingCheckpointBlocksEvent(CoroTaskYield &yield, MineFlowerManager *self, MineFlowerClass& mineClass);
     };
 }
 

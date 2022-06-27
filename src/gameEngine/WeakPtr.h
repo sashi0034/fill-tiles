@@ -48,8 +48,6 @@ namespace gameEngine
     template<class T>
     class WeakPtrController;
 
-#define nonvirtual
-
     template<class T>
     class WeakPtr
     {
@@ -57,7 +55,7 @@ namespace gameEngine
 
         gameEngine::PtrInfo *m_pPtrInfo = nullptr;
     public:
-        nonvirtual ~WeakPtr()
+        ~WeakPtr()
         {
             gameEngine::PtrInfo::Dec(m_pPtrInfo);
         }
@@ -147,7 +145,7 @@ namespace gameEngine
     {
         WeakPtr<T> m_WeakPtr;
     public:
-        nonvirtual ~WeakPtrController()
+        ~WeakPtrController()
         {
             if (m_WeakPtr.m_pPtrInfo)
             {
