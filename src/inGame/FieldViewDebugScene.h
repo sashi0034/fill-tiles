@@ -24,7 +24,7 @@ namespace inGame
         ScrollManager *GetScrollManager() override;
 
         Player *GetPlayer() override;
-
+        FieldEventManager *GetFieldEventManager() override;
     private:
         GameRoot* m_Root;
         ChildrenPool<ActorBase> m_ChildrenPool{};

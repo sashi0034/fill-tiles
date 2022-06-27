@@ -11,6 +11,7 @@
 #include "field/TileMap.h"
 #include "FieldManager.h"
 #include "ScrollManager.h"
+#include "FieldEventManager.h"
 
 namespace inGame
 {
@@ -24,6 +25,7 @@ namespace inGame
         virtual ScrollManager* GetScrollManager() = 0;
         virtual IFieldManager* GetFieldManager() = 0;
         virtual Player* GetPlayer() = 0;
+        virtual FieldEventManager* GetFieldEventManager() = 0;
     };
 
     class MainScene: public ActorBase, public IMainScene
@@ -39,6 +41,7 @@ namespace inGame
         GameRoot *GetRoot() override;
         IFieldManager* GetFieldManager() override;
         ScrollManager *GetScrollManager() override;
+        FieldEventManager *GetFieldEventManager() override;
     private:
         void init();
 
@@ -47,6 +50,7 @@ namespace inGame
         TextureAnimator m_TextureAnimator{};
         FieldManager* m_FieldManager{};
         Player* m_Player;
+        FieldEventManager m_FieldEventManager{};
         unique_ptr<ScrollManager> m_ScrollManager{};
     };
 }

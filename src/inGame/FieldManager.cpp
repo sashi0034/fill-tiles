@@ -152,7 +152,7 @@ namespace inGame
             {
                 auto targetPos = startPos + Vec2<int>{x, y};
                 if (m_TileMap.IsInRange(targetPos))
-                    m_TileMap.GetElementAt(targetPos)->OverwriteIsWall(isWall);
+                    m_TileMap.GetElementWritableAt(targetPos)->OverwriteIsWall(isWall);
             }
     }
 

@@ -28,7 +28,14 @@ namespace inGame::field
         small_tree,
         big_tree,
         stairs,
-        mine_flower,
+        mine_flower_1,
+        mine_flower_2,
+        mine_flower_3,
+        mine_flower_4,
+        checkpoint_block_1,
+        checkpoint_block_2,
+        checkpoint_block_3,
+        checkpoint_block_4,
 
         max,
     };
@@ -45,20 +52,37 @@ namespace inGame::field
     public:
         [[nodiscard]] virtual const std::vector<const TilePropertyChip *> &GetChipList() const = 0;
         [[nodiscard]] virtual bool IsWall() const = 0;
+        [[nodiscard]] virtual bool IsBloomedMineFlower() const = 0;
         virtual bool GetCliffFlag(EAngle aspect) = 0;
-        virtual void OverwriteIsWall(bool isWall) = 0;
     };
 
-    class TileMapMatElement : public ITileMapMatElement
+    class ITileMapMatElementWritable
+    {
+    public:
+        virtual void AddChip(const TilePropertyChip *chip) = 0;
+        virtual bool InsertChip(const TilePropertyChip *frontChip, const TilePropertyChip *newBackChip) = 0;
+        virtual bool ReplaceChip(const TilePropertyChip *oldChip, const TilePropertyChip *newChip) = 0;
+        virtual bool RemoveChip(const TilePropertyChip *chip) = 0;
+        virtual bool RemoveChip(ETileKind kind)= 0;
+
+        virtual void OverwriteIsWall(bool isWall) = 0;
+        virtual void SetIsBloomedMineFlower(bool flag) = 0;
+    };
+
+    class TileMapMatElement : public ITileMapMatElement, public ITileMapMatElementWritable
     {
     public:
         TileMapMatElement();
 
-        void AddChip(const TilePropertyChip *chip);
-        bool InsertChip(const TilePropertyChip *frontChip, const TilePropertyChip *newBackChip);
-        bool ReplaceChip(const TilePropertyChip *oldChip, const TilePropertyChip *newChip);
-        bool RemoveChip(const TilePropertyChip *chip);
-        bool RemoveChip(ETileKind kind);
+        bool IsBloomedMineFlower() const override;
+
+        void SetIsBloomedMineFlower(bool flag) override;
+
+        void AddChip(const TilePropertyChip *chip) override;
+        bool InsertChip(const TilePropertyChip *frontChip, const TilePropertyChip *newBackChip) override;
+        bool ReplaceChip(const TilePropertyChip *oldChip, const TilePropertyChip *newChip) override;
+        bool RemoveChip(const TilePropertyChip *chip) override;
+        bool RemoveChip(ETileKind kind) override;
 
         bool HasChip(ETileKind kind);
 
@@ -77,6 +101,7 @@ namespace inGame::field
         std::bitset<int(ETileKind::max)> m_HasChip{};
 
         bool m_IsWall = false;
+        bool m_IsBloomedMineFlower = false;
 
         std::bitset<4> m_CliffAspect{};
     };

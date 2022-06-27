@@ -99,7 +99,6 @@ namespace gameEngine
         }
         ~ChildrenPool()
         {
-            assert(m_Pool.size()==0);
             Release();
         }
     };

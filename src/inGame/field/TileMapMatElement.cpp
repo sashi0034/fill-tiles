@@ -97,5 +97,15 @@ namespace inGame::field{
         return m_CliffAspect[int(aspect)];
     }
 
+    bool TileMapMatElement::IsBloomedMineFlower() const
+    {
+        return m_IsBloomedMineFlower;
+    }
+
+    void TileMapMatElement::SetIsBloomedMineFlower(bool flag)
+    {
+        m_IsBloomedMineFlower= flag;
+    }
+
 
 }

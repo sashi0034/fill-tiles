@@ -24,6 +24,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(tree_16x16);
         REGISTER_RESOURCE_PNG(tree_48x48);
         REGISTER_RESOURCE_PNG(low_basin_16x16);
+        REGISTER_RESOURCE_PNG(grow_bamboo_16x16);
 
         explicit Image(IAppState* appState);
     private:

@@ -68,6 +68,11 @@ namespace inGame{
         return m_Player;
     }
 
+    FieldEventManager *MainScene::GetFieldEventManager()
+    {
+        return &m_FieldEventManager;
+    }
+
 }
 
 

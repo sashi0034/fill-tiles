@@ -115,15 +115,15 @@ namespace inGame::field
                 checkCliffShade(Vec2{x, y});
     }
 
-
+    // @tileSwitch
     void TileMap::checkCliff(const Vec2<int> &pos)
     {
         checkCliffFlagOf(pos, ETileKind::high_plateau, ETileKind::high_plateau_cliff);
         checkCliffFlagOf(pos, ETileKind::normal_plain, ETileKind::normal_plain_cliff);
     }
 
-    void
-    TileMap::checkCliffFlagOf(const Vec2<int> &pos, ETileKind checkingKind, ETileKind cliffKind)
+    // @tileSwitch
+    void TileMap::checkCliffFlagOf(const Vec2<int> &pos, ETileKind checkingKind, ETileKind cliffKind)
     {
         if (HasChipAt(pos, checkingKind) == Boolean::False &&
             HasChipAt(pos + Vec2{1, 0}, checkingKind) == Boolean::True)
@@ -204,6 +204,7 @@ namespace inGame::field
 
 
 
+    // @tileSwitch
     bool TileMap::summonCharacterByChip(const Vec2<int> &pos, ETileKind kind)
     {
         const auto matPos = MatPos(pos);
@@ -364,10 +365,27 @@ namespace inGame::field
         {
             ETileKind kind = magic_enum::enum_cast<ETileKind>(value).value_or(ETileKind::none);
             propertyRef->Kind = kind;
+
+            initTilePropertyByKind(propertyRef, kind);
         }
         else
         {
             assert(!"Invalid chip property exit.");
+        }
+    }
+
+    // @tileSwitch
+    void TileMap::initTilePropertyByKind(TilePropertyChip *propertyRef, const ETileKind &kind) const
+    {
+        switch (kind)
+        {
+            case ETileKind::checkpoint_block_1:
+            case ETileKind::checkpoint_block_2:
+            case ETileKind::checkpoint_block_3:
+            case ETileKind::checkpoint_block_4:
+                propertyRef->IsWall = true;
+            default:
+                break;
         }
     }
 
@@ -380,6 +398,12 @@ namespace inGame::field
     {
         return getElementAt(pos);
     }
+
+    ITileMapMatElementWritable *TileMap::GetElementWritableAt(const Vec2<int> &pos)
+    {
+        return getElementAt(pos);
+    }
+
 
     Graph &TileMap::GetTilesetImage() const
     {
@@ -408,6 +432,11 @@ namespace inGame::field
         if (!IsInRange(pos)) return Boolean::Null;
         const auto element = getElementAt(pos);
         return static_cast<Boolean>(element->HasChip(checkingKind));
+    }
+
+    const StaticTileset &TileMap::GetStaticTileSet()
+    {
+        return staticTileset;
     }
 
 

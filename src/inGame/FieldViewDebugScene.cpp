@@ -103,4 +103,9 @@ namespace inGame{
     {
         return nullptr;
     }
+
+    FieldEventManager *FieldViewDebugScene::GetFieldEventManager()
+    {
+        return nullptr;
+    }
 }

@@ -13,12 +13,47 @@
  </tile>
  <tile id="24">
   <properties>
-   <property name="kind" value="mine_flower"/>
+   <property name="kind" value="mine_flower_1"/>
+  </properties>
+ </tile>
+ <tile id="25">
+  <properties>
+   <property name="kind" value="mine_flower_2"/>
+  </properties>
+ </tile>
+ <tile id="26">
+  <properties>
+   <property name="kind" value="mine_flower_3"/>
+  </properties>
+ </tile>
+ <tile id="27">
+  <properties>
+   <property name="kind" value="mine_flower_4"/>
   </properties>
  </tile>
  <tile id="34">
   <properties>
    <property name="kind" value="low_basin"/>
+  </properties>
+ </tile>
+ <tile id="40">
+  <properties>
+   <property name="kind" value="checkpoint_block_1"/>
+  </properties>
+ </tile>
+ <tile id="41">
+  <properties>
+   <property name="kind" value="checkpoint_block_2"/>
+  </properties>
+ </tile>
+ <tile id="42">
+  <properties>
+   <property name="kind" value="checkpoint_block_3"/>
+  </properties>
+ </tile>
+ <tile id="43">
+  <properties>
+   <property name="kind" value="checkpoint_block_4"/>
   </properties>
  </tile>
  <tile id="65">

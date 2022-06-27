@@ -76,8 +76,8 @@ namespace inGame::field
         static const Vec2<int> srcStartingPoints[16] = {
                 Vec2{0, 0} * pixelPerMat, //
                 Vec2{0, 1} * pixelPerMat, //       D
-                Vec2{2, 3} * pixelPerMat, //     U
-                Vec2{2, 2} * pixelPerMat, //     U D
+                Vec2{0, 3} * pixelPerMat, //     U
+                Vec2{0, 2} * pixelPerMat, //     U D
                 Vec2{1, 0} * pixelPerMat, //   R
                 Vec2{1, 1} * pixelPerMat, //   R   D
                 Vec2{1, 3} * pixelPerMat, //   R U

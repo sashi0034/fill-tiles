@@ -25,18 +25,24 @@ namespace inGame::field
     public:
         virtual Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) = 0;
         virtual Vec2<int> GetMatSize() const = 0;
+        virtual ITileMapMatElement * GetElementAt(const Vec2<int>& pos) = 0;
+        virtual ITileMapMatElementWritable * GetElementWritableAt(const Vec2<int>& pos) = 0;
+        virtual const StaticTileset& GetStaticTileSet() = 0;
+        virtual bool IsInRange(const Vec2<int>& pos) const = 0;
     };
 
     class TileMap : public ITileMap
     {
     public:
-        TileMap(IMainScene *mainScene);
+        explicit TileMap(IMainScene *mainScene);
         void LoadMapFile(const std::string &fileName);
         Vec2<int> GetMatSize() const override;
-        ITileMapMatElement * GetElementAt(const Vec2<int>& pos);
-        bool IsInRange(const Vec2<int>& pos) const;
+        ITileMapMatElement * GetElementAt(const Vec2<int>& pos) override;
+        ITileMapMatElementWritable * GetElementWritableAt(const Vec2<int>& pos) override;
+        bool IsInRange(const Vec2<int>& pos) const override;
         Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) override;
         Graph& GetTilesetImage() const;
+        const StaticTileset &GetStaticTileSet() override;
 
         static inline const std::string TileMapDirectory = "./assets/tilemaps/";
     private:
@@ -81,6 +87,8 @@ namespace inGame::field
         checkCliffShadeOf(const Vec2<int> &pos, ETileKind upperKind, ETileKind upperCliffKind, TilePropertyChip *lowerChip,
                           TilePropertyChip *lowerShadeFace, TilePropertyChip *lowerShadeEdge);
         void checkCliffFlagOf(const Vec2<int> &pos, ETileKind checkingKind, ETileKind cliffKind);
+
+        void initTilePropertyByKind(TilePropertyChip *propertyRef, const ETileKind &kind) const;
     };
 }
 
