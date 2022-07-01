@@ -125,11 +125,6 @@ namespace inGame{
         blockList.ForEach([&](character::CheckpointBlock* block){
             block->Destroy();
         });
-        for (auto&& pos : blockPosList)
-        {
-            auto writable = field->GetTileMap()->GetElementWritableAt(pos);
-            writable->SetWallByTopTile();
-        }
 
         // ちょっと待機
         coroUtil::WaitForTime(yield, app->GetTime(), 0.5);

@@ -23,13 +23,6 @@ namespace inGame::character
         field->OverwriteWallFlag(matPos, true);
         field->GetCheckpointBlockList(tileKind).Add(this);
 
-        mainScene->GetFieldManager()->OnUpdatedChip().subscribe([this, field, matPos, tileKind](auto){
-            if (field->GetTileMap()->HasChipAt(matPos.GetVec(), tileKind)!=Boolean::True)
-            {
-                this->getBelongingPool()->Destroy(this);
-            }
-        });
-
         ZIndexCharacter(m_View).ApplyZ();
 
         constexpr double duration = 0.1;
@@ -46,5 +39,11 @@ namespace inGame::character
     MatPos CheckpointBlock::GetMatPos() const
     {
         return m_MatPos;
+    }
+
+    void CheckpointBlock::Destroy()
+    {
+        getParentField()->GetTileMap()->GetElementWritableAt(m_MatPos.GetVec())->SetWallByTopTile();
+        CharacterBase::Destroy();
     }
 }

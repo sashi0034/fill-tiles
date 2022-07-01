@@ -20,7 +20,11 @@ namespace inGame::character
     public:
         explicit CharacterBase(IFieldManager *parentField);
         virtual ~CharacterBase() = default;
-        void Destroy();
+        virtual void Destroy();
+    protected:
+        IFieldManager* getParentField();
+    private:
+        IFieldManager* m_ParentalField;
     };
 }
 

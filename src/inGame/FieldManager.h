@@ -34,9 +34,6 @@ namespace inGame
         virtual field::ITileMap* GetTileMap() = 0;
         virtual ICoroutineManager * GetCoroutine() = 0;
 
-        virtual rx::observable <rx::Unit> OnUpdatedChip() = 0;
-        virtual void NotifyUpdatedChip() = 0;
-
         virtual void OverwriteWallFlag(const MatPos &pos, bool isWal) = 0;
         virtual void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &size, bool isWal) = 0;
 
@@ -54,9 +51,6 @@ namespace inGame
 
         explicit FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene);
         ~FieldManager();
-
-        rx::observable <rx::Unit> OnUpdatedChip() override;
-        void NotifyUpdatedChip() override;
 
         ITextureAnimator* GetAnimator() override;
 
@@ -88,7 +82,6 @@ namespace inGame
         TextureAnimator m_Animator{};
         TextureColliderManager m_DynamicCharacterCollider{};
         CoroutineManager m_CoroutineManager{};
-        rx::subject<rx::Unit> m_OnUpdatedChip{};
 
         std::unordered_map<field::ETileKind, WeakCollection<character::CheckpointBlock>> m_CheckpointBlockList{};
     };

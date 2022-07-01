@@ -270,7 +270,11 @@ namespace inGame
         const double fps60 = 1.0 / 60;
 
         m_SubProcess.Birth(new ProcessTimer([&]() {
-            scrollByTracking(m_ParentalScene->GetScrollManager()->CalcScrollToCenter(GetPos()));
+            auto scrollPos = m_ParentalScene->GetScrollManager()->CalcScrollToCenter(GetPos());
+//            constexpr int overhangByWalk = 60;
+//            if (m_State.GetState()==EPlayerState::Walk)
+//                scrollPos = scrollPos - Angle(m_Angle).ToXY().CastTo<double>() * overhangByWalk;
+            scrollByTracking(scrollPos);
             return EProcessStatus::Running;
         }, fps60));
 

@@ -17,6 +17,8 @@ namespace inGame::character
         CheckpointBlock(IMainScene *mainScene, const MatPos &matPos, field::ETileKind tileKind);
         CharacterViewModel m_View;
         MatPos GetMatPos() const;
+
+        void Destroy() override;
     private:
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         MatPos m_MatPos;
