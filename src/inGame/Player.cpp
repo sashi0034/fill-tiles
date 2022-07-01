@@ -42,7 +42,7 @@ namespace inGame
         self->changeAnimation([&](){self->animWait(self->m_Angle);});
 
         // フィールド上でイベントが発生していたら待機する
-        coroUtils::WaitForTrue(yield, [self](){return !self->isRunningFieldEvent();});
+        coroUtil::WaitForTrue(yield, [self](){return !self->isRunningFieldEvent();});
 
         EAngle goingAngle = EAngle::None;
         while (goingAngle == EAngle::None)
@@ -112,7 +112,7 @@ namespace inGame
                 ->AnimPosition(moveVector, movingTIme)->SetEase(EAnimEase::Linear)->SetRelative(true)
                 ->ToWeakPtr();
 
-        coroUtils::WaitForExpire<>(yield, moveAnim);
+        coroUtil::WaitForExpire<>(yield, moveAnim);
 
         self->m_OnMoveFinish.get_subscriber().on_next(self->GetMatPos());
 

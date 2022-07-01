@@ -179,7 +179,7 @@ namespace gameEngine
     public:  WeakPtr<type_> GetWeakPtr( void ){ return m_WeakPtrController.GetWeakPtr(); } \
     protected: WeakPtrController<type_> m_WeakPtrController{this}
 
-#define DEF_WEAK_GET(type_) public: WeakPtr<type_> GetWeakPtr( void ){ return m_WeakPtrController.GetDowncasted_unsafe( this ); }class{}
+#define DEF_WEAK_GET(type_) public: WeakPtr<type_> GetWeakPtr( void ){ return m_WeakPtrController.GetDowncasted_unsafe<type_>( this ); }
 
 
 #endif //FILL_TILES_WEAKPTR_H

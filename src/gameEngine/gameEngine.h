@@ -7,7 +7,7 @@
 
 #include <memory>
 #include "AppState.h"
-#include "arrayUtils.h"
+#include "arrayUtil.h"
 #include "ChildrenPool.h"
 #include "UniqueCollection.h"
 #include "ChildBase.h"
@@ -22,13 +22,14 @@
 #include "Vec2.h"
 #include "CoroTask.h"
 #include "CoroutineManager.h"
-#include "coroUtils.h"
+#include "coroUtil.h"
 #include "TextureAnimator.h"
 #include "Range.h"
 #include "TextureCollider.h"
 #include "TextureColliderManager.h"
 #include "FileChangeDetector.h"
 #include "ProcessTimer.h"
+#include "WeakCollection.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

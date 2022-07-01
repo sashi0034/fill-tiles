@@ -13,6 +13,7 @@
 #include "MatPos.h"
 #include "character/CharacterBase.h"
 #include "rx.h"
+#include "../gameEngine/WeakCollection.h"
 
 namespace inGame
 {
@@ -39,7 +40,7 @@ namespace inGame
         virtual void OverwriteWallFlag(const MatPos &pos, bool isWal) = 0;
         virtual void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &size, bool isWal) = 0;
 
-        virtual std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> & GetCheckpointBlockList() = 0;
+        virtual WeakCollection<character::CheckpointBlock> &GetCheckpointBlockList(field::ETileKind blockKind) = 0;
     };
 
     class FieldManager : public IFieldManager, public ActorBase
@@ -47,7 +48,7 @@ namespace inGame
     public:
         IChildrenPool<character::CharacterBase> *GetCharacterPool() override;
 
-        std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> & GetCheckpointBlockList() override;
+        WeakCollection<character::CheckpointBlock> &GetCheckpointBlockList(field::ETileKind blockKind) override;
 
         TextureColliderManager *GetCharacterCollider() override;
 
@@ -89,7 +90,7 @@ namespace inGame
         CoroutineManager m_CoroutineManager{};
         rx::subject<rx::Unit> m_OnUpdatedChip{};
 
-        std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> m_CheckpointBlockList{};
+        std::unordered_map<field::ETileKind, WeakCollection<character::CheckpointBlock>> m_CheckpointBlockList{};
     };
 }
 

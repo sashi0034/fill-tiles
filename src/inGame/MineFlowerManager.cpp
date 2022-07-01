@@ -98,13 +98,13 @@ namespace inGame{
         std::vector<Vec2<int>> blockPosList{};
         Vec2<double> blockPosSum{};
 
-        auto blockList = field->GetCheckpointBlockList()[mineClass.BlockTile];
-        for (auto&& block : blockList)
-        {
+        auto& blockList = field->GetCheckpointBlockList(mineClass.BlockTile);
+        blockList.ForEach([&](auto&& block){
             const auto pos = block->GetMatPos().GetVec();
             blockPosList.push_back(pos);
-            blockPosSum = blockPosSum + pos.CastTo<double>() * FieldManager::PixelPerMat;
-        }
+            blockPosSum = blockPosSum + pos.template CastTo<double>() * FieldManager::PixelPerMat;
+        });
+
         const int numBlock = blockPosList.size();
 
         const Vec2<double> centerPos = blockPosSum / numBlock;
@@ -113,24 +113,26 @@ namespace inGame{
         // チェックポイントのブロックがあるところまで画面をスクロール
         auto animation = field->GetAnimator()->TargetTo(self->m_MainScene->GetScrollManager()->GetSprite())
                 ->AnimPosition(scrollPos, 2.0)->ToWeakPtr();
-        coroUtils::WaitForExpire(yield, animation);
+        coroUtil::WaitForExpire(yield, animation);
 
         // スクロールが終わるまで待機
-        coroUtils::WaitForExpire(yield, animation);
+        coroUtil::WaitForExpire(yield, animation);
 
         // ちょっと待機
-        coroUtils::WaitForTime(yield, app->GetTime(), 0.5);
+        coroUtil::WaitForTime(yield, app->GetTime(), 0.5);
 
         // ブロックを削除
+        blockList.ForEach([&](character::CheckpointBlock* block){
+            block->Destroy();
+        });
         for (auto&& pos : blockPosList)
         {
             auto writable = field->GetTileMap()->GetElementWritableAt(pos);
             writable->SetWallByTopTile();
         }
-        field->NotifyUpdatedChip();
 
         // ちょっと待機
-        coroUtils::WaitForTime(yield, app->GetTime(), 0.5);
+        coroUtil::WaitForTime(yield, app->GetTime(), 0.5);
     }
 
 }

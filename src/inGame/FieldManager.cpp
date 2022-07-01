@@ -187,9 +187,18 @@ namespace inGame
         m_OnUpdatedChip.get_subscriber().on_next(rx::Unit{});
     }
 
-    std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> & FieldManager::GetCheckpointBlockList()
+    WeakCollection<character::CheckpointBlock> & FieldManager::GetCheckpointBlockList(field::ETileKind blockKind)
     {
-        return m_CheckpointBlockList;
+        switch (blockKind)
+        {
+            case ETileKind::checkpoint_block_1:
+            case ETileKind::checkpoint_block_2:
+            case ETileKind::checkpoint_block_3:
+            case ETileKind::checkpoint_block_4:
+                return m_CheckpointBlockList[blockKind];
+            default:
+                assert(false);
+        }
     }
 
 

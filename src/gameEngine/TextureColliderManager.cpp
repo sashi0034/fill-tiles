@@ -4,7 +4,7 @@
 
 #include "TextureColliderManager.h"
 #include "Range.h"
-#include "arrayUtils.h"
+#include "arrayUtil.h"
 
 namespace gameEngine
 {

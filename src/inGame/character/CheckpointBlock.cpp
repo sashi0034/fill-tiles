@@ -21,7 +21,7 @@ namespace inGame::character
 
         auto field =mainScene->GetFieldManager();
         field->OverwriteWallFlag(matPos, true);
-        field->GetCheckpointBlockList()[tileKind].push_back(this);
+        field->GetCheckpointBlockList(tileKind).Add(this);
 
         mainScene->GetFieldManager()->OnUpdatedChip().subscribe([this, field, matPos, tileKind](auto){
             if (field->GetTileMap()->HasChipAt(matPos.GetVec(), tileKind)!=Boolean::True)
