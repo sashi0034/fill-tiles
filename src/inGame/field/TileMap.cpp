@@ -14,6 +14,7 @@
 #include "../character/SmallTree.h"
 #include "../character/BigTree.h"
 #include "../Player.h"
+#include "../character/CheckpointBlock.h"
 
 
 namespace inGame::field
@@ -218,6 +219,12 @@ namespace inGame::field
             case ETileKind::big_tree:
                 field->Birth(new character::BigTree(m_MainScene, matPos));
                 break;
+            case ETileKind::checkpoint_block_1:
+            case ETileKind::checkpoint_block_2:
+            case ETileKind::checkpoint_block_3:
+            case ETileKind::checkpoint_block_4:
+                field->Birth(new character::CheckpointBlock(m_MainScene, matPos, kind));
+                break;
             default:
                 return false;
         }
@@ -379,14 +386,15 @@ namespace inGame::field
     {
         switch (kind)
         {
-            case ETileKind::checkpoint_block_1:
-            case ETileKind::checkpoint_block_2:
-            case ETileKind::checkpoint_block_3:
-            case ETileKind::checkpoint_block_4:
-                propertyRef->IsWall = true;
+//            case ETileKind::checkpoint_block_1:
+//            case ETileKind::checkpoint_block_2:
+//            case ETileKind::checkpoint_block_3:
+//            case ETileKind::checkpoint_block_4:
+//                propertyRef->IsWall = true;
             default:
                 break;
         }
+        (void)propertyRef;
     }
 
     Vec2<int> TileMap::GetMatSize() const

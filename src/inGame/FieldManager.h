@@ -12,11 +12,13 @@
 #include "field/FieldRenderer.h"
 #include "MatPos.h"
 #include "character/CharacterBase.h"
+#include "rx.h"
 
 namespace inGame
 {
     namespace character{
         class CharacterBase;
+        class CheckpointBlock;
     }
 
     class IMainScene;
@@ -31,8 +33,13 @@ namespace inGame
         virtual field::ITileMap* GetTileMap() = 0;
         virtual ICoroutineManager * GetCoroutine() = 0;
 
+        virtual rx::observable <rx::Unit> OnUpdatedChip() = 0;
+        virtual void NotifyUpdatedChip() = 0;
+
         virtual void OverwriteWallFlag(const MatPos &pos, bool isWal) = 0;
         virtual void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &size, bool isWal) = 0;
+
+        virtual std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> & GetCheckpointBlockList() = 0;
     };
 
     class FieldManager : public IFieldManager, public ActorBase
@@ -40,10 +47,15 @@ namespace inGame
     public:
         IChildrenPool<character::CharacterBase> *GetCharacterPool() override;
 
+        std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> & GetCheckpointBlockList() override;
+
         TextureColliderManager *GetCharacterCollider() override;
 
         explicit FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene);
         ~FieldManager();
+
+        rx::observable <rx::Unit> OnUpdatedChip() override;
+        void NotifyUpdatedChip() override;
 
         ITextureAnimator* GetAnimator() override;
 
@@ -75,6 +87,9 @@ namespace inGame
         TextureAnimator m_Animator{};
         TextureColliderManager m_DynamicCharacterCollider{};
         CoroutineManager m_CoroutineManager{};
+        rx::subject<rx::Unit> m_OnUpdatedChip{};
+
+        std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> m_CheckpointBlockList{};
     };
 }
 

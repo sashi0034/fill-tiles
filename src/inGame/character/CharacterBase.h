@@ -14,7 +14,7 @@ namespace inGame{
 
 namespace inGame::character
 {
-    class CharacterBase : ChildBase<CharacterBase>
+    class CharacterBase : public ChildBase<CharacterBase>
     {
     public:
         explicit CharacterBase(IFieldManager *parentField);

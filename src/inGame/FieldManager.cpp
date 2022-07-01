@@ -177,5 +177,20 @@ namespace inGame
         return &m_CoroutineManager;
     }
 
+    rx::observable<rx::Unit> FieldManager::OnUpdatedChip()
+    {
+        return m_OnUpdatedChip.get_observable();
+    }
+
+    void FieldManager::NotifyUpdatedChip()
+    {
+        m_OnUpdatedChip.get_subscriber().on_next(rx::Unit{});
+    }
+
+    std::unordered_map<field::ETileKind, std::vector<character::CheckpointBlock*>> & FieldManager::GetCheckpointBlockList()
+    {
+        return m_CheckpointBlockList;
+    }
+
 
 }

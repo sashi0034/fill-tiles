@@ -5,6 +5,7 @@
 #include "MineFlowerManager.h"
 #include "Player.h"
 #include "character/MineFlower.h"
+#include "character/CheckpointBlock.h"
 
 namespace inGame{
 
@@ -20,7 +21,6 @@ namespace inGame{
     void MineFlowerClass::DecreaseMineFlower()
     {
         --m_MineFlowerCount;
-        std::cout << m_MineFlowerCount<<"%%\n";
     }
 
     bool MineFlowerClass::HasMineFlower()
@@ -94,20 +94,18 @@ namespace inGame{
         eventInScope.StartFromHere();
 
         const auto field = self->m_MainScene->GetFieldManager();
-        const auto matSize = field->GetTileMap()->GetMatSize();
 
         std::vector<Vec2<int>> blockPosList{};
         Vec2<double> blockPosSum{};
-        int numBlock = 0;
 
-        for (int x = 0; x < matSize.X; ++x)
-            for (int y = 0; y < matSize.Y; ++y)
-                if (field->GetTileMap()->HasChipAt(Vec2{x, y}, mineClass.BlockTile) == Boolean::True)
-                {
-                    blockPosList.emplace_back(x, y);
-                    blockPosSum = blockPosSum + Vec2<double>{double(x), double(y)} * FieldManager::PixelPerMat;
-                    numBlock++;
-                }
+        auto blockList = field->GetCheckpointBlockList()[mineClass.BlockTile];
+        for (auto&& block : blockList)
+        {
+            const auto pos = block->GetMatPos().GetVec();
+            blockPosList.push_back(pos);
+            blockPosSum = blockPosSum + pos.CastTo<double>() * FieldManager::PixelPerMat;
+        }
+        const int numBlock = blockPosList.size();
 
         const Vec2<double> centerPos = blockPosSum / numBlock;
         const auto scrollPos = self->m_MainScene->GetScrollManager()->CalcScrollToCenter(centerPos);
@@ -127,10 +125,9 @@ namespace inGame{
         for (auto&& pos : blockPosList)
         {
             auto writable = field->GetTileMap()->GetElementWritableAt(pos);
-            bool isRemoved = writable->RemoveChip(mineClass.BlockTile);
-            assert(isRemoved);
             writable->SetWallByTopTile();
         }
+        field->NotifyUpdatedChip();
 
         // ちょっと待機
         coroUtils::WaitForTime(yield, app->GetTime(), 0.5);

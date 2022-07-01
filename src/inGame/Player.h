@@ -11,15 +11,7 @@
 #include "FieldManager.h"
 #include "MainScene.h"
 #include "CharacterViewModel.h"
-#include "rxcpp/rx.hpp"
-
-namespace rx
-{
-    using namespace rxcpp;
-    using namespace rxcpp::subjects;
-    using namespace rxcpp::operators;
-    using namespace rxcpp::util;
-}
+#include "rx.h"
 
 namespace inGame
 {
