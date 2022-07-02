@@ -7,20 +7,16 @@
 
 #include "SDL_ttf.h"
 #include "ActorBase.h"
+#include "GameRoot.h"
 
 namespace inGame
 {
     class TextLabel : public ActorBase
     {
     public:
-        TextLabel(IChildrenPool<ActorBase> *parentPool, IAppState *app);
+        TextLabel(IChildrenPool<ActorBase> *parentPool, GameRoot *root);
     private:
-        SDL_Surface *m_Surface{};
-        SDL_Texture *m_Texture{};
-        SDL_Surface *m_SurfaceOutlined{};
-        SDL_Texture *m_TextureOutlined{};
-
-        SpriteTexture m_Sprite = SpriteTexture::Create();
+        TextureText m_Text;
     };
 }
 

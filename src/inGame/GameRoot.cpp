@@ -11,7 +11,9 @@
 
 namespace inGame{
     GameRoot::GameRoot(IAppState *appState)
-    : ResImage(std::make_unique<resource::Image>(appState)), m_AppState(appState)
+    : ResImage(std::make_unique<resource::Image>(appState)),
+      ResFont(std::make_unique<resource::Font>(appState)),
+      m_AppState(appState)
     {
         createSelfSpr();
 #ifdef INGAME_DEBUG_FIELDVIEW

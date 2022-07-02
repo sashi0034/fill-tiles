@@ -7,6 +7,7 @@
 
 #include "ActorBase.h"
 #include "resource/Image.h"
+#include "resource/Font.h"
 
 namespace inGame
 {
@@ -16,6 +17,7 @@ namespace inGame
         explicit GameRoot(IAppState* appState);
         ~GameRoot() override;
         const unique_ptr<resource::Image> ResImage;
+        const unique_ptr<resource::Font> ResFont;
         IAppState* GetAppState();
         TextureAnimator& GetTextureAnimator();
     private:

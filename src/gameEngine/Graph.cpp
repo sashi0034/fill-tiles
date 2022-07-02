@@ -66,4 +66,9 @@ namespace gameEngine
         return new Graph(renderer, surface);
     }
 
+    Vec2<int> Graph::GetSize() const
+    {
+        return Vec2<int>{m_Surface->w, m_Surface->h};
+    }
+
 }

@@ -7,9 +7,9 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
-#include "SpriteTexture.h"
 
 namespace gameEngine{
+    class IAppState;
     class SpriteTexture;
 }
 

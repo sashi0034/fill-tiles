@@ -30,6 +30,7 @@
 #include "FileChangeDetector.h"
 #include "ProcessTimer.h"
 #include "WeakCollection.h"
+#include "TextureText.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

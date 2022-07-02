@@ -24,7 +24,7 @@ namespace inGame{
 
         m_ChildrenPool.Birth(new MineFlowerManager(&m_ChildrenPool, this));
 
-        m_ChildrenPool.Birth(new TextLabel(&m_ChildrenPool, root->GetAppState()));
+        m_ChildrenPool.Birth(new TextLabel(&m_ChildrenPool, root));
 
         init();
     }
