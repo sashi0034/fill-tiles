@@ -16,7 +16,7 @@ namespace inGame::field
     {
     public:
         FieldRenderer(const resource::Image *image, const Vec2<int> &matPos, const Vec2<int> &screenPos,
-                      SDL_Renderer *renderer, const Vec2<int> &srcSize, const Vec2<double> &pixelScaleSize,
+                      SDL_Renderer *renderer, const Vec2<int> &srcSize, const Vec2<double> &renderingSize,
                       ITileMap *tileMap);
         bool RenderChip(ETileKind kind);
     private:
@@ -26,7 +26,7 @@ namespace inGame::field
         const Vec2<int>& m_ScreenPos;
         SDL_Renderer* m_Renderer;
         const Vec2<int>& m_SrcSize;
-        const Vec2<double>& m_PixelScaleSize;
+        const Vec2<double>& m_RenderingSize;
         ITileMap* m_TileMapPtr;
 
         void renderAutoTile(Graph *image, const std::function<bool(int, int)> &isNeighbor,

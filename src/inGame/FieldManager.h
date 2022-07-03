@@ -69,12 +69,11 @@ namespace inGame
         static inline const int PixelPerMat = 16;
         static inline const Vec2<int> MatPixelSize = {PixelPerMat, PixelPerMat};
         static inline const Vec2<double> CharacterPadding{0, -PixelPerMat/4};
-        const Vec2<int> ScreenMatSize;
-
+        Vec2<int> GetScreenMatSize() const;
     private:
-        void renderTileMap(IAppState *appState);
-        void renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &renderer, IAppState *appState,
-                        const Vec2<int> &screenPos);
+        void createRenderedTileMapToBuffer(IAppState *appState);
+        void renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &fieldRenderer, SDL_Renderer *sdlRenderer,
+                        const Vec2<int> &screenPos, const Vec2<double> &renderingSize);
         IMainScene* m_ParentalScene;
         field::TileMap m_TileMap;
         SpriteTexture m_Texture = SpriteTexture::Create(nullptr);
@@ -82,8 +81,13 @@ namespace inGame
         TextureAnimator m_Animator{};
         TextureColliderManager m_DynamicCharacterCollider{};
         CoroutineManager m_CoroutineManager{};
+        unique_ptr<Graph> m_BufferGraph;
+        Vec2<int> m_BufferGraphSize{};
 
         std::unordered_map<field::ETileKind, WeakCollection<character::CheckpointBlock>> m_CheckpointBlockList{};
+
+        void renderTileMapUnsafely(const Vec2<int> &renderingChipStartingPoint, const Vec2<int> &renderingChipEndPoint,
+                                   SDL_Renderer *const sdlRenderer, SDL_Texture *renderingTarget);
     };
 }
 

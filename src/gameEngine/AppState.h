@@ -21,7 +21,7 @@ namespace gameEngine
     class IAppState
     {
     public:
-        [[nodiscard]] virtual const Vec2<int>& GetScreenSize() const = 0;
+        [[nodiscard]] virtual Vec2<int> GetScreenSize() const = 0;
         [[nodiscard]] virtual int GetPixelPerUnit() const = 0;
         [[nodiscard]] virtual const Time& GetTime() const = 0;
         [[nodiscard]] virtual SDL_Window* GetWindow() const = 0;
@@ -42,7 +42,7 @@ namespace gameEngine
 
         [[nodiscard]] bool CanQuitApp() const;
     private:
-        const Vec2<int> m_ScreenSize{};
+        Vec2<int> m_ScreenSize{};
         const int m_PixelPerUnit=0;
         unique_ptr<Time> m_Time{};
         SDL_Window* m_Window{};
@@ -54,7 +54,7 @@ namespace gameEngine
         MouseState m_Mouse{};
     public:
         [[nodiscard]] int GetPixelPerUnit() const override;
-        [[nodiscard]] const Vec2<int> & GetScreenSize() const override;
+        [[nodiscard]] Vec2<int> GetScreenSize() const override;
         [[nodiscard]] const Time & GetTime() const override;
         [[nodiscard]] SDL_Window* GetWindow() const override;
         [[nodiscard]] SDL_Renderer* GetRenderer() const override;
