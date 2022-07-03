@@ -42,4 +42,9 @@ namespace gameEngine
     {
         return m_Texture;
     }
+
+    Vec2<int> TextureText::GetSize() const
+    {
+        return m_TextGraph->GetSize();
+    }
 } // gameEngine

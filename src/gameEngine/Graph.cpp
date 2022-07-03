@@ -14,27 +14,34 @@ namespace gameEngine
     {
         assert(renderer);
         assert(surface);
-        m_Surface = surface;
-        m_Texture = SDL_CreateTextureFromSurface(renderer, surface);
+        m_SdlSurface = surface;
+        m_SdlTexture = SDL_CreateTextureFromSurface(renderer, surface);
     }
 
     Graph::Graph(SDL_Surface *surface, SDL_Texture* texture)
     {
         assert(surface);
         assert(texture);
-        m_Surface = surface;
-        m_Texture =texture;
+        m_SdlSurface = surface;
+        m_SdlTexture =texture;
+    }
+
+
+    Graph::Graph(SDL_Texture *texture)
+    {
+        assert(texture);
+        m_SdlTexture =texture;
     }
 
     Graph::~Graph()
     {
-        if (m_Surface != nullptr) SDL_FreeSurface(m_Surface);
-        if (m_Texture != nullptr) SDL_DestroyTexture(m_Texture);
+        if (m_SdlSurface != nullptr) SDL_FreeSurface(m_SdlSurface);
+        if (m_SdlTexture != nullptr) SDL_DestroyTexture(m_SdlTexture);
     }
 
-    const SDL_Texture* Graph::GetTexture() const
+    SDL_Texture* Graph::GetSdlTexture() const
     {
-        return m_Texture;
+        return m_SdlTexture;
     }
 
     void Graph::RenderGraph(
@@ -51,10 +58,10 @@ namespace gameEngine
         SDL_Rect drawingToScreenRect = SDL_Rect{startPoint.X, startPoint.Y, screenSize.X, screenSize.Y};
         SDL_Rect cutSrcRect = SDL_Rect{srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height};
 
-        SDL_SetTextureBlendMode(m_Texture, blend.GetMode());
-        SDL_SetTextureAlphaMod(m_Texture, blend.GetPal());
+        SDL_SetTextureBlendMode(m_SdlTexture, blend.GetMode());
+        SDL_SetTextureAlphaMod(m_SdlTexture, blend.GetPal());
 
-        SDL_RenderCopyEx(const_cast<SDL_Renderer *>(renderer), m_Texture, &cutSrcRect, &drawingToScreenRect,
+        SDL_RenderCopyEx(const_cast<SDL_Renderer *>(renderer), m_SdlTexture, &cutSrcRect, &drawingToScreenRect,
                          rotationDeg, nullptr, isFlipHorizontal ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
     }
 
@@ -68,7 +75,7 @@ namespace gameEngine
 
     Vec2<int> Graph::GetSize() const
     {
-        return Vec2<int>{m_Surface->w, m_Surface->h};
+        return Vec2<int>{m_SdlSurface->w, m_SdlSurface->h};
     }
 
 }

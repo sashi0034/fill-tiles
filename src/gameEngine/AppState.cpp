@@ -13,7 +13,7 @@ namespace gameEngine
     {}
 
     AppState::AppState(const Vec2<int> &screenSize, const int pixelPerUnit, SDL_Window* window)
-        : IAppState(), m_ScreenSize(screenSize), m_PixelPerUnit(pixelPerUnit)
+        : m_ScreenSize(screenSize), m_PixelPerUnit(pixelPerUnit)
     {
         m_Time = std::make_unique<Time>();
         m_Window = window;
@@ -102,7 +102,5 @@ namespace gameEngine
     {
         return &m_Mouse;
     }
-
-    AppState::~AppState() = default;
 
 }

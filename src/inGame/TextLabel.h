@@ -8,15 +8,18 @@
 #include "SDL_ttf.h"
 #include "ActorBase.h"
 #include "GameRoot.h"
+#include "MainScene.h"
+#include "NinePatchImage.h"
 
 namespace inGame
 {
     class TextLabel : public ActorBase
     {
     public:
-        TextLabel(IChildrenPool<ActorBase> *parentPool, GameRoot *root);
+        TextLabel(IChildrenPool<ActorBase> *parentPool, IMainScene *scene);
     private:
         TextureText m_Text;
+        unique_ptr<NinePatchImage> m_Background;
     };
 }
 

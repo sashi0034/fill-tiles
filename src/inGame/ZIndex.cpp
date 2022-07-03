@@ -30,4 +30,20 @@ namespace inGame{
 
         m_Character.GetView().SetZ(normalizedZ);
     }
+
+    ZIndexUi::ZIndexUi(SpriteTexture *texture)
+    : m_Texture(texture)
+    {}
+
+    void ZIndexUi::ApplyZ()
+    {
+        m_Texture->SetZ(baseUiZ - m_Index);
+    }
+
+    ZIndexUi &ZIndexUi::SetIndex(int frontLargerIndex)
+    {
+        assert(Range<int>(0, baseRange).IsBetween(frontLargerIndex));
+        m_Index = frontLargerIndex;
+        return *this;
+    }
 }

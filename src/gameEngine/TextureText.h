@@ -18,8 +18,8 @@ namespace gameEngine
         void SetOutline(EasyRgba color);
         void ChangeText(const std::string& text);
         SpriteTexture& GetTexture();
+        [[nodiscard]] Vec2<int> GetSize() const;
     private:
-        TextureText() = default;
         FontResource* m_Font;
         SpriteTexture m_Texture = SpriteTexture::Create();
         unique_ptr<Graph> m_TextGraph{};
