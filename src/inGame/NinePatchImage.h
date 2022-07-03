@@ -15,6 +15,7 @@ namespace inGame
         NinePatchImage(IAppState *app, Graph *srcGraph, const Vec2<double> &centerPos, const Vec2<double> &sizeByUnit,
                        const Vec2<double> &sideRatio);
         void SetSize(const Vec2<double>& sizeByUnit);
+        SpriteTexture& GetSprite();
     private:
         IAppState* m_App;
         SpriteTexture m_Sprite = SpriteTexture::Create();

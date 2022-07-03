@@ -14,8 +14,8 @@ namespace gameEngine
     {
     public:
         explicit TextureText(FontResource *font);
-        void SetForeground(EasyRgba color);
-        void SetOutline(EasyRgba color);
+        void SetForeground(Rgba color);
+        void SetOutline(Rgba color);
         void ChangeText(const std::string& text);
         SpriteTexture& GetTexture();
         [[nodiscard]] Vec2<int> GetSize() const;
@@ -23,8 +23,8 @@ namespace gameEngine
         FontResource* m_Font;
         SpriteTexture m_Texture = SpriteTexture::Create();
         unique_ptr<Graph> m_TextGraph{};
-        EasyRgba m_Foreground = EasyRgba(255, 255, 255);
-        EasyRgba m_Outline = EasyRgba(32, 32, 32);
+        Rgba m_Foreground = Rgba(255, 255, 255);
+        Rgba m_Outline = Rgba(32, 32, 32);
     };
 
 } // gameEngine

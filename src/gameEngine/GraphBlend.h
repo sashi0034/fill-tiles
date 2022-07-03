@@ -15,6 +15,7 @@ namespace gameEngine
         int m_Pal = 255;
     public:
         GraphBlend();
+        explicit GraphBlend(int pal);
         GraphBlend(SDL_BlendMode mode, int pal);
 
         void GetMode(SDL_BlendMode mode);

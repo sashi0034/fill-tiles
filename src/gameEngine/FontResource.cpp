@@ -29,15 +29,18 @@ namespace gameEngine
         if (m_FontOutLined!= nullptr) TTF_CloseFont(m_FontOutLined);
     }
 
-    unique_ptr<Graph> FontResource::MakeTextGraph(const std::string &text, EasyRgba foreground, EasyRgba outline) const
+    unique_ptr<Graph> FontResource::MakeTextGraph(const std::string &text, Rgba foreground, Rgba outline) const
     {
         assert(m_FontOutLined);
 
-        auto surface = TTF_RenderUTF8_Blended(m_Font, text.c_str(), foreground.GetSdlColor());
-        auto surfaceOutlined = TTF_RenderUTF8_Blended(m_FontOutLined, text.c_str(), outline.GetSdlColor());
+        auto surface = TTF_RenderUTF8_Solid(m_Font, text.c_str(), foreground.GetSdlColor());
+        auto surfaceOutlined = TTF_RenderUTF8_Solid(m_FontOutLined, text.c_str(), outline.GetSdlColor());
+//        auto surface = TTF_RenderUTF8_Blended(m_Font, text.c_str(), foreground.GetSdlColor());
+//        auto surfaceOutlined = TTF_RenderUTF8_Blended(m_FontOutLined, text.c_str(), outline.GetSdlColor());
         auto foreGroundDestRect = SDL_Rect{m_OutlineWidth, m_OutlineWidth, surface->w, surface->h};
 
-        SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
+        SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_NONE);
+//        SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLENDED);
         SDL_UpperBlit(surface, nullptr, surfaceOutlined, &foreGroundDestRect);
 
         SDL_FreeSurface(surface);
@@ -45,9 +48,9 @@ namespace gameEngine
         return std::make_unique<Graph>(m_App->GetRenderer(), surfaceOutlined);
     }
 
-    unique_ptr<Graph> FontResource::MakeTextGraph(const std::string &text, EasyRgba foreground) const
+    unique_ptr<Graph> FontResource::MakeTextGraph(const std::string &text, Rgba foreground) const
     {
-        auto surface = TTF_RenderUTF8_Blended(m_Font, text.c_str(), foreground.GetSdlColor());
+        auto surface = TTF_RenderUTF8_Solid(m_Font, text.c_str(), foreground.GetSdlColor());
         return std::make_unique<Graph>(m_App->GetRenderer(), surface);
     }
 

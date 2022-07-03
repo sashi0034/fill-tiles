@@ -81,7 +81,7 @@ namespace gameEngine
         void SetRotationDeg(double deg);
         [[nodiscard]] double GetRotationDeg() const;
 
-        void SetBlend(GraphBlend& blend);
+        void SetBlend(const GraphBlend &blend);
         [[nodiscard]] GraphBlend GetBlend() const;
 
         void SetUpdateProcess(const std::function<void(IAppState*)>& process);

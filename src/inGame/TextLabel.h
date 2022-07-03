@@ -19,6 +19,7 @@ namespace inGame
         TextLabel(IChildrenPool<ActorBase> *parentPool, IMainScene *scene);
     private:
         TextureText m_Text;
+        TextureText m_Text2;
         unique_ptr<NinePatchImage> m_Background;
     };
 }

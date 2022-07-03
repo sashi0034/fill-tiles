@@ -14,12 +14,12 @@ namespace gameEngine
         });
     }
 
-    void TextureText::SetForeground(EasyRgba color)
+    void TextureText::SetForeground(Rgba color)
     {
         m_Foreground = color;
     }
 
-    void TextureText::SetOutline(EasyRgba color)
+    void TextureText::SetOutline(Rgba color)
     {
         m_Outline = color;
     }
@@ -32,7 +32,7 @@ namespace gameEngine
         }
         else
         {
-            m_TextGraph = m_Font->MakeTextGraph(text, m_Foreground, EasyRgba(0, 0, 0));
+            m_TextGraph = m_Font->MakeTextGraph(text, m_Foreground, Rgba(0, 0, 0));
         }
         m_Texture.SetGraph(m_TextGraph.get());
         m_Texture.SetSrcRect(Rect(Vec2{0, 0}, m_TextGraph->GetSize()));

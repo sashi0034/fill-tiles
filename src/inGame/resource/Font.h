@@ -21,6 +21,10 @@ namespace inGame::resource
                 std::make_unique<FontResource>(
                         m_AppStatePtr, "assets/fonts/PixelMplus-20130602/PixelMplus12-Regular.ttf", 24, 2);
 
+        const unique_ptr<FontResource> MPlus24Px =
+                std::make_unique<FontResource>(
+                        m_AppStatePtr, "assets/fonts/Mplus2-Regular.ttf", 24, 2);
+
 
     };
 

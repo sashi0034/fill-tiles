@@ -128,7 +128,7 @@ namespace gameEngine
         return m_RotationDeg;
     }
 
-    void SpriteTexture::SetBlend(GraphBlend& blend)
+    void SpriteTexture::SetBlend(const GraphBlend &blend)
     {
         m_Blend = blend;
     }

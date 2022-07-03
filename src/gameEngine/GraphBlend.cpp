@@ -10,6 +10,11 @@ namespace gameEngine
     GraphBlend::GraphBlend()
     = default;
 
+    GraphBlend::GraphBlend(int pal)
+    {
+        SetPal(pal);
+    }
+
     GraphBlend::GraphBlend(SDL_BlendMode mode, int pal)
     {
         m_Mode = mode;

@@ -78,4 +78,9 @@ namespace inGame
 
         SDL_SetRenderTarget(renderer, nullptr);
     }
+
+    SpriteTexture &NinePatchImage::GetSprite()
+    {
+        return m_Sprite;
+    }
 }

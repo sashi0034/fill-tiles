@@ -8,7 +8,7 @@
 #include "string"
 #include "SDL_ttf.h"
 #include "memory"
-#include "EasyRgba.h"
+#include "Rgba.h"
 #include "Graph.h"
 #include "AppState.h"
 
@@ -21,8 +21,8 @@ namespace gameEngine
     public:
         FontResource(IAppState *app, const std::string &fontPath, int fontSize, int outLineWidth);
         ~FontResource();
-        unique_ptr<Graph> MakeTextGraph(const std::string &text, EasyRgba foreground) const;
-        unique_ptr<Graph> MakeTextGraph(const std::string &text, EasyRgba foreground, EasyRgba outline) const;
+        unique_ptr<Graph> MakeTextGraph(const std::string &text, Rgba foreground) const;
+        unique_ptr<Graph> MakeTextGraph(const std::string &text, Rgba foreground, Rgba outline) const;
         bool HasOutline() const;
     private:
         IAppState* m_App;
