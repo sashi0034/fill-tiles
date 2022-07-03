@@ -75,6 +75,7 @@ namespace gameEngine
 
     Vec2<int> Graph::GetSize() const
     {
+        assert(m_SdlSurface);
         return Vec2<int>{m_SdlSurface->w, m_SdlSurface->h};
     }
 

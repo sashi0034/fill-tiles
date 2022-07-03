@@ -11,13 +11,13 @@ namespace inGame::field
 
     FieldRenderer::FieldRenderer(const resource::Image *image, const Vec2<int> &matPos,
                                  const Vec2<int> &screenPos, SDL_Renderer *renderer, const Vec2<int> &srcSize,
-                                 const Vec2<double> &pixelScaleSize, ITileMap *tileMap)
+                                 const Vec2<double> &renderingSize, ITileMap *tileMap)
             : m_ResImage(image),
               m_MatPos(matPos),
               m_ScreenPos(screenPos),
               m_Renderer(renderer),
               m_SrcSize(srcSize),
-              m_PixelScaleSize(pixelScaleSize),
+              m_RenderingSize(renderingSize),
               m_TileMapPtr(tileMap)
     {}
 
@@ -103,7 +103,7 @@ namespace inGame::field
         image->RenderGraph(
                 m_Renderer,
                 m_ScreenPos, Rect<int>{srcStarting + targetSrcOrigin, m_SrcSize},
-                m_PixelScaleSize);
+                m_RenderingSize);
     }
 
     void FieldRenderer::renderPlateauCliff(Graph *image, const std::function<bool(int, int)> &isNeighbor)
@@ -124,13 +124,13 @@ namespace inGame::field
         image->RenderGraph(
                 m_Renderer,
                 m_ScreenPos, Rect<int>{srcStarting, m_SrcSize},
-                m_PixelScaleSize);
+                m_RenderingSize);
     }
 
 
     void FieldRenderer::renderCell(Graph *image, const Vec2<int> &cellPos)
     {
-        image->RenderGraph(m_Renderer, m_ScreenPos, Rect<int>{cellPos * pixelPerMat, m_SrcSize}, m_PixelScaleSize);
+        image->RenderGraph(m_Renderer, m_ScreenPos, Rect<int>{cellPos * pixelPerMat, m_SrcSize}, m_RenderingSize);
     }
 
     template<class... A>

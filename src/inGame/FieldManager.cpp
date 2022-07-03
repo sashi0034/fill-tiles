@@ -14,83 +14,87 @@ namespace inGame
 
     FieldManager::FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene) :
             ActorBase(belonging),
-            ScreenMatSize(GameRoot::GetInstance().GetAppState()->GetScreenSize() / PixelPerMat),
             m_ParentalScene(parentalScene), m_TileMap(parentalScene)
     {
-        m_Texture.SetRenderingProcess([this](IAppState *appState) { renderTileMap(appState); });
         ZIndexBackGround(&m_Texture).ApplyZ();
-
         m_ParentalScene->GetScrollManager()->RegisterSprite(m_Texture);
     }
 
     void FieldManager::Init()
     {
         m_TileMap.LoadMapFile("field_00.tmx");
+
+        createRenderedTileMapToBuffer(m_ParentalScene->GetRoot()->GetAppState());
+        m_Texture.SetGraph(m_BufferGraph.get());
+        m_Texture.SetSrcRect(Rect<int>{Vec2{0, 0}, m_BufferGraphSize});
     }
 
 
-    void FieldManager::renderTileMap(IAppState *appState)
+    void FieldManager::createRenderedTileMapToBuffer(IAppState *appState)
     {
-        const auto globalPos = m_Texture.GetParentalGlobalPosition();
-        const auto screenGlobalPos = (globalPos * appState->GetPixelPerUnit()).CastTo<int>();
-
-        const auto negativeCorrection = Vec2<int>{globalPos.X<0 ? -1 : 0, globalPos.Y<0 ? -1 : 0};
-
-        const Vec2<int> startingChipPoint = (globalPos * -1 / PixelPerMat).CastTo<int>() + negativeCorrection;
-
         const Vec2<int> matSize = m_TileMap.GetMatSize();
 
-        const auto renderingChipStartingPoint = Vec2<int>{
-            std::max(0, startingChipPoint.X),
-            std::max(0, startingChipPoint.Y)};
+        const auto renderingChipStartingPoint = Vec2<int>{0, 0};
+        const auto renderingChipEndPoint = Vec2<int>{matSize.X-1, matSize.Y-1};
 
-        const auto renderingChipEndPoint = Vec2<int>{
-                std::min(startingChipPoint.X + 1 + ScreenMatSize.X, matSize.X-1),
-                std::min(startingChipPoint.Y + 1 + ScreenMatSize.Y, matSize.Y-1)};
+        m_BufferGraphSize = Vec2{matSize.X * PixelPerMat, matSize.Y * PixelPerMat};
+        const auto sdlRenderer = appState->GetRenderer();
+        SDL_Texture *renderingTarget = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_RGBA8888,
+                                                         SDL_TEXTUREACCESS_TARGET, m_BufferGraphSize.X, m_BufferGraphSize.Y);
+        assert(renderingTarget);
+        renderTileMapUnsafely(renderingChipStartingPoint, renderingChipEndPoint, sdlRenderer, renderingTarget);
 
+        m_BufferGraph = std::make_unique<Graph>(renderingTarget);
+    }
+
+    void
+    FieldManager::renderTileMapUnsafely(const Vec2<int> &renderingChipStartingPoint,
+                                        const Vec2<int> &renderingChipEndPoint,
+                                        SDL_Renderer *const sdlRenderer, SDL_Texture *renderingTarget)
+    {
+        SDL_SetRenderTarget(sdlRenderer, renderingTarget);
+        SDL_RenderClear(sdlRenderer);
 
         for (int chipY = renderingChipStartingPoint.Y; chipY<=renderingChipEndPoint.Y; ++chipY)
             for (int chipX = renderingChipStartingPoint.X; chipX<=renderingChipEndPoint.X; ++chipX)
             {
                 const auto chipPos = Vec2{chipX, chipY};
-                const Vec2<int> renderingScreenPos =
-                        screenGlobalPos + (Vec2<int>{chipX, chipY} * PixelPerMat) * appState->GetPixelPerUnit();
+                const Vec2<int> renderingPos = (Vec2<int>{chipX, chipY} * PixelPerMat);
                 const auto mapElement = m_TileMap.GetElementAt(chipPos);
                 const auto chipList = mapElement->GetChipList();
 
                 const auto srcSize = Vec2{PixelPerMat, PixelPerMat};
-                const double pixelPerUnit = appState->GetPixelPerUnit();
-                const auto pixelScaleSize = Vec2<double>{pixelPerUnit, pixelPerUnit};
+                const auto renderingSize = Vec2<double>{1, 1};
 
-                FieldRenderer renderer = FieldRenderer(
+                FieldRenderer fieldRenderer = FieldRenderer(
                         GameRoot::GetInstance().ResImage.get(),
                         chipPos,
-                        renderingScreenPos,
-                        appState->GetRenderer(),
+                        renderingPos,
+                        sdlRenderer,
                         srcSize,
-                        pixelScaleSize,
+                        renderingSize,
                         &m_TileMap);
 
-                // @todo: テクスチャをバッファに格納して処理を減らす
                 for (const auto chip : chipList)
-                    renderChip(chip, renderer, appState, renderingScreenPos);
+                    renderChip(chip, fieldRenderer, sdlRenderer, renderingPos, renderingSize);
             }
+
+        SDL_SetRenderTarget(sdlRenderer, nullptr);
     }
 
-    void FieldManager::renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &renderer, IAppState *appState,
-                                  const Vec2<int> &screenPos)
+    void
+    FieldManager::renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &fieldRenderer, SDL_Renderer *sdlRenderer,
+                             const Vec2<int> &screenPos, const Vec2<double> &renderingSize)
     {
         auto srcStarting = chip->SrcPoint;
         const auto srcSize = Vec2{PixelPerMat, PixelPerMat};
-        const double pixelPerUnit = appState->GetPixelPerUnit();
-        const auto pixelScaleSize = Vec2<double>{pixelPerUnit, pixelPerUnit};
 
-        bool rendered = renderer.RenderChip(chip->Kind);
-        if (!rendered)
+        bool hasRendered = fieldRenderer.RenderChip(chip->Kind);
+        if (!hasRendered)
             m_TileMap.GetTilesetImage().RenderGraph(
-                    appState->GetRenderer(),
+                    sdlRenderer,
                     screenPos, Rect<int>(srcStarting, srcSize),
-                    pixelScaleSize);
+                    renderingSize);
     }
 
     bool FieldManager::CanMoveTo(const MatPos &currMatPos, EAngle goingAngle)
@@ -189,6 +193,11 @@ namespace inGame
             default:
                 assert(false);
         }
+    }
+
+    Vec2<int> FieldManager::GetScreenMatSize() const
+    {
+        return (GameRoot::GetInstance().GetAppState()->GetScreenSize() / PixelPerMat);
     }
 
 

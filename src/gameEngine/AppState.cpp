@@ -5,6 +5,7 @@
 #include "AppState.h"
 #include "../gameEngine/SpriteTexture.h"
 #include <memory>
+#include <iostream>
 
 namespace gameEngine
 {
@@ -25,7 +26,7 @@ namespace gameEngine
         return m_PixelPerUnit;
     }
 
-    const Vec2<int> &AppState::GetScreenSize() const
+    Vec2<int> AppState::GetScreenSize() const
     {
         return m_ScreenSize;
     }
@@ -47,6 +48,11 @@ namespace gameEngine
     void AppState::UpdateFrame()
     {
         pollEvent();
+
+        int w, h;
+        SDL_GetWindowSize(m_Window, &w, &h);
+        m_ScreenSize = Vec2{w/m_PixelPerUnit, h/m_PixelPerUnit};
+
         m_KeyboardState = SDL_GetKeyboardState(NULL);
         m_Time->Update();
         SpriteTexture::UpdateAll(this);
@@ -88,6 +94,12 @@ namespace gameEngine
                 break;
             case SDL_MOUSEMOTION:
                 m_Mouse.SetPosition(Vec2<double>(double(e.motion.x), double(e.motion.y)) / m_PixelPerUnit);
+                break;
+            case SDL_WINDOWEVENT_RESIZED:
+                // SDL2に動作しないバグがあるかも
+                std::cout << e.window.data1 << ", " << e.window.data2 << std::endl;
+                assert(false);
+                break;
             default:
                 break;
         }
