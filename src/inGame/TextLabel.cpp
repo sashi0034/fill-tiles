@@ -9,7 +9,8 @@
 namespace inGame{
 
     TextLabel::TextLabel(IChildrenPool<ActorBase> *parentPool, IMainScene *scene)
-        : ActorBase(parentPool), m_Text(scene->GetRoot()->ResFont->PixelMPlus24Px.get()),m_Text2(scene->GetRoot()->ResFont->MPlus24Px.get())
+        : ActorBase(parentPool), m_Text(scene->GetRoot()->ResFont->KHDotAkihabara32px.get()),m_Text2(scene->GetRoot()->ResFont->KHDotHibiya48px.get()),
+          m_TextList(scene->GetRoot()->GetAppState(), "aaaああ<br>ああかあああ", Vec2<double>{50.0, 50.0}, scene->GetRoot()->ResFont->KHDotAkihabara32px.get())
     {
         //const char* fontPath = "assets/fonts/Mplus2-Regular.ttf";
 
@@ -20,6 +21,8 @@ namespace inGame{
         m_Text2.ChangeText("Hello Hello. ラベルテストです。 12345");
         ZIndexUi(&m_Text2.GetTexture()).SetIndex(1).ApplyZ();
         m_Text2.GetTexture().SetPosition(Vec2<double>{100, 130});
+
+        m_TextList.SetZIndex(1);
 
         m_Background = std::make_unique<NinePatchImage>(
                 scene->GetRoot()->GetAppState(),

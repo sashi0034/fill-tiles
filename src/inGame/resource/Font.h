@@ -21,10 +21,13 @@ namespace inGame::resource
                 std::make_unique<FontResource>(
                         m_AppStatePtr, "assets/fonts/PixelMplus-20130602/PixelMplus12-Regular.ttf", 24, 2);
 
-        const unique_ptr<FontResource> MPlus24Px =
+        const unique_ptr<FontResource> KHDotAkihabara32px =
                 std::make_unique<FontResource>(
-                        m_AppStatePtr, "assets/fonts/Mplus2-Regular.ttf", 24, 2);
+                        m_AppStatePtr, "assets/fonts/khdotfont-20150527/KH-Dot-Akihabara-16.ttf", 32, 2);
 
+        const unique_ptr<FontResource> KHDotHibiya48px =
+                std::make_unique<FontResource>(
+                        m_AppStatePtr, "assets/fonts/khdotfont-20150527/KH-Dot-Hibiya-24.ttf", 48, 2);
 
     };
 

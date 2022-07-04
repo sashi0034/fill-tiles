@@ -10,6 +10,7 @@
 #include "GameRoot.h"
 #include "MainScene.h"
 #include "NinePatchImage.h"
+#include "TextController.h"
 
 namespace inGame
 {
@@ -21,6 +22,8 @@ namespace inGame
         TextureText m_Text;
         TextureText m_Text2;
         unique_ptr<NinePatchImage> m_Background;
+
+        TextController m_TextList;
     };
 }
 
