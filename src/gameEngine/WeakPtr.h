@@ -19,7 +19,7 @@ namespace gameEngine
         PtrInfo(void *ptr) : m_Ptr(ptr)
         {}
 
-        void Inc(void)
+        void Inc()
         { ++m_RefCount; }
 
         static void Dec(PtrInfo *&p_info)
@@ -34,14 +34,14 @@ namespace gameEngine
             }
         }
 
-        bool IsNull(void) const
+        bool IsNull() const
         { return m_Ptr == nullptr; }
 
         template<class T>
-        T *GetPtr(void) const
+        T *GetPtr() const
         { return reinterpret_cast<T *>(m_Ptr); }
 
-        int GetRefCount(void) const
+        int GetRefCount() const
         { return m_RefCount; }
     };
 
@@ -91,21 +91,21 @@ namespace gameEngine
             return *this;
         }
 
-        void Clear(void)
+        void Clear()
         {
             gameEngine::PtrInfo::Dec(m_pPtrInfo);
             m_pPtrInfo = nullptr;
         }
 
         template<class U>
-        WeakPtr<U> GetUpcasted(void)
+        WeakPtr<U> GetUpcasted()
         {
             static_assert(std::is_base_of<U, T>::value, ""); // U が T の基底クラスである必要がある
             return WeakPtr<U>(m_pPtrInfo);
         }
 
         template<class U>
-        WeakPtr<U> GetDowncasted(void)
+        WeakPtr<U> GetDowncasted()
         {
             //static_assert(std::is_base_of<T, U>::value, ""); // U は T の派生クラスである必要がある
             if (dynamic_cast<U *>( GetPtr())) // ポインタが実際に U型 インスタンスであるかどうかをチェック
@@ -136,7 +136,7 @@ namespace gameEngine
         operator T *() const
         { return GetPtr(); }
 
-        int GetRefCount(void) const
+        int GetRefCount() const
         { return m_pPtrInfo ? m_pPtrInfo->GetRefCount() : 0; }
     };
 

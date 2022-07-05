@@ -10,7 +10,7 @@
 #include "GameRoot.h"
 #include "MainScene.h"
 #include "NinePatchImage.h"
-#include "TextController.h"
+#include "TextPassage.h"
 
 namespace inGame
 {
@@ -19,11 +19,9 @@ namespace inGame
     public:
         TextLabel(IChildrenPool<ActorBase> *parentPool, IMainScene *scene);
     private:
-        TextureText m_Text;
-        TextureText m_Text2;
         unique_ptr<NinePatchImage> m_Background;
 
-        TextController m_TextList;
+        TextPassage m_TextList;
     };
 }
 

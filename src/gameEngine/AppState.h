@@ -31,7 +31,7 @@ namespace gameEngine
     };
 
 
-    class AppState : public IAppState
+    class AppState final: public IAppState
     {
     public:
         AppState();

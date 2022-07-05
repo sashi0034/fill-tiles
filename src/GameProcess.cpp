@@ -25,7 +25,7 @@ int GameProcess::RunGame()
         return -1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("KEY EVENT TEST", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+    SDL_Window *window = SDL_CreateWindow("Fill Tiles (Debug)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                           screenWidth * pixelPerUnit, screenHeight * pixelPerUnit, SDL_WINDOW_SHOWN);
 
     if (window == NULL)
