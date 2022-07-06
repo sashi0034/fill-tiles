@@ -4,6 +4,8 @@
 
 #include <cassert>
 #include "TextureAnimationEaser.h"
+#include "../easing.h"
+
 namespace gameEngine::detail
 {
     TextureAnimationEaser::TextureAnimationEaser(const WeakPtr<SpriteTexture> &mTargetTexture, double endSecond)
@@ -41,7 +43,7 @@ namespace gameEngine::detail
                 assert(false);
                 break;
             case EAnimEase::OutBack:
-                assert(false);
+                m_ProgressRatio = easing::EaseOutBack(m_Time / m_EndTime);
                 break;
             default:
                 assert(false);
@@ -56,7 +58,7 @@ namespace gameEngine::detail
         m_LoopCount += 1;
     }
 
-    bool TextureAnimationEaser::IsDead()
+    bool TextureAnimationEaser::IsDead() const
     {
         return m_LoopCount>=m_LoopMax;
     }

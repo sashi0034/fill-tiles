@@ -20,7 +20,7 @@ namespace gameEngine::detail
         void SetLoop(int loopMax);
         void SetRelative(bool isRelative);
         void Update(double deltaSec);
-        bool IsDead();
+        bool IsDead() const;
 
     private:
         WeakPtr<SpriteTexture> m_TargetTexture;
