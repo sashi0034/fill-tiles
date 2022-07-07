@@ -28,7 +28,7 @@ namespace inGame{
 
     void TextLabel::Init()
     {
-        effect::Smoke::Produce(m_Scene->GetEffectManager(), Vec2<double>{200, 150});
+
     }
 
 }

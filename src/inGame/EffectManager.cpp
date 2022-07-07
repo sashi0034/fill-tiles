@@ -35,6 +35,7 @@ namespace inGame
 
     void EffectManager::ApplyParentalPos(SpriteTexture &target)
     {
+        if (m_ParentalPos == nullptr) return;
         target.SetPositionParent(*m_ParentalPos);
     }
 

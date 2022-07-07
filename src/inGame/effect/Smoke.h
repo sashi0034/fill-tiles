@@ -17,14 +17,19 @@ namespace inGame::effect
 
         void Update(IAppState *appState) override;
     private:
-        double m_TimeCount;
+        double m_LifeTime{};
         Vec2<double> m_Vel;
+        static constexpr int initialAlpha = 160;
 
         Smoke(EffectManager *effectManager, const Vec2<double> &pos, const Vec2<double> &velocity,
               double rotationDeg);
         EffectManager* m_Manager;
         SpriteTexture m_Texture = SpriteTexture::Create();
         static CoroTask produceWithRotating(CoroTaskYield& yield, EffectManager *manager, const Vec2<double> &pos);
+
+        bool passLifeTime(const IAppState *appState);
+
+        static int getCorrectedDeg(const int deg);
     };
 }
 

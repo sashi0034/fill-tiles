@@ -15,13 +15,16 @@ namespace inGame::character
         DEF_WEAK_GET(CheckpointBlock);
     public:
         CheckpointBlock(IMainScene *mainScene, const MatPos &matPos, field::ETileKind tileKind);
-        CharacterViewModel m_View;
         MatPos GetMatPos() const;
 
+        void InvokeDestroyEffect();
         void Destroy() override;
     private:
+        IMainScene* m_Scene;
+        CharacterViewModel m_View;
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         MatPos m_MatPos;
+
     };
 }
 

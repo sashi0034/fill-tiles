@@ -4,12 +4,14 @@
 
 #include "CheckpointBlock.h"
 #include "../ZIndex.h"
+#include "../effect/Smoke.h"
 
 namespace inGame::character
 {
 
     CheckpointBlock::CheckpointBlock(IMainScene *mainScene, const MatPos &matPos, field::ETileKind tileKind)
             : CharacterBase(mainScene->GetFieldManager()),
+            m_Scene(mainScene),
             m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->ResImage->folder_16x16.get()),
             m_MatPos(matPos)
     {
@@ -43,7 +45,11 @@ namespace inGame::character
 
     void CheckpointBlock::Destroy()
     {
+        InvokeDestroyEffect();
         getParentField()->GetTileMap()->GetElementWritableAt(m_MatPos.GetVec())->SetWallByTopTile();
         CharacterBase::Destroy();
     }
+
+    void CheckpointBlock::InvokeDestroyEffect()
+    { effect::Smoke::Produce(m_Scene->GetEffectManager(), util::GetTextureCentralPos(m_View.GetModel())); }
 }

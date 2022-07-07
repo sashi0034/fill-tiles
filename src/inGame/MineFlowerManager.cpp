@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "character/MineFlower.h"
 #include "character/CheckpointBlock.h"
+#include "effect/Smoke.h"
 
 namespace inGame{
 
@@ -123,7 +124,9 @@ namespace inGame{
 
         // ブロックを削除
         blockList.ForEach([&](character::CheckpointBlock* block){
+            block->InvokeDestroyEffect();
             block->Destroy();
+            coroUtil::WaitForTime(yield, app->GetTime(), 0.05);
         });
 
         // ちょっと待機

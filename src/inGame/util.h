@@ -12,7 +12,8 @@ namespace inGame
 {
     namespace util
     {
-        void SetTextureCentral(SpriteTexture& texture, const Vec2<double>& pos);
+        Vec2<double> GetTextureCentralPos(SpriteTexture& texture);
+        void SetTextureByCenter(SpriteTexture& texture, const Vec2<double>& pos);
     }
 }
 

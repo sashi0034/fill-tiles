@@ -19,7 +19,8 @@ namespace inGame
         const double baseRange = 1000;
         const double baseBackGroundZ = baseRange * 1;
         const double baseCharacterZ = baseRange * 0;
-        const double baseUiZ = baseRange * -1;
+        const double baseEffect = baseRange * -1;
+        const double baseUiZ = baseRange * -2;
     };
 
     class ZIndexBackGround : public ZIndex
@@ -40,6 +41,17 @@ namespace inGame
         const double infinity = 32768;
         const double infinityMinus = -infinity;
         CharacterViewModel& m_Character;
+    };
+
+    class ZIndexEffect : public ZIndex
+    {
+    public:
+        explicit ZIndexEffect(SpriteTexture *texture);
+        ZIndexEffect& SetIndex(int frontLargerIndex);
+        void ApplyZ() override;
+    private:
+        SpriteTexture* m_Texture;
+        int m_Index;
     };
 
     class ZIndexUi : public ZIndex

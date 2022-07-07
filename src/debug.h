@@ -6,6 +6,9 @@
 // フィールドデバッグシーン
 //#define INGAME_DEBUG_FIELDVIEW
 
+// エフェクトテスト
+#define INGAME_DEBUG_EFFECTTEST
+
 
 
 

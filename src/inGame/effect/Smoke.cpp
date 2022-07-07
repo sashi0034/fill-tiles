@@ -3,6 +3,7 @@
 //
 
 #include "Smoke.h"
+#include "../ZIndex.h"
 
 namespace inGame::effect
 {
@@ -11,13 +12,14 @@ namespace inGame::effect
                  double rotationDeg)
     : ActorBase(effectManager->GetChildren()), m_Vel(velocity), m_Manager(effectManager)
     {
+        effectManager->ApplyParentalPos(m_Texture);
         m_Texture.SetGraph(effectManager->GetRoot()->ResImage->smoke_48x32.get());
         //m_Texture.SetRenderingProcess(std::bind(renderingProcess::RenderSpriteTwoDots, std::placeholders::_1, &m_Texture));
         m_Texture.SetSrcRect(Rect<int>{0, 0, 48, 32});
         m_Texture.SetRotationDeg(rotationDeg);
-        m_Texture.SetBlend(GraphBlend(160));
-
-        util::SetTextureCentral(m_Texture, pos);
+        m_Texture.SetBlend(GraphBlend(0));
+        ZIndexEffect(&m_Texture).SetIndex(1).ApplyZ();
+        util::SetTextureByCenter(m_Texture, pos);
 
 //        m_Texture.SetScale(Vec2{0.0, 0.0});
 //        effectManager->GetAnimator()->TargetTo(m_Texture.GetWeakPtr())
@@ -47,26 +49,51 @@ namespace inGame::effect
             constexpr double velSize = 20;
             const Vec2<double> deltaPos = Vec2{std::cos(rad), std::sin(rad)} * radius;
             const Vec2<double> vel = Vec2{std::cos(rad), std::sin(rad)} * velSize;
-            manager->GetChildren()->Birth(new Smoke(manager, pos + deltaPos, vel, 90 + deg));
+            manager->GetChildren()->Birth(new Smoke(manager, pos + deltaPos, vel, getCorrectedDeg(deg)));
 
             coroUtil::WaitForTime(yield, duration);
         }
     }
 
+    int Smoke::getCorrectedDeg(const int deg)
+    { return 90 + deg; }
+
     void Smoke::Update(IAppState *appState)
     {
         constexpr double scaleSpeed = 5;
-        const double scale = 0.7 - 0.3 * std::cos(m_TimeCount * scaleSpeed * M_PI);
+        const double scale = 0.7 - 0.3 * std::cos(m_LifeTime * scaleSpeed * M_PI);
 
         m_Texture.SetScale(Vec2{scale, scale});
         m_Texture.SetPosition(m_Texture.GetPosition() + m_Vel * appState->GetTime().GetDeltaSec());
 
-        m_TimeCount += appState->GetTime().GetDeltaSec();
+        if (passLifeTime(appState)) return;
+    }
+
+    bool Smoke::passLifeTime(const IAppState *appState)
+    {
+        m_LifeTime += appState->GetTime().GetDeltaSec();
         constexpr double lifeTime = 3.0;
-        if (m_TimeCount>lifeTime)
+        constexpr double fadingTime = 0.6;
+        constexpr double fadingStartTime = lifeTime - fadingTime;
+
+        // フェードアウト処理
+        if (m_LifeTime > fadingStartTime)
+        {
+            double fadingRate = 1 - (m_LifeTime - fadingStartTime) / fadingTime;
+            int alpha = Range<int>(0, 255).MakeInRange(initialAlpha * fadingRate);
+            m_Texture.SetBlend(GraphBlend(alpha));
+        }
+        else
+        {
+            m_Texture.SetBlend(GraphBlend(initialAlpha));
+        }
+
+        // 寿命
+        if (m_LifeTime > lifeTime)
         {
             m_Manager->GetChildren()->Destroy(this);
-            return;
+            return true;
         }
+        return false;
     }
 }
