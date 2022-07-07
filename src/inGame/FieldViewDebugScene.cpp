@@ -108,4 +108,9 @@ namespace inGame{
     {
         return nullptr;
     }
+
+    EffectManager *FieldViewDebugScene::GetEffectManager()
+    {
+        return nullptr;
+    }
 }

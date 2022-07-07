@@ -56,6 +56,8 @@ namespace gameEngine::detail
     void TextureAnimationProcessor::trigger()
     {
         m_IsTriggered = true;
+        if (m_AnimationProcess!= nullptr) m_AnimationProcess->Start();
+
         if (m_IsImmediatelyStepToNext)
             if (auto next = m_NextAnimation.GetPtr())
                 next->trigger();

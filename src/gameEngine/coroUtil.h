@@ -19,6 +19,7 @@ namespace gameEngine::coroUtil
     }
 
     CoroTask WaitForTime(CoroTaskYield& yield, const Time &timeSystem, double waitSecond);
+    CoroTask WaitForTime(CoroTaskYield& yield, double waitSecond);
 
     CoroTask WaitForTrue(CoroTaskYield& yield, const std::function<bool()>& discriminant);
 }

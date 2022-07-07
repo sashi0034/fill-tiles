@@ -12,6 +12,7 @@
 #include "FieldManager.h"
 #include "ScrollManager.h"
 #include "FieldEventManager.h"
+#include "EffectManager.h"
 
 namespace inGame
 {
@@ -26,6 +27,7 @@ namespace inGame
         virtual IFieldManager* GetFieldManager() = 0;
         virtual Player* GetPlayer() = 0;
         virtual FieldEventManager* GetFieldEventManager() = 0;
+        virtual EffectManager* GetEffectManager() = 0;
     };
 
     class MainScene: public ActorBase, public IMainScene
@@ -42,6 +44,7 @@ namespace inGame
         IFieldManager* GetFieldManager() override;
         ScrollManager *GetScrollManager() override;
         FieldEventManager *GetFieldEventManager() override;
+        EffectManager* GetEffectManager() override;
     private:
         void init();
 
@@ -52,6 +55,7 @@ namespace inGame
         Player* m_Player;
         FieldEventManager m_FieldEventManager{};
         unique_ptr<ScrollManager> m_ScrollManager{};
+        EffectManager* m_EffectManager;
     };
 }
 

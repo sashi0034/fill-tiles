@@ -35,11 +35,13 @@ namespace gameEngine::detail::textureAnimation
     Position::Position(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime)
     : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
-        if (auto texture = targetTexture.GetPtr())
-        {
+        m_EndPos = endPos;
+    }
+
+    void Position::Start()
+    {
+        if (auto texture = m_Texture.GetPtr())
             m_StartPos = texture->GetPosition();
-            m_EndPos = endPos;
-        }
     }
 
     bool Position::UpdateAnimation(double deltaSecond)
@@ -68,6 +70,12 @@ namespace gameEngine::detail::textureAnimation
         }
     }
 
+    void Rotation::Start()
+    {
+        if (auto texture = m_Texture.GetPtr())
+            m_StartDeg = texture->GetRotationDeg();
+    }
+
     bool Rotation::UpdateAnimation(double deltaSecond)
     {
         m_Easer.Update(deltaSecond);
@@ -89,6 +97,12 @@ namespace gameEngine::detail::textureAnimation
             m_StartScale = texture->GetScale();
             m_EndScale = endScale;
         }
+    }
+
+    void Scale::Start()
+    {
+        if (auto texture = m_Texture.GetPtr())
+            m_StartScale = texture->GetScale();
     }
 
     bool Scale::UpdateAnimation(double deltaSecond)

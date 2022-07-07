@@ -127,6 +127,7 @@ namespace inGame
 
     void FieldManager::Update(IAppState* app)
     {
+        m_ChildrenPool.ProcessEach([&](character::CharacterBase& child){child.Update(app); });
         m_Animator.Update(app->GetTime().GetDeltaSec());
         m_CoroutineManager.UpdateEach();
     }

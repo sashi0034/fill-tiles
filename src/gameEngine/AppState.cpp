@@ -54,7 +54,7 @@ namespace gameEngine
         m_ScreenSize = Vec2{w/m_PixelPerUnit, h/m_PixelPerUnit};
 
         m_KeyboardState = SDL_GetKeyboardState(NULL);
-        m_Time->Update();
+        m_Time->Update(true);
         SpriteTexture::UpdateAll(this);
     }
 

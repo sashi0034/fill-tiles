@@ -25,6 +25,9 @@ namespace inGame
 
         Player *GetPlayer() override;
         FieldEventManager *GetFieldEventManager() override;
+
+        EffectManager *GetEffectManager() override;
+
     private:
         GameRoot* m_Root;
         ChildrenPool<ActorBase> m_ChildrenPool{};

@@ -18,6 +18,21 @@ namespace gameEngine::coroUtil{
         }
     }
 
+
+    CoroTask WaitForTime(CoroTaskYield &yield, double waitSecond)
+    {
+        Time time{};
+        double totalTime = 0;
+
+        while (totalTime<waitSecond)
+        {
+            time.Update();
+            double deltaSec = time.GetDeltaSec();
+            totalTime += deltaSec;
+            yield();
+        }
+    }
+
     CoroTask WaitForTrue(CoroTaskYield &yield, const std::function<bool()>& discriminant)
     {
         while (!discriminant())

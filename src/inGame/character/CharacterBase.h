@@ -21,6 +21,7 @@ namespace inGame::character
         explicit CharacterBase(IFieldManager *parentField);
         virtual ~CharacterBase() = default;
         virtual void Destroy();
+        virtual void Update(IAppState* app);
     protected:
         IFieldManager* getParentField();
     private:

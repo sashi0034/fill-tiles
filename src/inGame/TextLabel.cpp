@@ -5,11 +5,12 @@
 #include "TextLabel.h"
 #include "MainScene.h"
 #include "ZIndex.h"
+#include "effect/Smoke.h"
 
 namespace inGame{
 
     TextLabel::TextLabel(IChildrenPool<ActorBase> *parentPool, IMainScene *scene)
-        : ActorBase(parentPool),
+        : ActorBase(parentPool), m_Scene(scene),
           m_TextList(scene->GetRoot()->GetAppState(), scene->GetRoot()->ResFont->KHDotAkihabara32px.get(), Rgba(255, 255, 255), Rgba(40, 40, 255))
     {
         m_Background = std::make_unique<NinePatchImage>(
@@ -23,7 +24,11 @@ namespace inGame{
         m_TextList.SetAlignment(ETextHorizontalAlign::Center, ETextVerticalAlign::Center);
         m_TextList.SetZIndex(1);
         m_TextList.UpdateTextAndView("おてんとうさま<br>これは ABCDE 012345 です。<br>眠すぎ<br>おねんね");
+    }
 
+    void TextLabel::Init()
+    {
+        effect::Smoke::Produce(m_Scene->GetEffectManager(), Vec2<double>{200, 150});
     }
 
 }

@@ -37,7 +37,7 @@ namespace gameEngine
 
         void Restart();
 
-        void Update(bool isPrintDebugFps= true);
+        void Update(bool isPrintDebugFps= false);
 
         Fps GetFps();
     };

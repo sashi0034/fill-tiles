@@ -26,6 +26,10 @@ namespace inGame{
 
         m_ChildrenPool.Birth(new TextLabel(&m_ChildrenPool, this));
 
+        m_EffectManager = m_ChildrenPool.BirthAs<EffectManager>(new EffectManager(&m_ChildrenPool,
+                                                                                  m_ScrollManager->GetSprite(),
+                                                                                  m_Root));
+
         init();
     }
 
@@ -74,6 +78,11 @@ namespace inGame{
     FieldEventManager *MainScene::GetFieldEventManager()
     {
         return &m_FieldEventManager;
+    }
+
+    EffectManager *MainScene::GetEffectManager()
+    {
+        return m_EffectManager;
     }
 
 }

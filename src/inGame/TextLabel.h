@@ -18,7 +18,9 @@ namespace inGame
     {
     public:
         TextLabel(IChildrenPool<ActorBase> *parentPool, IMainScene *scene);
+        void Init() override;
     private:
+        IMainScene* m_Scene;
         unique_ptr<NinePatchImage> m_Background;
 
         TextPassage m_TextList;

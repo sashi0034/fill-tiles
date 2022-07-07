@@ -6,6 +6,7 @@
 #define FILL_TILES_ACTORBASE_H
 
 #include "../gameEngine/gameEngine.h"
+#include "util.h"
 
 namespace inGame
 {

@@ -15,6 +15,7 @@ namespace gameEngine::detail::textureAnimation
     class AnimationBase
     {
     public:
+        virtual void Start(){};
         virtual bool UpdateAnimation(double);   // returns false if object is dead.
         virtual ~AnimationBase() = default;
     };
@@ -42,6 +43,7 @@ namespace gameEngine::detail::textureAnimation
     {
     public:
         Position(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime);
+        void Start() override;
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
         ~Position() override = default;
@@ -56,6 +58,7 @@ namespace gameEngine::detail::textureAnimation
     {
     public:
         Rotation(const WeakPtr<SpriteTexture> &targetTexture, double endDeg, double endTime);
+        void Start() override;
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
         ~Rotation() override = default;
@@ -70,6 +73,7 @@ namespace gameEngine::detail::textureAnimation
     {
     public:
         Scale(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime);
+        void Start() override;
         bool UpdateAnimation(double deltaSecond) override;
         TextureAnimationEaser * GetEaser() override;
         ~Scale() override = default;

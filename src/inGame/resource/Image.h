@@ -27,6 +27,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(grow_bamboo_16x16);
         REGISTER_RESOURCE_PNG(mine_flower_16x16);
         REGISTER_RESOURCE_PNG(folder_16x16);
+        REGISTER_RESOURCE_PNG(smoke_48x32);
         REGISTER_RESOURCE_PNG(ui_white_rounnd_rect);
         REGISTER_RESOURCE_PNG(ui_black_window);
 

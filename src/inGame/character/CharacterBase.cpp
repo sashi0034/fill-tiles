@@ -21,4 +21,9 @@ namespace inGame::character
     {
         return m_ParentalField;
     }
+
+    void CharacterBase::Update(IAppState *app)
+    {
+        (void)app;
+    }
 }
