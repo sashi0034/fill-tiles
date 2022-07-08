@@ -15,6 +15,18 @@
 
 namespace inGame
 {
+    struct PlayerMoveData
+    {
+    public:
+        const MatPos BeforePos;
+        const MatPos AfterPos;
+        const Angle MovingAngle;
+        const bool IsDash;
+
+        PlayerMoveData(const MatPos &beforePos, const MatPos &afterPos, const Angle &movingAngle, const bool isDash);
+    };
+
+
     class Player final : public ActorBase
     {
     public:
@@ -24,7 +36,7 @@ namespace inGame
         Vec2<double> GetPos();
         void SetPos(const Vec2<double> &pos);
         MatPos GetMatPos();
-        [[nodiscard]] rx::observable<MatPos> OnMoveFinish() const;
+        [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveFinish() const;
         static inline const Vec2<int> CellSize{32, 32};
     private:
         void setPos(Vec2<double> newPos);
@@ -46,7 +58,7 @@ namespace inGame
         IFieldManager* m_Field;
 
         ChildrenPool<ProcessTimer> m_SubProcess{};
-        rx::subject<MatPos> m_OnMoveFinish;
+        rx::subject<PlayerMoveData*> m_OnMoveFinish;
         bool m_ShouldResetScroll = true;
 
         static EAngle getInputAngle(const Uint8 *keyState);

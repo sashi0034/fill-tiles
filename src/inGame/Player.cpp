@@ -107,6 +107,12 @@ namespace inGame
 
         self->m_Angle = goingAngle;
 
+        PlayerMoveData moveData(
+            self->GetMatPos(),
+            self->GetMatPos() +  MatPos(Angle(self->m_Angle).ToXY()),
+            self->m_Angle,
+            isDash);
+
         // 歩行アニメーション
         auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_View->GetModel().GetWeakPtr())
                 ->AnimPosition(moveVector, movingTIme)->SetEase(EAnimEase::Linear)->SetRelative(true)
@@ -114,7 +120,8 @@ namespace inGame
 
         coroUtil::WaitForExpire<>(yield, moveAnim);
 
-        self->m_OnMoveFinish.get_subscriber().on_next(self->GetMatPos());
+        // 移動終了時のフィールドイベントを発火
+        self->m_OnMoveFinish.get_subscriber().on_next(&moveData);
 
         // フィールドイベントが発生したら待機にする
         if (self->isRunningFieldEvent()) return;
@@ -235,7 +242,7 @@ namespace inGame
         animation();
     }
 
-    rx::observable<MatPos> Player::OnMoveFinish() const
+    rx::observable<PlayerMoveData*> Player::OnMoveFinish() const
     {
         return m_OnMoveFinish.get_observable();
     }
@@ -281,4 +288,8 @@ namespace inGame
     }
 
 
+    PlayerMoveData::PlayerMoveData(const MatPos &beforePos, const MatPos &afterPos, const Angle &movingAngle,
+                                   const bool isDash) : BeforePos(beforePos), AfterPos(afterPos),
+                                                        MovingAngle(movingAngle), IsDash(isDash)
+    {}
 }

@@ -44,14 +44,15 @@ namespace inGame{
         for (auto& mineClass: m_MineFlowerClass)
             initMineFlowerCount(mineClass);
 
-        m_MainScene->GetPlayer()->OnMoveFinish().subscribe([&](MatPos matPos) {
+        m_MainScene->GetPlayer()->OnMoveFinish().subscribe([&](PlayerMoveData* moveData) {
+            const auto playerPos = moveData->AfterPos;
             const auto field = m_MainScene->GetFieldManager();
-            if (field->GetTileMap()->GetElementAt(matPos.GetVec())->IsBloomedMineFlower()) return;
+            if (field->GetTileMap()->GetElementAt(playerPos.GetVec())->IsBloomedMineFlower()) return;
 
-            if (!field->GetTileMap()->IsInRange(matPos.GetVec())) return;
+            if (!field->GetTileMap()->IsInRange(playerPos.GetVec())) return;
 
             for (auto& mineClass: m_MineFlowerClass)
-                checkBloomMineFlower(matPos, mineClass);
+                checkBloomMineFlower(playerPos, mineClass);
         });
 
 
