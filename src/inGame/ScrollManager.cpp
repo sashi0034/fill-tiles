@@ -37,4 +37,17 @@ namespace inGame
             (m_ParentScene->GetRoot()->GetAppState()->GetScreenSize() /
             2).CastTo<double>();
     }
+
+    Vec2<double> ScrollManager::MakePosInFieldRange(const Vec2<double> &pos)
+    {
+        const auto field = m_ParentScene->GetFieldManager();
+        const auto fieldSize = field->GetTileMap()->GetSizeByPixel();
+        auto screenSize = m_ParentScene->GetRoot()->GetAppState()->GetScreenSize();
+
+        auto result = Vec2{
+            Range<double>((fieldSize.X - screenSize.X)*-1, 0).MakeInRange(pos.X),
+            Range<double>((fieldSize.Y - screenSize.Y)*-1, 0).MakeInRange(pos.Y)};
+
+        return result;
+    }
 }

@@ -25,6 +25,7 @@ namespace inGame::field
     public:
         virtual Boolean HasChipAt(const Vec2<int> &pos, ETileKind checkingKind) = 0;
         virtual Vec2<int> GetMatSize() const = 0;
+        virtual Vec2<int> GetSizeByPixel() const = 0;
         virtual ITileMapMatElement * GetElementAt(const Vec2<int>& pos) = 0;
         virtual ITileMapMatElementWritable * GetElementWritableAt(const Vec2<int>& pos) = 0;
         virtual const StaticTileset& GetStaticTileSet() = 0;
@@ -37,6 +38,7 @@ namespace inGame::field
         explicit TileMap(IMainScene *mainScene);
         void LoadMapFile(const std::string &fileName);
         Vec2<int> GetMatSize() const override;
+        Vec2<int> GetSizeByPixel() const override;
         ITileMapMatElement * GetElementAt(const Vec2<int>& pos) override;
         ITileMapMatElementWritable * GetElementWritableAt(const Vec2<int>& pos) override;
         bool IsInRange(const Vec2<int>& pos) const override;

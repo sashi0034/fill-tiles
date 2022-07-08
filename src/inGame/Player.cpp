@@ -278,6 +278,7 @@ namespace inGame
 
         m_SubProcess.Birth(new ProcessTimer([&]() {
             auto scrollPos = m_ParentalScene->GetScrollManager()->CalcScrollToCenter(GetPos());
+            scrollPos = m_ParentalScene->GetScrollManager()->MakePosInFieldRange(scrollPos);
 //            constexpr int overhangByWalk = 60;
 //            if (m_State.GetState()==EPlayerState::Walk)
 //                scrollPos = scrollPos - Angle(m_Angle).ToXY().CastTo<double>() * overhangByWalk;

@@ -15,6 +15,7 @@
 #include "../character/BigTree.h"
 #include "../Player.h"
 #include "../character/CheckpointBlock.h"
+#include "../FieldManager.h"
 
 
 namespace inGame::field
@@ -401,6 +402,12 @@ namespace inGame::field
     {
         return m_MatSize;
     }
+
+    Vec2<int> TileMap::GetSizeByPixel() const
+    {
+        return m_MatSize * FieldManager::PixelPerMat;
+    }
+
 
     ITileMapMatElement * TileMap::GetElementAt(const Vec2<int> &pos)
     {

@@ -70,7 +70,7 @@ namespace inGame::field
         virtual void SetIsBloomedMineFlower(bool flag) = 0;
     };
 
-    class TileMapMatElement : public ITileMapMatElement, public ITileMapMatElementWritable
+    class TileMapMatElement final: public ITileMapMatElement, public ITileMapMatElementWritable
     {
     public:
         TileMapMatElement();
