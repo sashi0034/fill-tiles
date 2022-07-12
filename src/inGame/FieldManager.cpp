@@ -67,7 +67,7 @@ namespace inGame
                 const auto renderingSize = Vec2<double>{1, 1};
 
                 FieldRenderer fieldRenderer = FieldRenderer(
-                        GameRoot::GetInstance().ResImage.get(),
+                        GameRoot::GetInstance().RscImage.get(),
                         chipPos,
                         renderingPos,
                         sdlRenderer,

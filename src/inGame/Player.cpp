@@ -16,7 +16,7 @@ namespace inGame
     Player::Player(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene)
             : ActorBase(belonging), m_State(inGame::EPlayerState::Walk), m_ParentalScene(mainScene), m_Field(mainScene->GetFieldManager())
 {
-        m_Image = mainScene->GetRoot()->ResImage->kisaragi_32x32.get();
+        m_Image = mainScene->GetRoot()->RscImage->kisaragi_32x32.get();
 
         initViewModel();
 

@@ -12,7 +12,7 @@ namespace inGame::character
     CheckpointBlock::CheckpointBlock(IMainScene *mainScene, const MatPos &matPos, field::ETileKind tileKind)
             : CharacterBase(mainScene->GetFieldManager()),
             m_Scene(mainScene),
-            m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->ResImage->folder_16x16.get()),
+            m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->folder_16x16.get()),
             m_MatPos(matPos)
     {
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});

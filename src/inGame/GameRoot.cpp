@@ -11,8 +11,8 @@
 
 namespace inGame{
     GameRoot::GameRoot(IAppState *appState)
-    : ResImage(std::make_unique<resource::Image>(appState)),
-      ResFont(std::make_unique<resource::Font>(appState)),
+    : RscImage(std::make_unique<resource::Image>(appState)),
+      RscFont(std::make_unique<resource::Font>(appState)),
       m_AppState(appState)
     {
         createSelfSpr();

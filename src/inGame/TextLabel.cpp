@@ -11,13 +11,13 @@ namespace inGame{
 
     TextLabel::TextLabel(IChildrenPool<ActorBase> *parentPool, IMainScene *scene)
         : ActorBase(parentPool), m_Scene(scene),
-          m_TextList(scene->GetRoot()->GetAppState(), scene->GetRoot()->ResFont->KHDotAkihabara32px.get(), Rgba(255, 255, 255), Rgba(40, 40, 255))
+          m_TextList(scene->GetRoot()->GetAppState(), scene->GetRoot()->RscFont->KHDotAkihabara32px.get(), Rgba(255, 255, 255), Rgba(16, 16, 16))
     {
         m_Background = std::make_unique<NinePatchImage>(
                 scene->GetRoot()->GetAppState(),
-                scene->GetRoot()->ResImage->ui_white_rounnd_rect.get(),
+                scene->GetRoot()->RscImage->ui_gray_rounnd_rect.get(),
                 Vec2{100.0, 100.0}, Vec2{200.0, 80.0}, Vec2{0.1, 0.1});
-        m_Background->GetSprite().SetBlend(GraphBlend(120));
+        m_Background->GetSprite().SetBlend(GraphBlend(200));
 
         m_TextList.SetPositionParent(m_Background->GetSprite());
         m_TextList.SetPos(Vec2 < double > {100, 40});

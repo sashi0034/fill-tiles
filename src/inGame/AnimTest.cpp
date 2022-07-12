@@ -11,7 +11,7 @@ namespace inGame
             : ActorBase(belonging),
               m_Action(coroutine<CoroTask>::pull_type{std::bind(wait, std::placeholders::_1, this)})
     {
-        m_Image = GameRoot::GetInstance().ResImage->dango_wolf_24x24.get();
+        m_Image = GameRoot::GetInstance().RscImage->dango_wolf_24x24.get();
 
         //m_Texture = SpriteTexture::Create(m_Image);
         m_Texture->SetSrcRect(Rect<int>{0,0,24, 24});

@@ -13,7 +13,7 @@ namespace inGame::effect
     : ActorBase(effectManager->GetChildren()), m_Vel(velocity), m_Manager(effectManager)
     {
         effectManager->ApplyParentalPos(m_Texture);
-        m_Texture.SetGraph(effectManager->GetRoot()->ResImage->smoke_48x32.get());
+        m_Texture.SetGraph(effectManager->GetRoot()->RscImage->smoke_48x32.get());
         //m_Texture.SetRenderingProcess(std::bind(renderingProcess::RenderSpriteTwoDots, std::placeholders::_1, &m_Texture));
         m_Texture.SetSrcRect(Rect<int>{0, 0, 48, 32});
         m_Texture.SetRotationDeg(rotationDeg);

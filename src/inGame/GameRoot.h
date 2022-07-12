@@ -16,8 +16,8 @@ namespace inGame
     public:
         explicit GameRoot(IAppState* appState);
         ~GameRoot() override;
-        const unique_ptr<resource::Image> ResImage;
-        const unique_ptr<resource::Font> ResFont;
+        const unique_ptr<resource::Image> RscImage;
+        const unique_ptr<resource::Font> RscFont;
         IAppState* GetAppState();
         TextureAnimator& GetTextureAnimator();
     private:

@@ -9,7 +9,7 @@ namespace inGame::character{
 
     SmallTree::SmallTree(IMainScene *mainScene, const MatPos &matPos)
             : CharacterBase(mainScene->GetFieldManager())
-            , m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->ResImage->tree_16x16.get())
+            , m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->tree_16x16.get())
     {
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});
 
