@@ -154,8 +154,14 @@ namespace gameEngine::detail::textureAnimation
         m_CellSrcStart = cellSrcStart;
     }
 
+    void Graph::SetCanFlip(bool canFlip)
+    {
+        m_CanFlip = canFlip;
+    }
+
     void Graph::AddFrame(Vec2<int>& cellPos, double duration, bool isFlip)
     {
+        assert(!isFlip || (isFlip && m_CanFlip));
         m_FrameList.push_back(FrameElement{cellPos, duration, isFlip});
     }
 
@@ -171,7 +177,7 @@ namespace gameEngine::detail::textureAnimation
             const auto currSrcRect = Rect<int>{currSrcXY.X, currSrcXY.Y, m_CellSize.X, m_CellSize.Y};
             texture->SetSrcRect(currSrcRect);
 
-            texture->SetFlip(currFrame.IsFlip);
+            if (m_CanFlip) texture->SetFlip(currFrame.IsFlip);
         }
     }
 

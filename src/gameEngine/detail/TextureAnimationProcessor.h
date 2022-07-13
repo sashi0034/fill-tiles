@@ -75,6 +75,7 @@ namespace gameEngine::detail
         virtual ITextureAnimationGraphProperty* SetFrameLoop(int loop) = 0;
         virtual ITextureAnimationGraphProperty* SetFrameLoopEndless(bool loop) = 0;
         virtual ITextureAnimationGraphProperty* SetCellSrcStart(Vec2<int> cellSrcStart) = 0;
+        virtual ITextureAnimationGraphProperty* SetCanFlip(bool canFlip) = 0;
     };
 
     class TextureAnimationProcessor final:
@@ -100,6 +101,7 @@ namespace gameEngine::detail
 
         ITextureAnimationGraphProperty *AnimGraph(Vec2<int> cellSize) override;
         ITextureAnimationGraphProperty *SetCellSrcStart(Vec2<int> cellSrcStart) override;
+        ITextureAnimationGraphProperty* SetCanFlip(bool canFlip) override;
         ITextureAnimationGraph *AddFrame(Vec2<int> cellPos, double duration) override;
         ITextureAnimationGraphProperty *SetFrameLoop(int loop) override;
         ITextureAnimationGraph *AddFrameFlipped(Vec2<int> cellPos, double duration) override;

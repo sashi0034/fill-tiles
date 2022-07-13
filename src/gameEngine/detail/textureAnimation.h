@@ -93,6 +93,7 @@ namespace gameEngine::detail::textureAnimation
         void SetLoopMax(int loopMax);
         void SetLoopEndless(bool isEndless);
         void SetCellSrcStart(const Vec2<int> &cellSrcStart);
+        void SetCanFlip(bool canFlip);
         ~Graph() override = default;
 
     private:
@@ -115,6 +116,7 @@ namespace gameEngine::detail::textureAnimation
         int m_LoopMax = 0;
         int m_LoopCount = 0;
         bool m_IsLoopEndless = false;
+        bool m_CanFlip = true;
     };
 
 }

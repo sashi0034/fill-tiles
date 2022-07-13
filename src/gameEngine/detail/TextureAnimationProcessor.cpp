@@ -154,6 +154,14 @@ namespace gameEngine::detail
         return this;
     }
 
+    ITextureAnimationGraphProperty *TextureAnimationProcessor::SetCanFlip(bool canFlip)
+    {
+        auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());
+        animation->SetCanFlip(canFlip);
+        return this;
+    }
+
+
     ITextureAnimationGraph *TextureAnimationProcessor::AddFrame(Vec2<int> cellPos, double duration)
     {
         auto* animation = dynamic_cast<textureAnimation::Graph*>(m_AnimationProcess.get());

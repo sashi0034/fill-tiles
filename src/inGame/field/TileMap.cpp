@@ -16,6 +16,7 @@
 #include "../Player.h"
 #include "../character/CheckpointBlock.h"
 #include "../FieldManager.h"
+#include "../character/Fairy.h"
 
 
 namespace inGame::field
@@ -299,14 +300,22 @@ namespace inGame::field
         }
     }
 
+    // @tileSwitch
     void
     TileMap::readObjectInObjectGroup(const std::string &objectType, const std::string &objectName, const Vec2<int> &pos,
                                      std::unordered_map<std::string, std::string> &objectProperty)
     {
+        auto field = m_MainScene->GetFieldManager()->GetCharacterPool();
+        auto matPos = MatPos(pos / FieldManager::PixelPerMat);
+
         if (objectType=="player")
         {
             auto player = m_MainScene->GetPlayer();
             if (player!= nullptr) player->SetPos(pos.CastTo<double>());
+        }
+        else if (objectType=="fairy")
+        {
+            field->Birth(new character::Fairy(m_MainScene, matPos, objectProperty["talk"]));
         }
         else if (objectType=="test")
         {
