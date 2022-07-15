@@ -200,15 +200,21 @@ namespace inGame
                 break;
             case EAngle::Right:
                 m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp);
+                        ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp)
+                        ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp)
+                        ->AddFrame(Vec2{3, 1}, baseTemp);
                 break;
             case EAngle::Left:
                 m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp);
+                        ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp)
+                        ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp)
+                        ->AddFrameFlipped(Vec2{3, 1}, baseTemp);
                 break;
             case EAngle::Down:
                 m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp);
+                        ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp)
+                        ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp)
+                        ->AddFrame(Vec2{4, 0}, baseTemp);
                 break;
             default:
                 assert(false);

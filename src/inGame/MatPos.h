@@ -23,6 +23,7 @@ namespace inGame
 
         int GetSumXY() const;
         std::string ToString() const;
+        int CalcManhattan(const MatPos& other) const;
     private:
         const Vec2<int> m_Pos;
 

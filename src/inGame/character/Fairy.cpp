@@ -5,6 +5,7 @@
 #include "Fairy.h"
 #include "../ZIndex.h"
 #include "../Player.h"
+#include "../TalkingBalloon.h"
 
 namespace inGame::character
 {
@@ -30,9 +31,7 @@ namespace inGame::character
         auto player = mainScene->GetPlayer();
         if (player!= nullptr)
         {
-            player->OnMoveFinish().subscribe([&, matPos](PlayerMoveData *moveData) {
-                m_View.GetView().SetFlip(moveData->BeforePos.GetVec().X > matPos.GetVec().X);
-            });
+            subscribePlayerMove(mainScene, matPos, message, player);
         }
 
         std::cout << message << std::endl;
@@ -52,5 +51,23 @@ namespace inGame::character
                 ->AddFrame(Vec2{7, 0}, 0.1)
                 ->AddFrame(Vec2{8, 0}, 0.2)
                 ->AddFrame(Vec2{9, 0}, 0.4);
+    }
+
+    void Fairy::subscribePlayerMove(IMainScene *mainScene, const MatPos &matPos, const std::string &message,
+                                    const Player *player)
+    {
+        player->OnMoveFinish().subscribe([&, matPos, message, mainScene](PlayerMoveData *moveData) {
+            m_View.GetView().SetFlip(moveData->BeforePos.GetVec().X > matPos.GetVec().X);
+
+            constexpr int talkAbleDistance = 3;
+
+            bool isJustInTalkAbleRange =
+                    matPos.CalcManhattan(moveData->AfterPos) <= talkAbleDistance &&
+                    matPos.CalcManhattan(moveData->BeforePos) > talkAbleDistance;
+            
+            if (m_TalkingRef.IsNull() && isJustInTalkAbleRange)
+                m_TalkingRef = TalkingBalloon::Create(mainScene, message, matPos)->GetWeakPtr();
+
+        });
     }
 }

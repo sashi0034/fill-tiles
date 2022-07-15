@@ -178,15 +178,15 @@
 </data>
  </layer>
  <objectgroup id="6" name="オブジェクトレイヤー1">
-  <object id="1" name="player" type="player" x="384" y="544" width="16" height="16">
+  <object id="1" name="player" type="player" x="368" y="496" width="16" height="16">
    <properties>
     <property name="kind" value="dddd"/>
     <property name="text" value="aho"/>
    </properties>
   </object>
-  <object id="4" name="fairy1" type="fairy" x="368" y="432" width="16" height="16">
+  <object id="4" name="fairy1" type="fairy" x="400" y="576" width="16" height="16">
    <properties>
-    <property name="talk" value="おねんねは最高&lt;br&gt;1234だと思います&lt;br&gt;わいわい"/>
+    <property name="talk" value="おねんね、楽しいおねんね&lt;br&gt;楽しいOnennne&lt;br&gt;おねんね、おねんね"/>
    </properties>
   </object>
  </objectgroup>

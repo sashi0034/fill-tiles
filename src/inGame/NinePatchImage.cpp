@@ -3,6 +3,8 @@
 //
 
 #include "NinePatchImage.h"
+
+#include <memory>
 #include "ZIndex.h"
 
 namespace inGame
@@ -45,6 +47,7 @@ namespace inGame
     void NinePatchImage::renderNinePath()
     {
         auto renderer = m_App->GetRenderer();
+        assert(m_RenderingSize.X * m_RenderingSize.Y > 0);
         SDL_Texture *renderingTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
                                                    SDL_TEXTUREACCESS_TARGET, m_RenderingSize.X, m_RenderingSize.Y);
         renderUnsafely(renderer, renderingTarget);

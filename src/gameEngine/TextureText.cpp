@@ -24,8 +24,10 @@ namespace gameEngine
         m_Outline = color;
     }
 
-    void TextureText::ChangeText(const std::string &text)
+    void TextureText::ChangeText(const std::string &inputText)
     {
+        const std::string& text = !inputText.empty() ? inputText : " ";
+
         if (m_Font->HasOutline())
         {
             m_TextGraph = m_Font->MakeTextGraph(text, m_Foreground, m_Outline);

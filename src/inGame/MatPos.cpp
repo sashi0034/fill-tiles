@@ -53,4 +53,13 @@ namespace inGame
         return m_Pos.X+m_Pos.Y;
     }
 
+    int MatPos::CalcManhattan(const MatPos &other) const
+    {
+        auto otherPos = other.GetVec();
+        const int diffX = this->m_Pos.X - otherPos.X;
+        const int diffY = this->m_Pos.Y - otherPos.Y;
+
+        return std::abs(diffX) + std::abs(diffY);
+    }
+
 }

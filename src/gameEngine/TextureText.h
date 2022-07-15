@@ -16,7 +16,7 @@ namespace gameEngine
         explicit TextureText(FontResource *font);
         void SetForeground(Rgba color);
         void SetOutline(Rgba color);
-        void ChangeText(const std::string& text);
+        void ChangeText(const std::string& inputText);
         SpriteTexture& GetTexture();
         [[nodiscard]] Vec2<int> GetSize() const;
     private:

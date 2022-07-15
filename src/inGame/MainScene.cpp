@@ -10,7 +10,7 @@
 #include "field/TileMap.h"
 #include "GameRoot.h"
 #include "MineFlowerManager.h"
-#include "TextLabel.h"
+#include "TalkingBalloon.h"
 
 namespace inGame{
     MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root)
@@ -23,8 +23,6 @@ namespace inGame{
         m_Player = m_ChildrenPool.BirthAs<Player>(new Player(&m_ChildrenPool, this));
 
         m_ChildrenPool.Birth(new MineFlowerManager(&m_ChildrenPool, this));
-
-        m_ChildrenPool.Birth(new TextLabel(&m_ChildrenPool, this));
 
         m_EffectManager = m_ChildrenPool.BirthAs<EffectManager>(new EffectManager(&m_ChildrenPool,
                                                                                   m_ScrollManager->GetSprite(),
