@@ -8,6 +8,7 @@
 #include "GameRoot.h"
 #include "FieldManager.h"
 #include "ZIndex.h"
+#include "PlayerMoveData.h"
 
 using namespace boost::coroutines2;
 
@@ -113,6 +114,9 @@ namespace inGame
             self->m_Angle,
             isDash);
 
+        // 移動開始時のフィールドイベントを発火
+        self->m_OnMoveBegin.get_subscriber().on_next(&moveData);
+
         // 歩行アニメーション
         auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_View->GetModel().GetWeakPtr())
                 ->AnimPosition(moveVector, movingTIme)->SetEase(EAnimEase::Linear)->SetRelative(true)
@@ -126,7 +130,7 @@ namespace inGame
         // フィールドイベントが発生したら待機にする
         if (self->isRunningFieldEvent()) return;
 
-        LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
+        //LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
 
         if (self->getInputAngle(appState->GetKeyboardState())==self->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
             if (self->m_Field->CanMoveTo(self->GetMatPos(), goingAngle))
@@ -233,7 +237,8 @@ namespace inGame
     void Player::changeStateToWalk(IAppState *appState, EAngle newAngle, bool canChangeAnim)
     {
         m_State.ChangeState(EPlayerState::Walk,
-                                  new CoroTaskCall(std::bind(walk, std::placeholders::_1, this, appState, newAngle, canChangeAnim)));
+                                  new CoroTaskCall([this, appState, newAngle, canChangeAnim](auto&& yield) {
+                                  walk(std::forward<decltype(yield)>(yield), this, appState, newAngle, canChangeAnim); }));
     }
 
     MatPos Player::GetMatPos()
@@ -246,6 +251,11 @@ namespace inGame
     {
         this->m_PlayerAnimator.Release();
         animation();
+    }
+
+    rx::observable<PlayerMoveData *> Player::OnMoveBegin() const
+    {
+        return m_OnMoveBegin.get_observable();
     }
 
     rx::observable<PlayerMoveData*> Player::OnMoveFinish() const
@@ -295,8 +305,4 @@ namespace inGame
     }
 
 
-    PlayerMoveData::PlayerMoveData(const MatPos &beforePos, const MatPos &afterPos, const Angle &movingAngle,
-                                   const bool isDash) : BeforePos(beforePos), AfterPos(afterPos),
-                                                        MovingAngle(movingAngle), IsDash(isDash)
-    {}
 }

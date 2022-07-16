@@ -12,19 +12,10 @@
 #include "MainScene.h"
 #include "CharacterViewModel.h"
 #include "rx.h"
+#include "PlayerMoveData.h"
 
 namespace inGame
 {
-    struct PlayerMoveData
-    {
-    public:
-        const MatPos BeforePos;
-        const MatPos AfterPos;
-        const Angle MovingAngle;
-        const bool IsDash;
-
-        PlayerMoveData(const MatPos &beforePos, const MatPos &afterPos, const Angle &movingAngle, const bool isDash);
-    };
 
 
     class Player final : public ActorBase
@@ -36,6 +27,7 @@ namespace inGame
         Vec2<double> GetPos();
         void SetPos(const Vec2<double> &pos);
         MatPos GetMatPos();
+        [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveBegin() const;
         [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveFinish() const;
         static inline const Vec2<int> CellSize{32, 32};
     private:
@@ -58,6 +50,7 @@ namespace inGame
         IFieldManager* m_Field;
 
         ChildrenPool<ProcessTimer> m_SubProcess{};
+        rx::subject<PlayerMoveData*> m_OnMoveBegin;
         rx::subject<PlayerMoveData*> m_OnMoveFinish;
         bool m_ShouldResetScroll = true;
 
@@ -65,7 +58,7 @@ namespace inGame
         void changeAnimation(const std::function<void()>& animation);
         void animWait(EAngle angle);
         void animWalk(EAngle angle, double frameSpeed);
-        void changeStateToWalk(IAppState *appState, EAngle newAngle, bool canChangeAnim);
+        void changeStateToWalk(IAppState *yield, EAngle newAngle, bool canChangeAnim);
 
         static CoroTask wait(CoroTaskYield &yield, Player *self, IAppState *appState);
         static CoroTask walk(CoroTaskYield &yield, Player *self, IAppState *appState, EAngle goingAngle, bool canChangeAnim);

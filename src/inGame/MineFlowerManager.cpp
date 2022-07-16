@@ -7,11 +7,12 @@
 #include "character/MineFlower.h"
 #include "character/CheckpointBlock.h"
 #include "effect/Smoke.h"
+#include "PlayerMoveData.h"
 
 namespace inGame{
 
-    MineFlowerClass::MineFlowerClass(const field::ETileKind mineFlowerTile, const field::ETileKind blockTile)
-            : MineFlowerTile(mineFlowerTile), BlockTile(blockTile)
+    MineFlowerClass::MineFlowerClass(field::ETileKind mineFlowerTile, field::ETileKind blockTile, int classLevel)
+            : MineFlowerTile(mineFlowerTile), BlockTile(blockTile), m_ClassLevel{classLevel}
     {}
 
     void MineFlowerClass::IncreaseMineFlower()
@@ -29,14 +30,37 @@ namespace inGame{
         return m_MineFlowerCount>0;
     }
 
+    int MineFlowerClass::GetClassLevel() const
+    {
+        return m_ClassLevel;
+    }
+
+    int MineFlowerClass::GetMaxMineFlowerCount() const
+    {
+        return m_MaxMineFlowerCount;
+    }
+
+    void MineFlowerClass::FixMaxMineFlowerCount()
+    {
+        assert(m_MaxMineFlowerCount==0);
+        m_MaxMineFlowerCount = m_MineFlowerCount;
+    }
+
+    int MineFlowerClass::GetMineFlowerCount() const
+    {
+        return m_MineFlowerCount;
+    }
+
     MineFlowerManager::MineFlowerManager(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene)
         : ActorBase(belonging), m_MainScene(mainScene)
     {
         using kind = field::ETileKind;
-        m_MineFlowerClass.emplace_back(kind::mine_flower_1, kind::checkpoint_block_1);
-        m_MineFlowerClass.emplace_back(kind::mine_flower_2, kind::checkpoint_block_2);
-        m_MineFlowerClass.emplace_back(kind::mine_flower_3, kind::checkpoint_block_3);
-        m_MineFlowerClass.emplace_back(kind::mine_flower_4, kind::checkpoint_block_4);
+        m_MineFlowerClass.emplace_back(kind::mine_flower_1, kind::checkpoint_block_1, 1);
+        m_MineFlowerClass.emplace_back(kind::mine_flower_2, kind::checkpoint_block_2, 2);
+        m_MineFlowerClass.emplace_back(kind::mine_flower_3, kind::checkpoint_block_3, 3);
+        m_MineFlowerClass.emplace_back(kind::mine_flower_4, kind::checkpoint_block_4, 4);
+
+        m_CurrMineFlowerClass = &m_MineFlowerClass[0];
     }
 
     void MineFlowerManager::Init()
@@ -72,9 +96,14 @@ namespace inGame{
 
         mineClass.DecreaseMineFlower();
 
+        m_CurrMineFlowerClass = &mineClass;
+
         if (!mineClass.HasMineFlower())
+        {
+            // 全消し演出
             field->GetCoroutine()->Start(new CoroTaskCall(std::bind(driveClearingCheckpointBlocksEvent,
                                                                     std::placeholders::_1, this, mineClass)));
+        }
     }
 
     void MineFlowerManager::initMineFlowerCount(MineFlowerClass &mineClass)
@@ -86,6 +115,8 @@ namespace inGame{
             for (int y = 0; y < matSize.Y; ++y)
                 if (field->GetTileMap()->HasChipAt(Vec2{x, y}, mineClass.MineFlowerTile) == Boolean::True)
                     mineClass.IncreaseMineFlower();
+
+        mineClass.FixMaxMineFlowerCount();
     }
 
     CoroTask MineFlowerManager::driveClearingCheckpointBlocksEvent
@@ -132,6 +163,11 @@ namespace inGame{
 
         // ちょっと待機
         coroUtil::WaitForTime(yield, app->GetTime(), 0.5);
+    }
+
+    MineFlowerClass *MineFlowerManager::GetCurrMineFlowerClass()
+    {
+        return m_CurrMineFlowerClass;
     }
 
 }

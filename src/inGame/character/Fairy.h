@@ -28,7 +28,7 @@ namespace inGame::character
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         static const inline Vec2<int>cellSrcSize = Vec2<int>{24, 24};
 
-        void subscribePlayerMove(IMainScene *mainScene, const MatPos &matPos, const std::string &message,
+        void subscribePlayerMove(IMainScene *mainScene, const MatPos &selfMatPos, const std::string &message,
                                  const Player *player);
     };
 }

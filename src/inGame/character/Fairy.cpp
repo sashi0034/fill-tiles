@@ -34,9 +34,6 @@ namespace inGame::character
             subscribePlayerMove(mainScene, matPos, message, player);
         }
 
-        std::cout << message << std::endl;
-
-
         mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView().GetWeakPtr())
                 ->VirtualDelay([]() {}, (matPos.GetSumXY() % 4) * 0.2)
                 ->Then()
@@ -53,21 +50,18 @@ namespace inGame::character
                 ->AddFrame(Vec2{9, 0}, 0.4);
     }
 
-    void Fairy::subscribePlayerMove(IMainScene *mainScene, const MatPos &matPos, const std::string &message,
+    void Fairy::subscribePlayerMove(IMainScene *mainScene, const MatPos &selfMatPos, const std::string &message,
                                     const Player *player)
     {
-        player->OnMoveFinish().subscribe([&, matPos, message, mainScene](PlayerMoveData *moveData) {
-            m_View.GetView().SetFlip(moveData->BeforePos.GetVec().X > matPos.GetVec().X);
+        player->OnMoveBegin().subscribe([&, selfMatPos, message, mainScene](PlayerMoveData *moveData) {
+            m_View.GetView().SetFlip(moveData->AfterPos.GetVec().X > selfMatPos.GetVec().X);
 
             constexpr int talkAbleDistance = 3;
+            bool isJustInTalkAbleRange = moveData->IsJustInRange(selfMatPos, talkAbleDistance);
 
-            bool isJustInTalkAbleRange =
-                    matPos.CalcManhattan(moveData->AfterPos) <= talkAbleDistance &&
-                    matPos.CalcManhattan(moveData->BeforePos) > talkAbleDistance;
-            
+            // プレイヤーが近づいたら会話を表示させる
             if (m_TalkingRef.IsNull() && isJustInTalkAbleRange)
-                m_TalkingRef = TalkingBalloon::Create(mainScene, message, matPos)->GetWeakPtr();
-
+                m_TalkingRef = TalkingBalloon::Create(mainScene, message, selfMatPos)->GetWeakPtr();
         });
     }
 }

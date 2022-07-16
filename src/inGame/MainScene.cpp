@@ -11,6 +11,7 @@
 #include "GameRoot.h"
 #include "MineFlowerManager.h"
 #include "TalkingBalloon.h"
+#include "RemainingMineUi.h"
 
 namespace inGame{
     MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root)
@@ -22,11 +23,12 @@ namespace inGame{
 
         m_Player = m_ChildrenPool.BirthAs<Player>(new Player(&m_ChildrenPool, this));
 
-        m_ChildrenPool.Birth(new MineFlowerManager(&m_ChildrenPool, this));
+        auto&& mineFlowerManager = m_ChildrenPool.BirthAs<MineFlowerManager>(new MineFlowerManager(&m_ChildrenPool, this));
 
         m_EffectManager = m_ChildrenPool.BirthAs<EffectManager>(new EffectManager(&m_ChildrenPool,
                                                                                   m_ScrollManager->GetSprite(),
                                                                                   m_Root));
+        m_ChildrenPool.Birth(new RemainingMineUi(this, mineFlowerManager));
 
         init();
     }
