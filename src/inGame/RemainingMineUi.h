@@ -23,6 +23,7 @@ namespace inGame
         void Update(IAppState *appState) override;
 
     private:
+        SpriteTexture m_SpriteRootParent = SpriteTexture::Create();
         SpriteTexture m_SpriteRoot = SpriteTexture::Create();
         SpriteTexture m_Icon = SpriteTexture::Create();
         static const inline Vec2<double> bgSize = Vec2<double>{80, 24};
@@ -31,10 +32,19 @@ namespace inGame
         unique_ptr<NinePatchImage> m_Background;
         unique_ptr<TextPassage> m_TextPassage;
         int m_RemainingCountBefore = 0;
+        int m_MaxRemainingCountBefore = 0;
 
         void initText(IMainScene *scene, const std::string &str);
 
         void initBackground(IMainScene *scene);
+
+        void checkUpdateText();
+
+        CoroTask animCountDown(CoroTaskYield &yield, MineFlowerClass *mineClass);
+
+        void updateText(const int remainingCount, const int maxRemainingCount);
+
+        void startAnimCountToZero(CoroTaskYield &yield);
     };
 
 } // inGame

@@ -75,18 +75,28 @@ namespace inGame{
 
             if (!field->GetTileMap()->IsInRange(playerPos.GetVec())) return;
 
-            for (auto& mineClass: m_MineFlowerClass)
-                checkBloomMineFlower(playerPos, mineClass);
+            checkSteppedByPlayer(playerPos);
         });
 
 
     }
 
-    void MineFlowerManager::checkBloomMineFlower(const MatPos &matPos, MineFlowerClass &mineClass)
+    void MineFlowerManager::checkSteppedByPlayer(const MatPos &playerPos)
+    {
+        for (int i=0; i < int(m_MineFlowerClass.size()); ++i)
+        {
+            auto& mineClass = m_MineFlowerClass[i];
+
+            bool isExist = checkBloomMineFlower(playerPos, mineClass);
+            if (!isExist) continue;
+        }
+    }
+
+    bool MineFlowerManager::checkBloomMineFlower(const MatPos &matPos, MineFlowerClass &mineClass)
     {
         const auto field = m_MainScene->GetFieldManager();
 
-        if (field->GetTileMap()->HasChipAt(matPos.GetVec(), mineClass.MineFlowerTile)!=Boolean::True) return;
+        if (field->GetTileMap()->HasChipAt(matPos.GetVec(), mineClass.MineFlowerTile)!=Boolean::True) return false;
 
         field->GetCharacterPool()->Birth(new character::MineFlower(m_MainScene, matPos));
 
@@ -104,6 +114,7 @@ namespace inGame{
             field->GetCoroutine()->Start(new CoroTaskCall(std::bind(driveClearingCheckpointBlocksEvent,
                                                                     std::placeholders::_1, this, mineClass)));
         }
+        return true;
     }
 
     void MineFlowerManager::initMineFlowerCount(MineFlowerClass &mineClass)
@@ -168,6 +179,17 @@ namespace inGame{
     MineFlowerClass *MineFlowerManager::GetCurrMineFlowerClass()
     {
         return m_CurrMineFlowerClass;
+    }
+
+    MineFlowerClass *MineFlowerManager::GetNextMineFlowerClass()
+    {
+        int currLevel = m_CurrMineFlowerClass->GetClassLevel();
+
+        if (currLevel==int(m_MineFlowerClass.size())) return nullptr;
+
+        auto&& next = m_MineFlowerClass.at(currLevel);
+        LOG_ASSERT(next.GetClassLevel() == currLevel + 1, "m_MineFlowerClassがレベル順になっていない可能性があります。");
+        return &next;
     }
 
 }

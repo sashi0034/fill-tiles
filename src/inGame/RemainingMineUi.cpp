@@ -10,7 +10,9 @@ namespace inGame
     RemainingMineUi::RemainingMineUi(IMainScene *scene, MineFlowerManager *mineFlowerManager)
     : ActorBase(scene->GetEffectManager()->GetChildren()),
         m_SceneRef(scene), m_MineFlowerManagerRef(mineFlowerManager)
-    { }
+    {
+        m_SpriteRoot.SetPositionParent(m_SpriteRootParent);
+    }
 
 
     void RemainingMineUi::Init()
@@ -55,17 +57,77 @@ namespace inGame
     void RemainingMineUi::Update(IAppState *appState)
     {
         constexpr double margin = 12;
-        m_SpriteRoot.SetPosition(Vec2{appState->GetScreenSize().X  - margin, margin} + Vec2{-bgSize.X / 2.0, bgSize.Y / 2.0});
+        m_SpriteRootParent.SetPosition(Vec2{appState->GetScreenSize().X  - margin, margin} + Vec2{-bgSize.X / 2.0, bgSize.Y / 2.0});
 
+        checkUpdateText();
+    }
+
+    void RemainingMineUi::checkUpdateText()
+    {
         auto&& mineClass = m_MineFlowerManagerRef->GetCurrMineFlowerClass();
+
+        if (mineClass== nullptr) return;
+
         const int remainingCount = mineClass->GetMineFlowerCount();
-        if (remainingCount!=m_RemainingCountBefore)
+
+        if (remainingCount != m_RemainingCountBefore)
         {
             m_RemainingCountBefore = remainingCount;
-            std::stringstream stream{};
-            stream << remainingCount << " / " << mineClass->GetMaxMineFlowerCount();
-            m_TextPassage->UpdateTextAndView(stream.str());
+            m_SceneRef->GetEffectManager()->GetCoroutineManager()->Start(
+                    new CoroTaskCall([&](auto&& yield){ animCountDown(yield, mineClass);}));
         }
+    }
+
+    CoroTask RemainingMineUi::animCountDown(CoroTaskYield &yield, MineFlowerClass *mineClass)
+    {
+        yield();
+
+        const int remainingCount = mineClass->GetMineFlowerCount();
+        const int maxRemainingCount = mineClass->GetMaxMineFlowerCount();
+
+        updateText(remainingCount, maxRemainingCount);
+
+        if (remainingCount == 0)
+        {
+            startAnimCountToZero(yield);
+        }
+    }
+
+    CoroTask RemainingMineUi::startAnimCountToZero(CoroTaskYield &yield)
+    {
+        constexpr double enoughBigWidth = 200;
+        constexpr double duration = 0.5;
+
+        coroUtil::WaitForTime(yield, duration);
+
+        // 画面外まで動かす
+        coroUtil::WaitForExpire(yield,
+                                m_SceneRef->GetEffectManager()->GetAnimator()->TargetTo(m_SpriteRoot.GetWeakPtr())
+                                        ->AnimPosition(Vec2<double>{enoughBigWidth, 0},
+                                                       duration)->SetEase(EAnimEase::OutBack)
+                                        ->ToWeakPtr());
+
+        coroUtil::WaitForTrue(yield, [&]() { return !m_SceneRef->GetFieldEventManager()->IsRunning(); });
+
+        auto&& nextMineClass = m_MineFlowerManagerRef->GetNextMineFlowerClass();
+
+        if (nextMineClass== nullptr) return;
+        if (nextMineClass->GetMaxMineFlowerCount()==0) return;
+
+        updateText(nextMineClass->GetMineFlowerCount(), nextMineClass->GetMaxMineFlowerCount());
+
+        // 元の位置に戻す
+        coroUtil::WaitForExpire(yield,
+                                m_SceneRef->GetEffectManager()->GetAnimator()->TargetTo(m_SpriteRoot.GetWeakPtr())
+                    ->AnimPosition(Vec2{0.0, 0.0}, duration)->SetEase(EAnimEase::OutBack)
+                    ->ToWeakPtr());
+    }
+
+    void RemainingMineUi::updateText(const int remainingCount, const int maxRemainingCount)
+    {
+        std::stringstream stream{};
+        stream << remainingCount << " / " << maxRemainingCount;
+        m_TextPassage->UpdateTextAndView(stream.str());
     }
 
 } // inGame

@@ -40,15 +40,18 @@ namespace inGame
         MineFlowerManager(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene);
         void Init() override;
         MineFlowerClass* GetCurrMineFlowerClass();
+        MineFlowerClass* GetNextMineFlowerClass();
     private:
         IMainScene* m_MainScene;
         std::vector<MineFlowerClass> m_MineFlowerClass{};
         MineFlowerClass* m_CurrMineFlowerClass{};
 
         void initMineFlowerCount(MineFlowerClass& mineClass);
-        void checkBloomMineFlower(const MatPos& matPos, MineFlowerClass& mineClass);
+        bool checkBloomMineFlower(const MatPos& matPos, MineFlowerClass& mineClass);
 
         static CoroTask driveClearingCheckpointBlocksEvent(CoroTaskYield &yield, MineFlowerManager *self, MineFlowerClass& mineClass);
+
+        void checkSteppedByPlayer(const MatPos &playerPos);
     };
 }
 
