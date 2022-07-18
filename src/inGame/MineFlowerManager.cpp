@@ -155,7 +155,7 @@ namespace inGame{
         const auto scrollPos = self->m_MainScene->GetScrollManager()->CalcScrollToCenter(centerPos);
 
         // チェックポイントのブロックがあるところまで画面をスクロール
-        auto animation = field->GetAnimator()->TargetTo(self->m_MainScene->GetScrollManager()->GetSprite())
+        auto animation = field->GetAnimator()->TargetTo(*self->m_MainScene->GetScrollManager()->GetSprite())
                 ->AnimPosition(scrollPos, 2.0)->ToWeakPtr();
         coroUtil::WaitForExpire(yield, animation);
 

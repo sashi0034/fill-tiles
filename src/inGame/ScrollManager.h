@@ -19,7 +19,7 @@ namespace inGame
 
         Vec2<double> GetScroll();
         void SetScroll(const Vec2<double> &amount);
-        WeakPtr<SpriteTexture> GetSprite();
+        SpriteTexture* GetSprite();
         Vec2<double> CalcScrollToCenter(const Vec2<double>& targetPos);
         Vec2<double> MakePosInFieldRange(const Vec2<double> &pos);
     private:

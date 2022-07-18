@@ -9,6 +9,7 @@
 #include "FieldManager.h"
 #include "ZIndex.h"
 #include "PlayerMoveData.h"
+#include "character/Catfish.h"
 
 using namespace boost::coroutines2;
 
@@ -42,20 +43,23 @@ namespace inGame
 
         self->changeAnimation([&](){self->animWait(self->m_Angle);});
 
-        // フィールド上でイベントが発生していたら待機する
-        coroUtil::WaitForTrue(yield, [self](){return !self->isRunningFieldEvent();});
-
         EAngle goingAngle = EAngle::None;
         while (goingAngle == EAngle::None)
         {
-            goingAngle = waitForWalkUntilInput(self, appState);
+            goingAngle = self->tryWalkOrActionByInput(yield, appState);
+
             yield();
         }
 
         self->changeStateToWalk(appState, goingAngle, true);
     }
 
-    EAngle Player::waitForWalkUntilInput(Player *self, const IAppState *appState)
+    void Player::waitFieldEvent(CoroTaskYield &yield)
+    {
+        coroUtil::WaitForTrue(yield, [this](){return !this->isRunningFieldEvent();});
+    }
+
+    EAngle Player::tryWalkOrActionByInput(CoroTaskYield &yield, const IAppState *appState)
     {
         EAngle goingAngle = EAngle::None;
         auto keyState = appState->GetKeyboardState();
@@ -63,12 +67,25 @@ namespace inGame
 
         if (inputAngle!=EAngle::None)
         {
-            if (self->m_Field->CanMoveTo(self->GetMatPos(), inputAngle))
+            auto checkingMove = this->m_Field->CheckMoveTo(this->GetMatPos(), inputAngle);
+
+            if (checkingMove.CanMove)
                 goingAngle = inputAngle;
-            else if (self->m_Angle != inputAngle)
+            else if (this->m_Angle != inputAngle)
             {
-                self->m_Angle = inputAngle;
-                self->changeAnimation([&](){self->animWait(self->m_Angle);});
+                this->m_Angle = inputAngle;
+                this->changeAnimation([&](){this->animWait(this->m_Angle);});
+            }
+
+            auto collidedObject = const_cast<ISprRectColliderOwner*>(checkingMove.CollidedObject);
+            auto catfish = dynamic_cast<character::Catfish*>(collidedObject);
+
+            if (catfish!= nullptr)
+            {
+                catfish->TryMove(inputAngle);
+
+                // フィールド上でイベントが発生していたら待機する
+                waitFieldEvent(yield);
             }
         }
         return goingAngle;
@@ -118,7 +135,7 @@ namespace inGame
         self->m_OnMoveBegin.get_subscriber().on_next(&moveData);
 
         // 歩行アニメーション
-        auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_View->GetModel().GetWeakPtr())
+        auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_View->GetModel())
                 ->AnimPosition(moveVector, movingTIme)->SetEase(EAnimEase::Linear)->SetRelative(true)
                 ->ToWeakPtr();
 
@@ -133,7 +150,7 @@ namespace inGame
         //LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
 
         if (self->getInputAngle(appState->GetKeyboardState())==self->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
-            if (self->m_Field->CanMoveTo(self->GetMatPos(), goingAngle))
+            if (self->m_Field->CheckMoveTo(self->GetMatPos(), goingAngle).CanMove)
                 self->changeStateToWalk(appState, goingAngle, false);
 
     }
@@ -169,21 +186,21 @@ namespace inGame
         switch (angle)
         {
             case EAngle::Up:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 5}, baseTemp)->AddFrame(Vec2{1, 5}, baseTemp)->AddFrame(Vec2{2, 5}, baseTemp)->AddFrame(Vec2{3, 5}, baseTemp);
                 break;
             case EAngle::Right:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 4}, baseTemp)->AddFrame(Vec2{1, 4}, baseTemp)->AddFrame(Vec2{2, 4}, baseTemp)
                         ->AddFrame(Vec2{3, 4}, baseTemp)->AddFrame(Vec2{4, 4}, baseTemp)->AddFrame(Vec2{5, 4}, baseTemp);
                 break;
             case EAngle::Left:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrameFlipped(Vec2{0, 4}, baseTemp)->AddFrameFlipped(Vec2{1, 4}, baseTemp)->AddFrameFlipped(Vec2{2, 4}, baseTemp)
                         ->AddFrameFlipped(Vec2{3, 4}, baseTemp)->AddFrameFlipped(Vec2{4, 4}, baseTemp)->AddFrameFlipped(Vec2{5, 4}, baseTemp);
                 break;
             case EAngle::Down:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 3}, baseTemp)->AddFrame(Vec2{1, 3}, baseTemp)->AddFrame(Vec2{2, 3}, baseTemp)->AddFrame(Vec2{3, 3}, baseTemp);
                 break;
             default:
@@ -199,23 +216,23 @@ namespace inGame
         switch (angle)
         {
             case EAngle::Up:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 2}, baseTemp)->AddFrame(Vec2{1, 2}, baseTemp)->AddFrame(Vec2{2, 2}, baseTemp)->AddFrame(Vec2{3, 2}, baseTemp);
                 break;
             case EAngle::Right:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp)
                         ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp)
                         ->AddFrame(Vec2{3, 1}, baseTemp);
                 break;
             case EAngle::Left:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp)
                         ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp)
                         ->AddFrameFlipped(Vec2{3, 1}, baseTemp);
                 break;
             case EAngle::Down:
-                m_PlayerAnimator.TargetTo(m_View->GetView().GetWeakPtr())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
                         ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp)
                         ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp)
                         ->AddFrame(Vec2{4, 0}, baseTemp);

@@ -21,7 +21,7 @@ namespace inGame::character{
 
         ZIndexCharacter(m_View).ApplyZ();
 
-        mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView().GetWeakPtr())
+        mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView())
                 ->VirtualDelay([]() {}, (matPos.GetSumXY() % 4) * 0.2)
                 ->Then()
                 ->AnimGraph(cellMatSize * FieldManager::PixelPerMat)->SetFrameLoopEndless(true)

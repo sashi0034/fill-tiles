@@ -5,9 +5,9 @@
 #include "TextureAnimator.h"
 
 namespace gameEngine{
-    detail::ITextureAnimationStarter* TextureAnimator::TargetTo(const WeakPtr <SpriteTexture> &texture)
+    detail::ITextureAnimationStarter* TextureAnimator::TargetTo(SpriteTexture &texture)
     {
-        auto product = new detail::TextureAnimationProcessor(texture, &m_Pool, nullptr);
+        auto product = new detail::TextureAnimationProcessor(texture.GetWeakPtr(), &m_Pool, nullptr);
         m_Pool.Birth(product);
         return product;
     }

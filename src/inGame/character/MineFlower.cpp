@@ -23,7 +23,7 @@ namespace inGame::character{
 
         constexpr double frameDuration = 0.15;
 
-        mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView().GetWeakPtr())
+        mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView())
                 //->VirtualDelay([]() {}, (matPos.GetSumXY() % 4) * 0.2)
                 //->Then()
                 ->AnimGraph(cellMatSize * FieldManager::PixelPerMat)->SetFrameLoopEndless(false)

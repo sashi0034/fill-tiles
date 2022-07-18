@@ -25,19 +25,20 @@ namespace inGame
         m_Icon.SetPositionParent(m_SpriteRoot);
         const Vec2<double> leftMargin{6, 0};
         m_Icon.SetPosition(Vec2{0.0, -8.0} + Vec2<double>{-bgSize.X/2.0, 0} + leftMargin);
-        ZIndexUi(&m_Icon).SetIndex(2).ApplyZ();
+        ZIndexUi(&m_Icon).SetIndex(12).ApplyZ();
     }
 
 
     void RemainingMineUi::initBackground(IMainScene *scene)
     {
-        const auto sideRatio = Vec2{0.1, 0.1};
+        const auto sideRatio = Vec2{0.2, 0.2};
         m_Background = std::make_unique<NinePatchImage>(
                 scene->GetRoot()->GetAppState(),
                 scene->GetRoot()->RscImage->ui_black_window.get(),
                 Vec2{0.0, 0.0}, Vec2<double>{bgSize.X, bgSize.Y}, sideRatio);
         //m_Background->GetSprite().SetBlend(GraphBlend(200));
         m_Background->GetSprite().SetPositionParent(m_SpriteRoot);
+        ZIndexUi(&m_Background->GetSprite()).SetIndex(10).ApplyZ();
     }
 
     void RemainingMineUi::initText(IMainScene *scene, const std::string &str)
@@ -49,7 +50,7 @@ namespace inGame
                                                       Rgba(255, 255, 255), Rgba(16, 16, 64));
         m_TextPassage->SetPos(Vec2{bgSize.X, bgSize.Y/2.0} + rightMargin);
         m_TextPassage->SetAlignment(ETextHorizontalAlign::Right, ETextVerticalAlign::Center);
-        m_TextPassage->SetZIndex(1);
+        m_TextPassage->SetZIndex(11);
         m_TextPassage->SetPositionParent(m_Background->GetSprite());
         m_TextPassage->UpdateTextAndView(str);
     }
@@ -102,7 +103,7 @@ namespace inGame
 
         // 画面外まで動かす
         coroUtil::WaitForExpire(yield,
-                                m_SceneRef->GetEffectManager()->GetAnimator()->TargetTo(m_SpriteRoot.GetWeakPtr())
+                                m_SceneRef->GetEffectManager()->GetAnimator()->TargetTo(m_SpriteRoot)
                                         ->AnimPosition(Vec2<double>{enoughBigWidth, 0},
                                                        duration)->SetEase(EAnimEase::OutBack)
                                         ->ToWeakPtr());
@@ -118,7 +119,7 @@ namespace inGame
 
         // 元の位置に戻す
         coroUtil::WaitForExpire(yield,
-                                m_SceneRef->GetEffectManager()->GetAnimator()->TargetTo(m_SpriteRoot.GetWeakPtr())
+                                m_SceneRef->GetEffectManager()->GetAnimator()->TargetTo(m_SpriteRoot)
                     ->AnimPosition(Vec2{0.0, 0.0}, duration)->SetEase(EAnimEase::OutBack)
                     ->ToWeakPtr());
     }

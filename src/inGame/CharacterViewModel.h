@@ -19,14 +19,15 @@ namespace inGame
         CharacterViewModel(ScrollManager* scrollManager, Graph* graph);
         void SetModelPos(const Vec2<double>& pos);
         void SetModelPos(const MatPos& pos);
-        void SetCollider(IFieldManager *field, const Rect<int> &collider);
+        void SetCollider(ISprRectColliderOwner *owner, IFieldManager *field, const Rect<int> &collider);
+
         SpriteTexture& GetModel();
         SpriteTexture& GetView();
-        void SetZ();
+
     private:
         SpriteTexture m_ViewModel= SpriteTexture::Create();
         SpriteTexture m_View = SpriteTexture::Create();
-        unique_ptr<TextureCollider> m_Collider;
+        unique_ptr<SprRectCollider> m_Collider;
     };
 }
 

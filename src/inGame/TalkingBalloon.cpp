@@ -53,7 +53,7 @@ namespace inGame{
         yield();
         constexpr double duration = 0.3;
 
-        auto scaling = m_Scene->GetEffectManager()->GetAnimator()->TargetTo(m_Background->GetSprite().GetWeakPtr())
+        auto scaling = m_Scene->GetEffectManager()->GetAnimator()->TargetTo(m_Background->GetSprite())
                 ->AnimScale(Vec2{1.0, 1.0}, duration)->SetEase(EAnimEase::OutBack)->ToWeakPtr();
         coroUtil::WaitForExpire(yield, scaling);
 

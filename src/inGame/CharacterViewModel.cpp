@@ -35,14 +35,10 @@ namespace inGame
         return m_View;
     }
 
-    void CharacterViewModel::SetZ()
+    void CharacterViewModel::SetCollider(ISprRectColliderOwner *owner, IFieldManager *field, const Rect<int> &collider)
     {
-
+        m_Collider = SprRectCollider::Create(owner, &m_ViewModel, collider);
+        field->GetCharacterCollider()->AddCollider(*m_Collider);
     }
 
-    void CharacterViewModel::SetCollider(IFieldManager *field, const Rect<int> &collider)
-    {
-        m_Collider = TextureCollider::Create(collider, m_ViewModel.GetWeakPtr());
-        field->GetCharacterCollider()->AddCollider(m_Collider->GetWeakPtr());
-    }
 }

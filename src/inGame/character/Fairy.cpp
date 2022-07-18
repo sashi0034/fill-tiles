@@ -23,7 +23,7 @@ namespace inGame::character
                 FieldManager::CharacterPadding -
                 Vec2<double>{(cellSrcSize.X - pixelPerMat) / 2.0, double(cellSrcSize.Y - pixelPerMat)});
 
-        m_View.SetCollider(mainScene->GetFieldManager(),
+        m_View.SetCollider(this, mainScene->GetFieldManager(),
                            Rect{0, 0, FieldManager::PixelPerMat, FieldManager::PixelPerMat});
 
         ZIndexCharacter(m_View).ApplyZ();
@@ -34,7 +34,7 @@ namespace inGame::character
             subscribePlayerMove(mainScene, matPos, message, player);
         }
 
-        mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView().GetWeakPtr())
+        mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView())
                 ->VirtualDelay([]() {}, (matPos.GetSumXY() % 4) * 0.2)
                 ->Then()
                 ->AnimGraph(cellSrcSize)->SetFrameLoopEndless(true)->SetCanFlip(false)

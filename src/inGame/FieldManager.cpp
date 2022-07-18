@@ -97,22 +97,24 @@ namespace inGame
                     renderingSize);
     }
 
-    bool FieldManager::CanMoveTo(const MatPos &currMatPos, EAngle goingAngle)
+    FieldCheckMoveResult FieldManager::CheckMoveTo(const MatPos &currMatPos, EAngle goingAngle)
     {
         const auto diffVec = Angle(goingAngle).ToXY();
         const auto currPos = currMatPos.GetVec();
         const auto nextPos = currPos + diffVec;
-        if (!m_TileMap.IsInRange(nextPos)) return false;
+        if (!m_TileMap.IsInRange(nextPos)) return FieldCheckMoveResult(false, nullptr);
 
         const auto currPosEle = m_TileMap.GetElementAt(currPos);
         const auto nextPosEle = m_TileMap.GetElementAt(nextPos);
 
-        bool result =
+        ISprRectColliderOwner* collidedObject = nullptr;
+        bool canMove =
                 !currPosEle->GetCliffFlag(goingAngle) &&
                 !nextPosEle->IsWall() &&
-                !m_DynamicCharacterCollider.IsHitWith((nextPos * PixelPerMat + MatPixelSize / 2).CastTo<double>());
+                !m_DynamicCharacterCollider.IsHitWith((nextPos * PixelPerMat + MatPixelSize / 2).CastTo<double>(),
+                                                      &collidedObject);
 
-        return result;
+        return FieldCheckMoveResult(canMove, collidedObject);
     }
 
     IChildrenPool<character::CharacterBase> *FieldManager::GetCharacterPool()
@@ -132,7 +134,7 @@ namespace inGame
         m_CoroutineManager.UpdateEach();
     }
 
-    TextureColliderManager *FieldManager::GetCharacterCollider()
+    SprRectColliderManager *FieldManager::GetCharacterCollider()
     {
         return &m_DynamicCharacterCollider;
     }
@@ -202,4 +204,8 @@ namespace inGame
     }
 
 
+    FieldCheckMoveResult::FieldCheckMoveResult(const bool canMove, const ISprRectColliderOwner *collidedObject) : CanMove(canMove),
+                                                                                                                  CollidedObject(
+                                                                                                             collidedObject)
+    {}
 }

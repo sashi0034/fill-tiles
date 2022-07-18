@@ -26,7 +26,7 @@ namespace inGame{
         auto&& mineFlowerManager = m_ChildrenPool.BirthAs<MineFlowerManager>(new MineFlowerManager(&m_ChildrenPool, this));
 
         m_EffectManager = m_ChildrenPool.BirthAs<EffectManager>(new EffectManager(&m_ChildrenPool,
-                                                                                  m_ScrollManager->GetSprite(),
+                                                                                  m_ScrollManager->GetSprite()->GetWeakPtr(),
                                                                                   m_Root));
         m_ChildrenPool.Birth(new RemainingMineUi(this, mineFlowerManager));
 

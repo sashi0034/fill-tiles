@@ -17,6 +17,8 @@
 #include "../character/CheckpointBlock.h"
 #include "../FieldManager.h"
 #include "../character/Fairy.h"
+#include "../character/Catfish.h"
+#include "../character/PuniCat.h"
 
 
 namespace inGame::field
@@ -316,6 +318,14 @@ namespace inGame::field
         else if (objectType=="fairy")
         {
             field->Birth(new character::Fairy(m_MainScene, matPos, objectProperty["talk"]));
+        }
+        else if (objectType=="catfish")
+        {
+            field->Birth(new character::Catfish(m_MainScene, matPos));
+        }
+        else if (objectType=="punicat")
+        {
+            field->Birth(new character::PuniCat(m_MainScene, matPos));
         }
         else if (objectType=="test")
         {

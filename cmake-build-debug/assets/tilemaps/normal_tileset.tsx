@@ -66,6 +66,11 @@
    <property name="kind" value="big_tree"/>
   </properties>
  </tile>
+ <tile id="100">
+  <properties>
+   <property name="kind" value="fines"/>
+  </properties>
+ </tile>
  <tile id="101">
   <properties>
    <property name="kind" value="fines"/>

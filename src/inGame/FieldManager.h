@@ -24,13 +24,20 @@ namespace inGame
 
     class IMainScene;
 
+    struct FieldCheckMoveResult{
+        const bool CanMove;
+        const ISprRectColliderOwner* CollidedObject;
+
+        FieldCheckMoveResult(const bool canMove, const ISprRectColliderOwner *collidedObject);
+    };
+
     class IFieldManager
     {
     public:
-        virtual bool CanMoveTo(const MatPos &currPos, EAngle goingAngle) = 0;
+        virtual FieldCheckMoveResult CheckMoveTo(const MatPos &currPos, EAngle goingAngle) = 0;
         virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
         virtual ITextureAnimator* GetAnimator() = 0;
-        virtual TextureColliderManager* GetCharacterCollider() = 0;
+        virtual SprRectColliderManager* GetCharacterCollider() = 0;
         virtual field::ITileMap* GetTileMap() = 0;
         virtual ICoroutineManager * GetCoroutine() = 0;
 
@@ -47,7 +54,7 @@ namespace inGame
 
         WeakCollection<character::CheckpointBlock> &GetCheckpointBlockList(field::ETileKind blockKind) override;
 
-        TextureColliderManager *GetCharacterCollider() override;
+        SprRectColliderManager *GetCharacterCollider() override;
 
         explicit FieldManager(IChildrenPool<ActorBase> *belonging, IMainScene *parentalScene);
         ~FieldManager();
@@ -59,7 +66,7 @@ namespace inGame
         void Init() override;
         void Update(IAppState* app) override;
 
-        bool CanMoveTo(const MatPos &currMatPos, EAngle goingAngle) override;
+        FieldCheckMoveResult CheckMoveTo(const MatPos &currMatPos, EAngle goingAngle) override;
 
         void OverwriteWallFlag(const MatPos &pos, bool isWall) override;
         void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &fillSize, bool isWall) override;
@@ -79,7 +86,7 @@ namespace inGame
         SpriteTexture m_Texture = SpriteTexture::Create(nullptr);
         ChildrenPool<character::CharacterBase> m_ChildrenPool{};
         TextureAnimator m_Animator{};
-        TextureColliderManager m_DynamicCharacterCollider{};
+        SprRectColliderManager m_DynamicCharacterCollider{};
         CoroutineManager m_CoroutineManager{};
         unique_ptr<Graph> m_BufferGraph;
         Vec2<int> m_BufferGraphSize{};

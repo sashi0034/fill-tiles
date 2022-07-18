@@ -18,7 +18,7 @@ namespace inGame{
 
 namespace inGame::character
 {
-    class Fairy : public CharacterBase
+    class Fairy : public CharacterBase, public ISprRectColliderOwner
     {
     public:
         Fairy(IMainScene *mainScene, const MatPos &matPos, const std::string &message);

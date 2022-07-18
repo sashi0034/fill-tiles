@@ -17,6 +17,8 @@ namespace inGame
         ~ActorBase() override;
         virtual void Init();
         virtual void Update(IAppState* appState);
+    private:
+        void operator=(const ActorBase &) = delete;
     };
 }
 

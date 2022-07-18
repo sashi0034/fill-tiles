@@ -32,6 +32,8 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(ui_white_rounnd_rect);
         REGISTER_RESOURCE_PNG(ui_gray_rounnd_rect);
         REGISTER_RESOURCE_PNG(ui_black_window);
+        REGISTER_RESOURCE_PNG(punicat_24x24);
+        REGISTER_RESOURCE_PNG(catfish_24x24);
 
         explicit Image(IAppState* appState);
     private:
