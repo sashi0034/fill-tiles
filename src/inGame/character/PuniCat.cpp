@@ -4,6 +4,7 @@
 
 #include "PuniCat.h"
 #include "../ZIndex.h"
+#include "../Player.h"
 
 namespace inGame::character
 {
@@ -31,6 +32,18 @@ namespace inGame::character
                 ->AddFrame(Vec2{1, 0}, 0.2)
                 ->AddFrame(Vec2{2, 0}, 0.2)
                 ->AddFrame(Vec2{3, 0}, 0.2);
+
+        auto player = mainScene->GetPlayer();
+        if (player!= nullptr)
+        {
+            player->OnAction().subscribe([&](auto&& action){
+                LOG_INFO << "try" << std::endl;
+               if (dynamic_cast<PlayerActionPushCatfish*>(action))
+               {
+                   std::cout << "OK" << std::endl;
+               }
+            });
+        }
     }
 
     void PuniCat::Update(IAppState *)

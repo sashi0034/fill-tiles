@@ -23,16 +23,22 @@ namespace gameEngine
         OutBack,
     };
 
+
+    using TextureAnimationWeakPtr = WeakPtr<detail::ITextureAnimationPointer>;
+
     class ITextureAnimator
     {
     public:
         virtual detail::ITextureAnimationStarter * TargetTo(SpriteTexture &texture) = 0;
+        virtual bool Destroy(TextureAnimationWeakPtr& target) = 0;
     };
 
     class TextureAnimator : public ITextureAnimator
     {
     public:
         detail::ITextureAnimationStarter * TargetTo(SpriteTexture &texture) override;
+
+        bool Destroy(TextureAnimationWeakPtr &target) override;
         //unique_ptr<TextureAnimationCreator> VirtualTo();
 
         void Update(double deltaTime);

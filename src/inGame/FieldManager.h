@@ -14,6 +14,7 @@
 #include "character/CharacterBase.h"
 #include "rx.h"
 #include "../gameEngine/WeakCollection.h"
+#include "MineFlowerManager.h"
 
 namespace inGame
 {
@@ -35,6 +36,7 @@ namespace inGame
     {
     public:
         virtual FieldCheckMoveResult CheckMoveTo(const MatPos &currPos, EAngle goingAngle) = 0;
+        virtual bool CanMovableObjectMoveTo(const MatPos &currPos, EAngle goingAngle) = 0;
         virtual IChildrenPool<character::CharacterBase>* GetCharacterPool() = 0;
         virtual ITextureAnimator* GetAnimator() = 0;
         virtual SprRectColliderManager* GetCharacterCollider() = 0;
@@ -45,6 +47,7 @@ namespace inGame
         virtual void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &size, bool isWal) = 0;
 
         virtual WeakCollection<character::CheckpointBlock> &GetCheckpointBlockList(field::ETileKind blockKind) = 0;
+        virtual MineFlowerManager* GetMineFlowerManager() = 0;
     };
 
     class FieldManager : public IFieldManager, public ActorBase
@@ -68,6 +71,8 @@ namespace inGame
 
         FieldCheckMoveResult CheckMoveTo(const MatPos &currMatPos, EAngle goingAngle) override;
 
+        bool CanMovableObjectMoveTo(const MatPos &currPos, EAngle goingAngle) override;
+
         void OverwriteWallFlag(const MatPos &pos, bool isWall) override;
         void OverwriteWallFlag(const MatPos &pos, const Vec2<int> &fillSize, bool isWall) override;
 
@@ -77,6 +82,9 @@ namespace inGame
         static inline const Vec2<int> MatPixelSize = {PixelPerMat, PixelPerMat};
         static inline const Vec2<double> CharacterPadding{0, -PixelPerMat/4};
         Vec2<int> GetScreenMatSize() const;
+
+        MineFlowerManager *GetMineFlowerManager() override;
+
     private:
         void createRenderedTileMapToBuffer(IAppState *appState);
         void renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &fieldRenderer, SDL_Renderer *sdlRenderer,
@@ -90,6 +98,7 @@ namespace inGame
         CoroutineManager m_CoroutineManager{};
         unique_ptr<Graph> m_BufferGraph;
         Vec2<int> m_BufferGraphSize{};
+        unique_ptr<MineFlowerManager> m_MineFlowerManager{};
 
         std::unordered_map<field::ETileKind, WeakCollection<character::CheckpointBlock>> m_CheckpointBlockList{};
 

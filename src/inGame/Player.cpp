@@ -43,6 +43,9 @@ namespace inGame
 
         self->changeAnimation([&](){self->animWait(self->m_Angle);});
 
+        // フィールド上でイベントが発生していたら待機する
+        self->waitFieldEvent(yield);
+
         EAngle goingAngle = EAngle::None;
         while (goingAngle == EAngle::None)
         {
@@ -78,18 +81,26 @@ namespace inGame
             }
 
             auto collidedObject = const_cast<ISprRectColliderOwner*>(checkingMove.CollidedObject);
-            auto catfish = dynamic_cast<character::Catfish*>(collidedObject);
 
-            if (catfish!= nullptr)
-            {
-                catfish->TryMove(inputAngle);
+            if (auto catfish = dynamic_cast<character::Catfish*>(collidedObject))
+                pushCatfish(yield, inputAngle, catfish);
 
-                // フィールド上でイベントが発生していたら待機する
-                waitFieldEvent(yield);
-            }
         }
         return goingAngle;
     }
+
+    void Player::pushCatfish(CoroTaskYield &yield, EAngle &inputAngle, character::Catfish *catfish)
+    {
+        bool result = catfish->TryMove(inputAngle);
+        if (!result) return;
+
+        waitFieldEvent(yield);
+
+        PlayerActionPushCatfish action;
+        m_OnAction.get_subscriber().on_next(&action);
+        waitFieldEvent(yield);
+    }
+
 
     void Player::Update(IAppState *appState)
     {
@@ -319,6 +330,11 @@ namespace inGame
             return EProcessStatus::Running;
         }, fps60));
 
+    }
+
+    rx::observable<PlayerActionData *> Player::OnAction() const
+    {
+        return m_OnAction.get_observable();
     }
 
 

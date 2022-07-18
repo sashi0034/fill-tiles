@@ -13,6 +13,8 @@
 #include "CharacterViewModel.h"
 #include "rx.h"
 #include "PlayerMoveData.h"
+#include "PlayerActionData.h"
+#include "character/Catfish.h"
 
 namespace inGame
 {
@@ -29,6 +31,7 @@ namespace inGame
         MatPos GetMatPos();
         [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveBegin() const;
         [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveFinish() const;
+        [[nodiscard]] rx::observable<PlayerActionData*> OnAction() const;
         static inline const Vec2<int> CellSize{32, 32};
     private:
         void setPos(Vec2<double> newPos);
@@ -50,8 +53,9 @@ namespace inGame
         IFieldManager* m_Field;
 
         ChildrenPool<ProcessTimer> m_SubProcess{};
-        rx::subject<PlayerMoveData*> m_OnMoveBegin;
-        rx::subject<PlayerMoveData*> m_OnMoveFinish;
+        rx::subject<PlayerMoveData*> m_OnMoveBegin{};
+        rx::subject<PlayerMoveData*> m_OnMoveFinish{};
+        rx::subject<PlayerActionData*> m_OnAction;
         bool m_ShouldResetScroll = true;
 
         static EAngle getInputAngle(const Uint8 *keyState);
@@ -68,6 +72,8 @@ namespace inGame
         bool isRunningFieldEvent();
 
         void waitFieldEvent(CoroTaskYield &yield);
+
+        void pushCatfish(CoroTaskYield &yield, EAngle &inputAngle, inGame::character::Catfish *catfish);
     };
 
 

@@ -2,11 +2,11 @@
 // Created by sashi0034 on 2022/06/24.
 //
 
+#include "MainScene.h"
 #include "MineFlowerManager.h"
 #include "Player.h"
 #include "character/MineFlower.h"
 #include "character/CheckpointBlock.h"
-#include "effect/Smoke.h"
 #include "PlayerMoveData.h"
 
 namespace inGame{
@@ -51,8 +51,8 @@ namespace inGame{
         return m_MineFlowerCount;
     }
 
-    MineFlowerManager::MineFlowerManager(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene)
-        : ActorBase(belonging), m_MainScene(mainScene)
+    MineFlowerManager::MineFlowerManager(IMainScene *mainScene)
+        : m_MainScene(mainScene)
     {
         using kind = field::ETileKind;
         m_MineFlowerClass.emplace_back(kind::mine_flower_1, kind::checkpoint_block_1, 1);
@@ -190,6 +190,17 @@ namespace inGame{
         auto&& next = m_MineFlowerClass.at(currLevel);
         LOG_ASSERT(next.GetClassLevel() == currLevel + 1, "m_MineFlowerClassがレベル順になっていない可能性があります。");
         return &next;
+    }
+
+    bool MineFlowerManager::IsMineFlowerMat(const MatPos &matPos) const
+    {
+        const auto field = m_MainScene->GetFieldManager();
+
+        for (const auto & mineClass : m_MineFlowerClass)
+            if (field->GetTileMap()->HasChipAt(matPos.GetVec(), mineClass.MineFlowerTile)==Boolean::True)
+                return true;
+
+        return false;
     }
 
 }

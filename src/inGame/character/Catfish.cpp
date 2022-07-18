@@ -35,10 +35,17 @@ namespace inGame::character
                 ->AddFrame(Vec2{4, 0}, 0.2);
     }
 
-    void Catfish::TryMove(EAngle angle)
+    bool Catfish::TryMove(EAngle angle)
     {
+        auto field =m_Scene->GetFieldManager();
+        const auto currPos = m_View.GetMatPos();
+
+        if (!field->CanMovableObjectMoveTo(currPos, angle)) return false;
+
         m_Scene->GetFieldManager()->GetCoroutine()->Start(
                 new CoroTaskCall([&](auto&& yield){ move(yield, angle);}));
+
+        return true;
     }
 
     void Catfish::move(CoroTaskYield &yield, EAngle angle)
@@ -48,8 +55,9 @@ namespace inGame::character
 
         yield();
 
+        constexpr double duration = 0.6;
         auto animation = m_Scene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetModel())
-            ->AnimPosition(Angle(angle).ToXY().CastTo<double>() * FieldManager::PixelPerMat, 1.0)->SetRelative(true)
+            ->AnimPosition(Angle(angle).ToXY().CastTo<double>() * FieldManager::PixelPerMat, duration)->SetRelative(true)
             ->ToWeakPtr();
 
         coroUtil::WaitForExpire(yield, animation);

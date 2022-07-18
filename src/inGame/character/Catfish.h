@@ -17,7 +17,7 @@ namespace inGame::character
     {
     public:
         Catfish(IMainScene *mainScene, const MatPos &matPos);
-        void TryMove(EAngle angle);
+        bool TryMove(EAngle angle);
 
         void Update(IAppState *app) override;
 

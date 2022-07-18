@@ -27,5 +27,14 @@ namespace gameEngine{
         m_Pool.Release();
     }
 
+    bool TextureAnimator::Destroy(TextureAnimationWeakPtr &target)
+    {
+        if (auto targetPtr = target.GetPtr())
+        {
+            return m_Pool.Destroy(dynamic_cast<detail::TextureAnimationProcessor*>(targetPtr));
+        }
+        return false;
+    }
+
 
 }

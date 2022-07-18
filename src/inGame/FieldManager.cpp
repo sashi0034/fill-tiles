@@ -7,6 +7,8 @@
 #include "field/FieldRenderer.h"
 #include "MainScene.h"
 #include "ZIndex.h"
+#include "RemainingMineUi.h"
+#include "MineFlowerManager.h"
 
 namespace inGame
 {
@@ -18,6 +20,8 @@ namespace inGame
     {
         ZIndexBackGround(&m_Texture).ApplyZ();
         m_ParentalScene->GetScrollManager()->RegisterSprite(m_Texture);
+
+        m_MineFlowerManager = std::make_unique<MineFlowerManager>(parentalScene);
     }
 
     void FieldManager::Init()
@@ -27,6 +31,8 @@ namespace inGame
         createRenderedTileMapToBuffer(m_ParentalScene->GetRoot()->GetAppState());
         m_Texture.SetGraph(m_BufferGraph.get());
         m_Texture.SetSrcRect(Rect<int>{Vec2{0, 0}, m_BufferGraphSize});
+
+        m_MineFlowerManager->Init();
     }
 
 
@@ -117,6 +123,8 @@ namespace inGame
         return FieldCheckMoveResult(canMove, collidedObject);
     }
 
+
+
     IChildrenPool<character::CharacterBase> *FieldManager::GetCharacterPool()
     {
         return &m_ChildrenPool;
@@ -201,6 +209,17 @@ namespace inGame
     Vec2<int> FieldManager::GetScreenMatSize() const
     {
         return (GameRoot::GetInstance().GetAppState()->GetScreenSize() / PixelPerMat);
+    }
+
+    MineFlowerManager *FieldManager::GetMineFlowerManager()
+    {
+        return m_MineFlowerManager.get();
+    }
+
+    bool FieldManager::CanMovableObjectMoveTo(const MatPos &currPos, EAngle goingAngle)
+    {
+        return (CheckMoveTo(currPos, goingAngle).CanMove &&
+            !m_MineFlowerManager->IsMineFlowerMat(currPos + MatPos(Angle(goingAngle).ToXY())));
     }
 
 

@@ -7,11 +7,14 @@
 
 
 #include "ActorBase.h"
-#include "MainScene.h"
 #include "field/TileMapMatElement.h"
+#include "MatPos.h"
 
 namespace inGame
 {
+    class IMainScene;
+
+
     class MineFlowerClass
     {
     public:
@@ -34,13 +37,14 @@ namespace inGame
     };
 
 
-    class MineFlowerManager final : public ActorBase
+    class MineFlowerManager
     {
     public:
-        MineFlowerManager(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene);
-        void Init() override;
+        MineFlowerManager(IMainScene *mainScene);
+        void Init();
         MineFlowerClass* GetCurrMineFlowerClass();
         MineFlowerClass* GetNextMineFlowerClass();
+        bool IsMineFlowerMat(const MatPos& matPos) const;
     private:
         IMainScene* m_MainScene;
         std::vector<MineFlowerClass> m_MineFlowerClass{};

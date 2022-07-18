@@ -41,4 +41,10 @@ namespace inGame
         field->GetCharacterCollider()->AddCollider(*m_Collider);
     }
 
+    MatPos CharacterViewModel::GetMatPos() const
+    {
+        const auto pixelPos = m_ViewModel.GetPosition().CastTo<int>();
+        return MatPos((pixelPos + FieldManager::MatPixelSize / 2) / FieldManager::PixelPerMat);
+    }
+
 }
