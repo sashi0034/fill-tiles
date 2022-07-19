@@ -6,4 +6,7 @@
 
 namespace inGame
 {
+    PlayerActionPushCatfish::PlayerActionPushCatfish(character::Catfish *const touchedCatfish) : TouchedCatfish(
+            touchedCatfish)
+    {}
 } // inGame

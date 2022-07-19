@@ -68,4 +68,9 @@ namespace inGame::character
         ZIndexCharacter(m_View).ApplyZ();
     }
 
+    UppingFlag& Catfish::GetEatableFlag()
+    {
+        return m_EatableFlag;
+    }
+
 } // inGame

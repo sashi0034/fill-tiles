@@ -7,6 +7,12 @@
 #include "math.h"
 
 namespace inGame{
+    const std::array<Angle, 4> Angle::EveryAngle = {
+            Angle(EAngle::Right),
+            Angle(EAngle::Up),
+            Angle(EAngle::Left),
+            Angle(EAngle::Down)
+    };
 
     Angle::Angle()
     : m_Angle(EAngle::None)
@@ -15,7 +21,7 @@ namespace inGame{
     Angle::Angle(EAngle angle) : m_Angle(angle)
     {}
 
-    Vec2<int> Angle::ToXY()
+    Vec2<int> Angle::ToXY() const
     {
         switch (m_Angle)
         {
@@ -33,7 +39,7 @@ namespace inGame{
         assert(false);
     }
 
-    EAngle Angle::GetKind()
+    EAngle Angle::GetKind() const
     {
         return m_Angle;
     }

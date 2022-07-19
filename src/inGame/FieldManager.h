@@ -27,9 +27,9 @@ namespace inGame
 
     struct FieldCheckMoveResult{
         const bool CanMove;
-        const ISprRectColliderOwner* CollidedObject;
+        ISprRectColliderOwner* const CollidedObject;
 
-        FieldCheckMoveResult(const bool canMove, const ISprRectColliderOwner *collidedObject);
+        FieldCheckMoveResult(const bool canMove, ISprRectColliderOwner *const collidedObject);
     };
 
     class IFieldManager

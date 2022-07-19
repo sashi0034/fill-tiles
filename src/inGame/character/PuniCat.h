@@ -12,6 +12,7 @@
 
 namespace inGame::character
 {
+    class Catfish;
 
     class PuniCat final: public CharacterBase, public ISprRectColliderOwner
     {
@@ -19,11 +20,22 @@ namespace inGame::character
         PuniCat(IMainScene *mainScene, const MatPos &matPos);
 
         void Update(IAppState *app) override;
-
     private:
+        IMainScene* m_Scene;
         CharacterViewModel m_View;
+
+        void moveToEatFish(CoroTaskYield& yield, const MatPos& goingPos, Catfish* targetFood);
+
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         static const inline Vec2<int>cellSrcSize = Vec2<int>{24, 24};
+
+        void subscribePlayerAction(IMainScene *mainScene, const Player *player);
+
+        void searchCatfishEveryAngle(IMainScene *mainScene, Catfish *nullableTargetCatfish);
+
+        void
+        startGoToEatCatfish(IMainScene *mainScene, Catfish *targetCatfish, const Vec2<int> &stepVec,
+                            const MatPos &checkingPos);
     };
 
 } // inGame

@@ -80,7 +80,7 @@ namespace inGame
                 this->changeAnimation([&](){this->animWait(this->m_Angle);});
             }
 
-            auto collidedObject = const_cast<ISprRectColliderOwner*>(checkingMove.CollidedObject);
+            auto collidedObject = checkingMove.CollidedObject;
 
             if (auto catfish = dynamic_cast<character::Catfish*>(collidedObject))
                 pushCatfish(yield, inputAngle, catfish);
@@ -96,7 +96,7 @@ namespace inGame
 
         waitFieldEvent(yield);
 
-        PlayerActionPushCatfish action;
+        PlayerActionPushCatfish action(catfish);
         m_OnAction.get_subscriber().on_next(&action);
         waitFieldEvent(yield);
     }

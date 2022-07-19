@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_ANGLE_H
 #define FILL_TILES_ANGLE_H
 
+#include <array>
 #include "../gameEngine/gameEngine.h"
 
 namespace inGame
@@ -23,10 +24,12 @@ namespace inGame
     public:
         Angle();
         Angle(EAngle angle);
-        Vec2<int> ToXY();
-        EAngle GetKind();
+        Vec2<int> ToXY() const;
+        EAngle GetKind() const;
         bool IsValid() const;
         static Angle ConvertFrom(Vec2<double> pos);
+
+        static const std::array<Angle, 4> EveryAngle;
     private:
         const EAngle m_Angle;
     };

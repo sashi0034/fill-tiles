@@ -223,8 +223,7 @@ namespace inGame
     }
 
 
-    FieldCheckMoveResult::FieldCheckMoveResult(const bool canMove, const ISprRectColliderOwner *collidedObject) : CanMove(canMove),
-                                                                                                                  CollidedObject(
-                                                                                                             collidedObject)
+    FieldCheckMoveResult::FieldCheckMoveResult(const bool canMove, ISprRectColliderOwner *const collidedObject)
+            : CanMove(canMove), CollidedObject(collidedObject)
     {}
 }

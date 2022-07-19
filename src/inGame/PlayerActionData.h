@@ -7,6 +7,10 @@
 
 namespace inGame
 {
+    namespace character
+    {
+        class Catfish;
+    }
 
     class PlayerActionData
     {
@@ -15,7 +19,12 @@ namespace inGame
     };
 
     class PlayerActionPushCatfish : public PlayerActionData
-    {};
+    {
+    public:
+        character::Catfish* const TouchedCatfish;
+
+        explicit PlayerActionPushCatfish(character::Catfish *const touchedCatfish);
+    };
 
 } // inGame
 
