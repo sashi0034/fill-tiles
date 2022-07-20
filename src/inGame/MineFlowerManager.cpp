@@ -71,24 +71,21 @@ namespace inGame{
         m_MainScene->GetPlayer()->OnMoveFinish().subscribe([&](PlayerMoveData* moveData) {
             const auto playerPos = moveData->AfterPos;
             const auto field = m_MainScene->GetFieldManager();
-            if (field->GetTileMap()->GetElementAt(playerPos.GetVec())->IsBloomedMineFlower()) return;
 
             if (!field->GetTileMap()->IsInRange(playerPos.GetVec())) return;
 
-            checkSteppedByPlayer(playerPos);
+            CheckStepOnMine(playerPos);
         });
 
 
     }
 
-    void MineFlowerManager::checkSteppedByPlayer(const MatPos &playerPos)
+    void MineFlowerManager::CheckStepOnMine(const MatPos &pos)
     {
-        for (int i=0; i < int(m_MineFlowerClass.size()); ++i)
+        for (auto & mineClass : m_MineFlowerClass)
         {
-            auto& mineClass = m_MineFlowerClass[i];
-
-            bool isExist = checkBloomMineFlower(playerPos, mineClass);
-            if (!isExist) continue;
+            bool isExist = checkBloomMineFlower(pos, mineClass);
+            if (!isExist) return;
         }
     }
 
@@ -97,6 +94,12 @@ namespace inGame{
         const auto field = m_MainScene->GetFieldManager();
 
         if (field->GetTileMap()->HasChipAt(matPos.GetVec(), mineClass.MineFlowerTile)!=Boolean::True) return false;
+
+        if (field->GetTileMap()->GetElementAt(matPos.GetVec())->IsBloomedMineFlower())
+        {
+            LOG_INFO << "stepped on mine." << std::endl;
+            return false;
+        }
 
         field->GetCharacterPool()->Birth(new character::MineFlower(m_MainScene, matPos));
 

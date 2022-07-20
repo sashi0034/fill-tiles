@@ -23,8 +23,11 @@ namespace inGame::character
     private:
         IMainScene* m_Scene;
         CharacterViewModel m_View;
+        TextureAnimationWeakPtr m_AnimationRef{};
 
-        void moveToEatFish(CoroTaskYield& yield, const MatPos& goingPos, Catfish* targetFood);
+        void animByAngle(EAngle angle);
+
+        void moveToEatFish(CoroTaskYield &yield, Catfish *targetFood, const MatPos &goingPos, EAngle angle);
 
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         static const inline Vec2<int>cellSrcSize = Vec2<int>{24, 24};
@@ -35,7 +38,7 @@ namespace inGame::character
 
         void
         startGoToEatCatfish(IMainScene *mainScene, Catfish *targetCatfish, const Vec2<int> &stepVec,
-                            const MatPos &checkingPos);
+                            const MatPos &checkingPos, EAngle angle);
     };
 
 } // inGame

@@ -45,6 +45,7 @@ namespace inGame
         MineFlowerClass* GetCurrMineFlowerClass();
         MineFlowerClass* GetNextMineFlowerClass();
         bool IsMineFlowerMat(const MatPos& matPos) const;
+        void CheckStepOnMine(const MatPos &pos);
     private:
         IMainScene* m_MainScene;
         std::vector<MineFlowerClass> m_MineFlowerClass{};
@@ -55,7 +56,6 @@ namespace inGame
 
         static CoroTask driveClearingCheckpointBlocksEvent(CoroTaskYield &yield, MineFlowerManager *self, MineFlowerClass& mineClass);
 
-        void checkSteppedByPlayer(const MatPos &playerPos);
     };
 }
 

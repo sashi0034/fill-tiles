@@ -50,6 +50,16 @@ namespace gameEngine
             return Vec2<T>{static_cast<T>(X / div), static_cast<T>(Y / div)};
         }
 
+        bool operator==(const Vec2<T>& other) const
+        {
+            return this->X == other.X && this->Y == other.Y;
+        }
+
+        bool operator!=(const Vec2<T>& other) const
+        {
+            return !(this->X == other.X && this->Y == other.Y);
+        }
+
         template<typename U>
         Vec2<U> CastTo() const
         {

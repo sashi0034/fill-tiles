@@ -25,14 +25,7 @@ namespace inGame::character
         m_View.SetCollider(this, mainScene->GetFieldManager(),
                            Rect{0, 0, FieldManager::PixelPerMat, FieldManager::PixelPerMat});
 
-        mainScene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetView())
-                ->VirtualDelay([]() {}, (matPos.GetSumXY() % 4) * 0.2)
-                ->Then()
-                ->AnimGraph(cellSrcSize)->SetFrameLoopEndless(true)->SetCanFlip(false)
-                ->AddFrame(Vec2{0, 0}, 0.3)
-                ->AddFrame(Vec2{1, 0}, 0.2)
-                ->AddFrame(Vec2{2, 0}, 0.2)
-                ->AddFrame(Vec2{3, 0}, 0.2);
+        animByAngle(EAngle::Down);
 
         if (auto player = mainScene->GetPlayer())
         {
@@ -72,13 +65,13 @@ namespace inGame::character
                 if (nullableTargetCatfish != nullptr)
                 {
                     if (checking.CollidedObject == nullableTargetCatfish)
-                        startGoToEatCatfish(mainScene, nullableTargetCatfish, stepVec, checkingPos);
+                        startGoToEatCatfish(mainScene, nullableTargetCatfish, stepVec, checkingPos, angle.GetKind());
                 }
                 // どれを食べるか指定なし
                 else
                 {
                     if (auto foundCatfish = dynamic_cast<Catfish*>(checking.CollidedObject))
-                        startGoToEatCatfish(mainScene, foundCatfish, stepVec, checkingPos);
+                        startGoToEatCatfish(mainScene, foundCatfish, stepVec, checkingPos, angle.GetKind());
                 }
                 if (!checking.CanMove) break;
             }
@@ -86,11 +79,12 @@ namespace inGame::character
     }
 
     void PuniCat::startGoToEatCatfish(IMainScene *mainScene, Catfish *targetCatfish, const Vec2<int> &stepVec,
-                                      const MatPos &checkingPos)
+                                      const MatPos &checkingPos, EAngle angle)
     {
         targetCatfish->GetEatableFlag().DownFlag();
         mainScene->GetFieldManager()->GetCoroutine()->Start(
-                new CoroTaskCall([&](auto&& yield){ moveToEatFish(yield, checkingPos + MatPos(stepVec), targetCatfish);}));
+                new CoroTaskCall([&](auto&& yield){
+                    moveToEatFish(yield, targetCatfish, checkingPos + MatPos(stepVec), angle);}));
     }
 
     void PuniCat::Update(IAppState *)
@@ -98,25 +92,86 @@ namespace inGame::character
         ZIndexCharacter(m_View).ApplyZ();
     }
 
-    void PuniCat::moveToEatFish(CoroTaskYield &yield, const MatPos &goingPos, Catfish *targetFood)
+    void PuniCat::moveToEatFish(CoroTaskYield &yield, Catfish *targetFood, const MatPos &goingPos, EAngle angle)
     {
         auto eventInScope = m_Scene->GetFieldEventManager()->UseEvent();
         eventInScope.StartFromHere();
 
         yield();
 
-        const auto currPos = m_View.GetMatPos();
-        const auto distance = goingPos.CalcManhattan(currPos);
+        animByAngle(angle);
 
-        constexpr double duration = 0.3;
-        auto animation = m_Scene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetModel())
-                ->AnimPosition(goingPos.GetVec().CastTo<double>() * FieldManager::PixelPerMat, duration * distance)
-                ->ToWeakPtr();
+        // 魚のある目的地まで1歩ずつ移動
+        while (true)
+        {
+            const auto currPos = m_View.GetMatPos();
 
-        coroUtil::WaitForExpire(yield, animation);
+            // 地雷があったら踏んだことにする
+            m_Scene->GetFieldManager()->GetMineFlowerManager()->CheckStepOnMine(currPos);
+
+            if (currPos == goingPos) break;
+
+            constexpr double duration = 0.3;
+            auto animation = m_Scene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetModel())
+                    ->AnimPosition(Angle(angle).ToXY().CastTo<double>() * FieldManager::PixelPerMat, duration)->SetRelative(true)
+                    ->ToWeakPtr();
+
+            coroUtil::WaitForExpire(yield, animation);
+        }
 
         targetFood->Destroy();
 
         searchCatfishEveryAngle(m_Scene, nullptr);
+    }
+
+
+    void PuniCat::animByAngle(EAngle angle)
+    {
+        auto const animator = m_Scene->GetFieldManager()->GetAnimator();
+
+        animator->Destroy(m_AnimationRef);
+
+        auto&& base = animator->TargetTo(m_View.GetView())
+                ->AnimGraph(cellSrcSize)->SetFrameLoopEndless(true);
+
+        constexpr double duration = 0.2;
+        switch (angle)
+        {
+            case EAngle::Down:
+                m_AnimationRef = base
+                    ->AddFrame(Vec2{0, 0}, duration * 1.5)
+                    ->AddFrame(Vec2{1, 0}, duration)
+                    ->AddFrame(Vec2{2, 0}, duration)
+                    ->AddFrame(Vec2{3, 0}, duration)
+                    ->ToWeakPtr();
+                break;
+            case EAngle::Right:
+                m_AnimationRef = base
+                        ->AddFrame(Vec2{0, 3}, duration * 1.5)
+                        ->AddFrame(Vec2{1, 3}, duration)
+                        ->AddFrame(Vec2{2, 3}, duration)
+                        ->AddFrame(Vec2{3, 3}, duration)
+                        ->ToWeakPtr();
+                break;
+            case EAngle::Up:
+                m_AnimationRef = base
+                        ->AddFrame(Vec2{0, 2}, duration * 1.5)
+                        ->AddFrame(Vec2{1, 2}, duration)
+                        ->AddFrame(Vec2{2, 2}, duration)
+                        ->AddFrame(Vec2{3, 2}, duration)
+                        ->ToWeakPtr();
+                break;
+            case EAngle::Left:
+                m_AnimationRef = base
+                        ->AddFrame(Vec2{0, 3}, duration * 1.5)
+                        ->AddFrame(Vec2{1, 3}, duration)
+                        ->AddFrame(Vec2{2, 3}, duration)
+                        ->AddFrame(Vec2{3, 3}, duration)
+                        ->ToWeakPtr();
+                break;
+            default:
+                assert(false);
+        }
+
     }
 } // inGame

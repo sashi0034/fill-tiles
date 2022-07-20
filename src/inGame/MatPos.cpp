@@ -62,4 +62,14 @@ namespace inGame
         return std::abs(diffX) + std::abs(diffY);
     }
 
+    bool MatPos::operator==(const MatPos &other) const
+    {
+        return other.GetVec() == m_Pos;
+    }
+
+    bool MatPos::operator!=(const MatPos &other) const
+    {
+        return other.GetVec() != m_Pos;
+    }
+
 }

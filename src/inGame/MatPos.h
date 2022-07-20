@@ -20,6 +20,8 @@ namespace inGame
         MatPos operator+(const MatPos& other) const;
         MatPos operator-(const MatPos& other) const;
         MatPos operator*(int times) const;
+        bool operator==(const MatPos& other) const;
+        bool operator!=(const MatPos& other) const;
 
         int GetSumXY() const;
         std::string ToString() const;
