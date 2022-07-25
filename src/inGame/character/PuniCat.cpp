@@ -119,6 +119,10 @@ namespace inGame::character
             coroUtil::WaitForExpire(yield, animation);
         }
 
+        // 魚が跳び跳ねて
+        targetFood->JumpWhenEat().AwaitForReturnToStart(yield).Forget();
+
+        // 食べて消す
         targetFood->Destroy();
 
         searchCatfishEveryAngle(m_Scene, nullptr);

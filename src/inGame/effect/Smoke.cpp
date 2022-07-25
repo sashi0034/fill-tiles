@@ -14,15 +14,15 @@ namespace inGame::effect
     {
         effectManager->ApplyParentalPos(m_Texture);
         m_Texture.SetGraph(effectManager->GetRoot()->RscImage->smoke_48x32.get());
-        //m_Texture.SetRenderingProcess(std::bind(renderingProcess::RenderSpriteTwoDots, std::placeholders::_1, &m_Texture));
+        //m_Target.SetRenderingProcess(std::bind(renderingProcess::RenderSpriteTwoDots, std::placeholders::_1, &m_Target));
         m_Texture.SetSrcRect(Rect<int>{0, 0, 48, 32});
         m_Texture.SetRotationDeg(rotationDeg);
         m_Texture.SetBlend(GraphBlend(0));
         ZIndexEffect(&m_Texture).SetIndex(1).ApplyZ();
         util::SetTextureByCenter(m_Texture, pos);
 
-//        m_Texture.SetScale(Vec2{0.0, 0.0});
-//        effectManager->GetAnimator()->TargetTo(m_Texture.GetWeakPtr())
+//        m_Target.SetScale(Vec2{0.0, 0.0});
+//        effectManager->GetAnimator()->TargetTo(m_Target.GetWeakPtr())
 //            ->AnimScale(Vec2{1.0, 1.0}, 1.0)->SetEase(EAnimEase::OutBack)
 //            ->Then()
 //            ->AnimScale(Vec2{.0, .0}, 1.0)->SetEase(EAnimEase::Linear);

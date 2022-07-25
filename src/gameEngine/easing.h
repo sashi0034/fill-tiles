@@ -11,6 +11,7 @@ namespace gameEngine
     {
 
         double EaseOutBack(double percent);
+        double EaseInBack(double percent);
 
     }
 } // gameEngine

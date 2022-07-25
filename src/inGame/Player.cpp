@@ -91,8 +91,11 @@ namespace inGame
 
     void Player::pushCatfish(CoroTaskYield &yield, EAngle &inputAngle, character::Catfish *catfish)
     {
-        bool result = catfish->TryMove(inputAngle);
-        if (!result) return;
+        if (!catfish->CanMove(inputAngle)) return;
+
+        tackleToFieldObject(yield, inputAngle, [&](){
+            catfish->ForceMove(inputAngle);
+        });
 
         waitFieldEvent(yield);
 
@@ -335,6 +338,28 @@ namespace inGame
     rx::observable<PlayerActionData *> Player::OnAction() const
     {
         return m_OnAction.get_observable();
+    }
+
+    void Player::tackleToFieldObject(CoroTaskYield &yield, EAngle angle, const std::function<void()> &onTackleHit)
+    {
+        const auto&& beforePosition = m_View->GetView().GetPosition();
+        const double movePixelByTackling = FieldManager::PixelPerMat * 0.5;
+        constexpr double tacklingDuration = 0.2;
+        constexpr double endTacklingDuration = 0.2;
+
+        const auto&& tacklingAnimation = m_PlayerAnimator.TargetTo(m_View->GetView())
+            ->AnimPosition(Angle(angle).ToXY().CastTo<double>() * movePixelByTackling, tacklingDuration)
+            ->SetRelative(true)->SetEase(EAnimEase::InBack)->ToWeakPtr();
+
+        coroUtil::WaitForExpire(yield, tacklingAnimation);
+
+        onTackleHit();
+
+        const auto&& endTacklingAnimation = m_PlayerAnimator.TargetTo(m_View->GetView())
+                ->AnimPosition(beforePosition, endTacklingDuration)
+                ->SetEase(EAnimEase::InBack)->ToWeakPtr();
+
+        coroUtil::WaitForExpire(yield, endTacklingAnimation);
     }
 
 

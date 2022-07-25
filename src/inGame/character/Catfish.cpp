@@ -4,6 +4,7 @@
 
 #include "Catfish.h"
 #include "../ZIndex.h"
+#include "../ParabolaAnimation.h"
 
 namespace inGame::character
 {
@@ -35,17 +36,21 @@ namespace inGame::character
                 ->AddFrame(Vec2{4, 0}, 0.2);
     }
 
-    bool Catfish::TryMove(EAngle angle)
+
+    bool Catfish::CanMove(EAngle angle)
     {
         auto field =m_Scene->GetFieldManager();
         const auto currPos = m_View.GetMatPos();
 
-        if (!field->CanMovableObjectMoveTo(currPos, angle)) return false;
+        return field->CanMovableObjectMoveTo(currPos, angle);
+    }
+
+    void Catfish::ForceMove(EAngle angle)
+    {
+        LOG_ASSERT(CanMove(angle), "invalid move");
 
         m_Scene->GetFieldManager()->GetCoroutine()->Start(
                 new CoroTaskCall([&](auto&& yield){ move(yield, angle);}));
-
-        return true;
     }
 
     void Catfish::move(CoroTaskYield &yield, EAngle angle)
@@ -58,6 +63,7 @@ namespace inGame::character
         constexpr double duration = 0.6;
         auto animation = m_Scene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetModel())
             ->AnimPosition(Angle(angle).ToXY().CastTo<double>() * FieldManager::PixelPerMat, duration)->SetRelative(true)
+            ->SetEase(EAnimEase::OutBack)
             ->ToWeakPtr();
 
         coroUtil::WaitForExpire(yield, animation);
@@ -71,6 +77,11 @@ namespace inGame::character
     UppingFlag& Catfish::GetEatableFlag()
     {
         return m_EatableFlag;
+    }
+
+    ParabolaAnimation& Catfish::JumpWhenEat()
+    {
+        return ParabolaAnimation::Create(m_Scene->GetEffectManager(), &m_View.GetView());
     }
 
 } // inGame

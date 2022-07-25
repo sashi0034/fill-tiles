@@ -10,6 +10,7 @@
 #include "../MainScene.h"
 #include "../CharacterViewModel.h"
 #include "../UppingFlag.h"
+#include "../ParabolaAnimation.h"
 
 namespace inGame::character
 {
@@ -18,7 +19,9 @@ namespace inGame::character
     {
     public:
         Catfish(IMainScene *mainScene, const MatPos &matPos);
-        bool TryMove(EAngle angle);
+        bool CanMove(EAngle angle);
+        void ForceMove(EAngle angle);
+        ParabolaAnimation& JumpWhenEat();
 
         void Update(IAppState *app) override;
         UppingFlag& GetEatableFlag();

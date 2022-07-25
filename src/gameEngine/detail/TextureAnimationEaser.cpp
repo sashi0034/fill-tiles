@@ -40,7 +40,7 @@ namespace gameEngine::detail
                 m_ProgressRatio = m_Time / m_EndTime;
                 break;
             case EAnimEase::InBack:
-                assert(false);
+                m_ProgressRatio = easing::EaseInBack(m_Time / m_EndTime);
                 break;
             case EAnimEase::OutBack:
                 m_ProgressRatio = easing::EaseOutBack(m_Time / m_EndTime);

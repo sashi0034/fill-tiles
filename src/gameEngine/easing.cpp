@@ -25,4 +25,12 @@ namespace gameEngine::easing
 
         return 1 + c3 * powByInt(percent - 1, 3) + c1 * powByInt(percent - 1, 2);
     }
+
+    double EaseInBack(double percent)
+    {
+        constexpr double c1 = 1.70158;
+        constexpr double c3 = c1 + 1;
+
+        return c3 * percent * percent * percent - c1 * percent * percent;
+    }
 } // gameEngine
