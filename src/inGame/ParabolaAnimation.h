@@ -14,12 +14,14 @@ namespace inGame
     class ParabolaAnimation : public ActorBase
     {
     public:
-        static ParabolaAnimation& Create(EffectManager *effectManager, SpriteTexture *target);
+        static ParabolaAnimation* Create(EffectManager *effectManager, SpriteTexture *target);
 
-        ParabolaAnimation & AwaitForReturnToStart(CoroTaskYield& yield);
+        ParabolaAnimation * AwaitForReturnToStart(CoroTaskYield& yield);
         void Forget();
 
         void Update(IAppState *appState) override;
+
+        ParabolaAnimation * SetSpeedByPeekHeightAndTime(double height, double second);
 
         void operator=(ParabolaAnimation&) = delete;
     private:
@@ -27,8 +29,8 @@ namespace inGame
         EffectManager* m_EffectManager;
         WeakPtr<SpriteTexture> m_Target{};
         Vec2<double> m_NormalizedDirection = {0, -1};
-        double m_SpeedAccel = -300;
-        double m_Speed = 200;
+        double m_SpeedAccel = -100;
+        double m_Speed = 100;
         double m_DeltaMove = 0;
 
         bool isReturnToStart() const;

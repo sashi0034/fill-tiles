@@ -30,12 +30,12 @@ namespace inGame
         ActorBase::Update(appState);
     }
 
-    ParabolaAnimation& ParabolaAnimation::AwaitForReturnToStart(CoroTaskYield &yield)
+    ParabolaAnimation* ParabolaAnimation::AwaitForReturnToStart(CoroTaskYield &yield)
     {
         coroUtil::WaitForTrue(yield, [&](){
             return this->isReturnToStart();
         });
-        return *this;
+        return this;
     }
 
     bool ParabolaAnimation::isReturnToStart() const
@@ -48,11 +48,20 @@ namespace inGame
         getBelongingPool()->Destroy(this);
     }
 
-    ParabolaAnimation & ParabolaAnimation::Create(EffectManager *effectManager, SpriteTexture *target)
+    ParabolaAnimation * ParabolaAnimation::Create(EffectManager *effectManager, SpriteTexture *target)
     {
         auto&& product = new ParabolaAnimation(effectManager, target);
         effectManager->GetChildren()->Birth(product);
-        return *product;
+        return product;
+    }
+
+    ParabolaAnimation* ParabolaAnimation::SetSpeedByPeekHeightAndTime(double height, double second)
+    {
+        // 物理の計算結果
+        m_Speed = 2 * height / second;
+        m_SpeedAccel = - 2 * height / (second * second);
+
+        return this;
     }
 
 

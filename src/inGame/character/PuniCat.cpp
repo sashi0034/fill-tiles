@@ -120,7 +120,7 @@ namespace inGame::character
         }
 
         // 魚が跳び跳ねて
-        targetFood->JumpWhenEat().AwaitForReturnToStart(yield).Forget();
+        targetFood->JumpWhenEat()->AwaitForReturnToStart(yield)->Forget();
 
         // 食べて消す
         targetFood->Destroy();

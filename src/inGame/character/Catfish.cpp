@@ -79,9 +79,9 @@ namespace inGame::character
         return m_EatableFlag;
     }
 
-    ParabolaAnimation& Catfish::JumpWhenEat()
+    ParabolaAnimation* Catfish::JumpWhenEat()
     {
-        return ParabolaAnimation::Create(m_Scene->GetEffectManager(), &m_View.GetView());
+        return ParabolaAnimation::Create(m_Scene->GetEffectManager(), &m_View.GetView())->SetSpeedByPeekHeightAndTime(40.0, 0.5);
     }
 
 } // inGame

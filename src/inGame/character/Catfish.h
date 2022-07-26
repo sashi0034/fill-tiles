@@ -21,7 +21,7 @@ namespace inGame::character
         Catfish(IMainScene *mainScene, const MatPos &matPos);
         bool CanMove(EAngle angle);
         void ForceMove(EAngle angle);
-        ParabolaAnimation& JumpWhenEat();
+        ParabolaAnimation * JumpWhenEat();
 
         void Update(IAppState *app) override;
         UppingFlag& GetEatableFlag();
