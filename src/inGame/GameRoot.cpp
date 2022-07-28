@@ -45,6 +45,11 @@ namespace inGame{
     {
         return m_AppState;
     }
+
+    LuaEngine *GameRoot::GetLua()
+    {
+        return &m_LuaEngine;
+    }
 }
 
 

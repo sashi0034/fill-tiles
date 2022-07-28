@@ -90,7 +90,7 @@ target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 target_link_libraries(${PROJECT_NAME} Boost::boost Boost::context)
 
 # Link Lua
-target_link_libraries(${PROJECT_NAME} m dl lua)
+target_link_libraries(${PROJECT_NAME} m dl lua ${CMAKE_DL_LIBS})
 
 # Copy assets
 #file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
