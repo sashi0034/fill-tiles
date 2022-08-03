@@ -85,7 +85,7 @@ namespace inGame{
         for (auto & mineClass : m_MineFlowerClass)
         {
             bool isExist = checkBloomMineFlower(pos, mineClass);
-            if (!isExist) return;
+            if (isExist) return;
         }
     }
 
