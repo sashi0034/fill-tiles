@@ -15,11 +15,13 @@ namespace inGame
     public:
         LuaEngine();
         sol::state& GetState();
+        void ReloadAllFiles();
     private:
+        const std::string  directoryPath = "assets/lua";
         sol::state m_Lua{};
-        void init();
+        bool tryInit();
     };
 
-} // inGame
+} // gameEngine
 
 #endif //FILL_TILES_LUAENGINE_H

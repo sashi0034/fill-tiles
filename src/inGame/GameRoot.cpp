@@ -6,7 +6,7 @@
 
 #include <memory>
 #include "MainScene.h"
-#include "FieldViewDebugScene.h"
+#include "test/FieldViewDebugScene.h"
 #include "../debug.h"
 
 namespace inGame{

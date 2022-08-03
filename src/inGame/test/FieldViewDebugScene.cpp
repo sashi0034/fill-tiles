@@ -5,12 +5,12 @@
 #include "FieldViewDebugScene.h"
 
 #include <memory>
-#include "field/TileMap.h"
+#include "../field/TileMap.h"
 
 namespace inGame{
 
-    FieldViewDebugScene::FieldViewDebugScene(IChildrenPool<ActorBase> *parent, GameRoot *root, Vec2<double> startScrollPos)
-            : ActorBase(parent), m_Root(root), m_FileDetector(field::TileMap::TileMapDirectory)
+    test::FieldViewDebugScene::FieldViewDebugScene(IChildrenPool<ActorBase> *parent, GameRoot *root, Vec2<double> startScrollPos)
+            : ActorBase(parent), m_Root(root), m_DirChangeDetector(field::TileMap::TileMapDirectory)
     {
         m_ScrollManager = std::make_unique<ScrollManager>(this);
         m_ScrollManager->SetScroll(startScrollPos);
@@ -20,13 +20,13 @@ namespace inGame{
         m_ChildrenPool.ProcessEach([&](auto& child){ child.Init();});
 
         m_ProcessUntilFileChanged = std::make_unique<ProcessTimer>([&](){
-            bool changed = m_FileDetector.CheckChanged();
+            bool changed = m_DirChangeDetector.CheckChanged();
             if (changed) return EProcessStatus::Dead;
             return EProcessStatus::Running;
         }, 0.5);
     }
 
-    void FieldViewDebugScene::Update(IAppState *appState)
+    void test::FieldViewDebugScene::Update(IAppState *appState)
     {
         m_ChildrenPool.ProcessEach([&](auto& child){ child.Update(appState);});
 
@@ -38,11 +38,11 @@ namespace inGame{
             auto pool = getBelongingPool();
             auto scroll = m_ScrollManager->GetScroll();
             pool->Destroy(this);
-            pool->Birth(new FieldViewDebugScene(pool, m_Root, scroll));
+            pool->Birth(new inGame::test::FieldViewDebugScene(pool, m_Root, scroll));
         }
     }
 
-    void FieldViewDebugScene::scrollByMouse(const IAppState *appState)
+    void test::FieldViewDebugScene::scrollByMouse(const IAppState *appState)
     {
         auto mouse = appState->GetMouseState();
         if (mouse->GetPushed(EMouseButton::Left))
@@ -79,37 +79,37 @@ namespace inGame{
         }
     }
 
-    IFieldManager *FieldViewDebugScene::GetFieldManager()
+    IFieldManager *test::FieldViewDebugScene::GetFieldManager()
     {
         return m_FieldManager;
     }
 
-    GameRoot *FieldViewDebugScene::GetRoot()
+    GameRoot *test::FieldViewDebugScene::GetRoot()
     {
         return m_Root;
     }
 
-    ScrollManager *FieldViewDebugScene::GetScrollManager()
+    ScrollManager *test::FieldViewDebugScene::GetScrollManager()
     {
         return m_ScrollManager.get();
     }
 
-    FieldViewDebugScene::~FieldViewDebugScene()
+    test::FieldViewDebugScene::~FieldViewDebugScene()
     {
         m_ChildrenPool.Release();
     }
 
-    Player *FieldViewDebugScene::GetPlayer()
+    Player *test::FieldViewDebugScene::GetPlayer()
     {
         return nullptr;
     }
 
-    FieldEventManager *FieldViewDebugScene::GetFieldEventManager()
+    FieldEventManager *test::FieldViewDebugScene::GetFieldEventManager()
     {
         return nullptr;
     }
 
-    EffectManager *FieldViewDebugScene::GetEffectManager()
+    EffectManager *test::FieldViewDebugScene::GetEffectManager()
     {
         return nullptr;
     }

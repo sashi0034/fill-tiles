@@ -15,23 +15,43 @@ namespace inGame
         m_Lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::coroutine, sol::lib::string, sol::lib::os, sol::lib::math,
                              sol::lib::table, sol::lib::debug, sol::lib::bit32, sol::lib::io, sol::lib::ffi, sol::lib::utf8);
 
-        init();
+        bool result = tryInit();
+        assert(result);
     }
 
-    void LuaEngine::init()
+    bool LuaEngine::tryInit()
     {
-        sol::protected_function_result result = m_Lua.safe_script_file(R"(assets/script/Test.lua)", &sol::script_pass_on_error);
-        if (!result.valid())
+        bool isSuccess = true;
+        namespace  fs = std::filesystem;
+
+        for (const auto& file : fs::directory_iterator(directoryPath))
         {
-            sol::error error = result;
-            LOG_ERR << error.what() << std::endl;
+            if (!file.is_regular_file()) continue;
+
+            const auto& filePath = file.path().string();
+            sol::protected_function_result result = m_Lua.safe_script_file(filePath, &sol::script_pass_on_error);
+
+            if (!result.valid())
+            {
+                sol::error error = result;
+                LOG_ERR << filePath  << ": " << error.what() << std::endl;
+                isSuccess = false;
+            }
         }
-        std::string str = m_Lua["Test"]();
-        std::cout << str << "\n";
+
+        m_Lua["println"] = [](const std::string& str){std::cout << str << "\n"; };
+
+        return isSuccess;
     }
 
     sol::state &LuaEngine::GetState()
     {
         return m_Lua;
     }
+
+    void LuaEngine::ReloadAllFiles()
+    {
+        tryInit();
+    }
+
 } // inGame

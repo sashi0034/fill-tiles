@@ -2,6 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cmake-build-debug/lua-ext-prefix/src/lua-ext" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cmake-build-debug/sol2-ext-prefix/src/sol2-ext" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/cotire" vcs="Git" />
   </component>
 </project>

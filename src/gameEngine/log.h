@@ -6,6 +6,7 @@
 #define FILL_TILES_LOG_H
 
 #include <iostream>
+#include "cassert"
 
 #define DEBUG_BUILD
 

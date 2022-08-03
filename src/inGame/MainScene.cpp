@@ -9,6 +9,8 @@
 #include "AnimTest.h"
 #include "GameRoot.h"
 #include "RemainingMineUi.h"
+#include "./test/EffectTest.h"
+#include "../debug.h"
 
 
 namespace inGame{
@@ -25,6 +27,10 @@ namespace inGame{
                                                                                   m_ScrollManager->GetSprite()->GetWeakPtr(),
                                                                                   m_Root));
         m_ChildrenPool.Birth(new RemainingMineUi(this, m_FieldManager->GetMineFlowerManager()));
+
+#ifdef INGAME_DEBUG_EFFECTTEST
+        m_ChildrenPool.Birth(new test::EffectTest(this, &m_ChildrenPool));
+#endif
 
         init();
     }
