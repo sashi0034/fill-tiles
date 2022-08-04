@@ -2,27 +2,27 @@
 // Created by sashi0034 on 2022/08/03.
 //
 
-#include "BombExplosion.h"
+#include "BurningFire.h"
 namespace inGame::effect
 {
 
-    void BombExplosion::Produce(EffectManager *effectManager, const Vec2<double> &pos)
+    void BurningFire::Produce(EffectManager *effectManager, const Vec2<double> &pos)
     {
-        effectManager->GetChildren()->Birth(new BombExplosion(effectManager, pos));
+        effectManager->GetChildren()->Birth(new BurningFire(effectManager, pos));
     }
 
 
-    CoroTask BombExplosion::produceEffectsAsync()
+    CoroTask BurningFire::produceEffectsAsync()
     {}
 
 
-    void BombExplosion::Update(IAppState *appState)
+    void BurningFire::Update(IAppState *appState)
     {
         m_Lifetime += appState->GetTime().GetDeltaSec();
 
         auto const lua = m_Manager->GetRoot()->GetLua();
 
-        lua->GetState()["BombExplosion"]["Update"](
+        lua->GetState()["BurningFire"]["Update"](
                 m_Lifetime,
                 [&](double alpha){m_Texture.SetBlend(GraphBlend(alpha));},
                 [&](int frame){m_Texture.SetSrcRect(Rect{frame*cellSize, 0, cellSize, cellSize});},
@@ -31,11 +31,11 @@ namespace inGame::effect
                 );
     }
 
-    BombExplosion::BombExplosion(EffectManager *effectManager, const Vec2<double> &pos)
+    BurningFire::BurningFire(EffectManager *effectManager, const Vec2<double> &pos)
             : ActorBase(effectManager->GetChildren()), m_Manager(effectManager)
     {
         effectManager->ApplyParentalPos(m_Texture);
-        m_Texture.SetGraph(effectManager->GetRoot()->RscImage->explode_192x192.get());
+        m_Texture.SetGraph(effectManager->GetRoot()->RscImage->burning_192x192.get());
         m_Texture.SetSrcRect(Rect<int>{0, 0, cellSize, cellSize});
         m_Texture.SetBlend(GraphBlend(0));
         util::SetTextureByCenter(m_Texture, pos);

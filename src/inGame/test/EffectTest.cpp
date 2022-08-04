@@ -4,7 +4,7 @@
 
 #include "EffectTest.h"
 #include "../MainScene.h"
-#include "../effect/BombExplosion.h"
+#include "../effect/BurningFire.h"
 #include "../Player.h"
 
 namespace inGame::test
@@ -17,21 +17,30 @@ namespace inGame::test
 
     void EffectTest::Update(IAppState *appState)
     {
-        const auto lua = m_SceneRef->GetRoot()->GetLua();
+        m_Timer.Update(appState->GetTime().GetDeltaSec());
+    }
 
-        if (m_FileChangeDetector.CheckChanged())
-        {
-            lua->ReloadAllFiles();
+    ProcessTimer EffectTest::initProcessTimer()
+    {
+        return  ProcessTimer([&](){
+            const auto lua = m_SceneRef->GetRoot()->GetLua();
 
-            const std::string testStr = lua->GetState()["Test"]();
-            std::cout << testStr << std::endl;
+            if (m_FileChangeDetector.CheckChanged())
+                processHotReload(lua);
 
-            effect::BombExplosion::Produce(
-                    m_SceneRef->GetEffectManager(),
-                    m_SceneRef->GetPlayer()->GetPos() + FieldManager::MatPixelSize.CastTo<double>()/2.0);
+            return EProcessStatus::Running;
+        }, 0.5);
+    }
 
-        }
+    void EffectTest::processHotReload(LuaEngine *const lua)
+    {
+        lua->ReloadAllFiles();
 
-        (void)appState;
+        const std::string testStr = lua->GetState()["Test"]();
+        std::cout << testStr << std::endl;
+
+        effect::BurningFire::Produce(
+                m_SceneRef->GetEffectManager(),
+                m_SceneRef->GetPlayer()->GetPos() + FieldManager::MatPixelSize.CastTo<double>() / 2.0);
     }
 } // inGame

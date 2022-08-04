@@ -39,7 +39,8 @@ namespace inGame
             }
         }
 
-        m_Lua["println"] = [](const std::string& str){std::cout << str << "\n"; };
+        m_Lua["NotImplementation"] = [](){ LOG_ASSERT(false, "Not Implementation."); };
+        m_Lua["Println"] = [](const std::string& str){std::cout << str << "\n"; };
 
         return isSuccess;
     }

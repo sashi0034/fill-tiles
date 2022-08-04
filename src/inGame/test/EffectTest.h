@@ -6,6 +6,7 @@
 #define FILL_TILES_EFFECTTEST_H
 
 #include "../ActorBase.h"
+#include "../LuaEngine.h"
 
 
 namespace inGame
@@ -26,6 +27,10 @@ namespace inGame::test
     private:
         IMainScene* m_SceneRef;
         DirChangeDetector m_FileChangeDetector;
+        ProcessTimer m_Timer = initProcessTimer();
+        ProcessTimer initProcessTimer();
+
+        void processHotReload(inGame::LuaEngine *const lua);
     };
 
 } // gameEngine
