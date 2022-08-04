@@ -6,7 +6,7 @@
 
 #include <memory>
 #include "MainScene.h"
-#include "FieldViewDebugScene.h"
+#include "test/FieldViewDebugScene.h"
 #include "../debug.h"
 
 namespace inGame{
@@ -44,6 +44,11 @@ namespace inGame{
     IAppState *GameRoot::GetAppState()
     {
         return m_AppState;
+    }
+
+    LuaEngine *GameRoot::GetLua()
+    {
+        return &m_LuaEngine;
     }
 }
 

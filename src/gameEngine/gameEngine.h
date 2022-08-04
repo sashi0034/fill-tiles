@@ -27,6 +27,7 @@
 #include "Range.h"
 #include "SprRectCollider.h"
 #include "SprRectColliderManager.h"
+#include "DirChangeDetector.h"
 #include "FileChangeDetector.h"
 #include "ProcessTimer.h"
 #include "WeakCollection.h"

@@ -1,18 +1,22 @@
 //
-// Created by sashi0034 on 2022/06/20.
+// Created by sashi0034 on 2022/08/03.
 //
 
 #include "FileChangeDetector.h"
 
 #include <utility>
+#include <cassert>
 
 namespace fs = std::filesystem;
 
-namespace inGame
+namespace gameEngine
 {
-    FileChangeDetector::FileChangeDetector(std::string dirPath)
-            : m_DirPath(std::move(dirPath))
+    FileChangeDetector::FileChangeDetector(std::string path)
+    : m_FilePath(std::move(path))
     {
+        const auto fileType = fs::status(m_FilePath).type();
+        assert(fileType==fs::file_type::regular);
+
         update();
     }
 
@@ -23,29 +27,14 @@ namespace inGame
 
     bool FileChangeDetector::update()
     {
-        bool result = false;
+        const auto lastWroteTime = fs::last_write_time(m_FilePath);
 
-        const int numOldFiles = m_FileInfo.size();
-        int numCurrFiles = 0;
-
-        for (const fs::directory_entry& file : fs::recursive_directory_iterator(m_DirPath)) {
-            ++numCurrFiles;
-
-            const auto filePath = file.path();
-            const auto lastWriteTime = fs::last_write_time(filePath);
-
-            if (m_FileInfo.count(filePath)==0) {
-                m_FileInfo[filePath] = lastWriteTime;
-            }
-            else if (m_FileInfo[filePath] != lastWriteTime)
-            {
-                m_FileInfo[filePath] = lastWriteTime;
-                result = true;
-            }
+        if (m_LastWroteTime != lastWroteTime)
+        {
+            m_LastWroteTime = lastWroteTime;
+            return true;
         }
 
-        if (numCurrFiles!=numOldFiles) result = true;
-
-        return result;
+        return false;
     }
-}
+} // gameEngine

@@ -1,0 +1,58 @@
+//
+// Created by sashi0034 on 2022/07/28.
+//
+
+#include "string"
+#include "../gameEngine/gameEngine.h"
+#include "LuaEngine.h"
+
+
+namespace inGame
+{
+
+    LuaEngine::LuaEngine()
+    {
+        m_Lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::coroutine, sol::lib::string, sol::lib::os, sol::lib::math,
+                             sol::lib::table, sol::lib::debug, sol::lib::bit32, sol::lib::io, sol::lib::ffi, sol::lib::utf8);
+
+        bool result = tryInit();
+        assert(result);
+    }
+
+    bool LuaEngine::tryInit()
+    {
+        bool isSuccess = true;
+        namespace  fs = std::filesystem;
+
+        for (const auto& file : fs::directory_iterator(directoryPath))
+        {
+            if (!file.is_regular_file()) continue;
+
+            const auto& filePath = file.path().string();
+            sol::protected_function_result result = m_Lua.safe_script_file(filePath, &sol::script_pass_on_error);
+
+            if (!result.valid())
+            {
+                sol::error error = result;
+                LOG_ERR << filePath  << ": " << error.what() << std::endl;
+                isSuccess = false;
+            }
+        }
+
+        m_Lua["NotImplementation"] = [](){ LOG_ASSERT(false, "Not Implementation."); };
+        m_Lua["Println"] = [](const std::string& str){std::cout << str << "\n"; };
+
+        return isSuccess;
+    }
+
+    sol::state &LuaEngine::GetState()
+    {
+        return m_Lua;
+    }
+
+    void LuaEngine::ReloadAllFiles()
+    {
+        tryInit();
+    }
+
+} // inGame

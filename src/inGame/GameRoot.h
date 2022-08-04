@@ -8,9 +8,19 @@
 #include "ActorBase.h"
 #include "resource/Image.h"
 #include "resource/Font.h"
+#include "LuaEngine.h"
 
 namespace inGame
 {
+    namespace resource
+    {
+        class Image;
+        class Font;
+    }
+
+    class LuaEngine;
+
+
     class GameRoot : public Singleton<GameRoot>
     {
     public:
@@ -20,11 +30,13 @@ namespace inGame
         const unique_ptr<resource::Font> RscFont;
         IAppState* GetAppState();
         TextureAnimator& GetTextureAnimator();
+        LuaEngine* GetLua();
     private:
         SpriteTexture m_Spr = SpriteTexture::Create();
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         IAppState* m_AppState;
+        LuaEngine m_LuaEngine{};
         void createSelfSpr();
     };
 }
