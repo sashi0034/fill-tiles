@@ -36,6 +36,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(catfish_24x24);
         REGISTER_RESOURCE_PNG(blinkstar_16x16);
         REGISTER_RESOURCE_PNG(burning_192x192);
+        REGISTER_RESOURCE_PNG(geo_explode_16x16);
 
         explicit Image(IAppState* appState);
     private:

@@ -6,6 +6,7 @@
 #include "../MainScene.h"
 #include "../effect/BurningFire.h"
 #include "../Player.h"
+#include "../effect/GeoExplosion.h"
 
 namespace inGame::test
 {
@@ -39,7 +40,7 @@ namespace inGame::test
         const std::string testStr = lua->GetState()["Test"]();
         std::cout << testStr << std::endl;
 
-        effect::BurningFire::Produce(
+        effect::GeoExplosion::Produce(
                 m_SceneRef->GetEffectManager(),
                 m_SceneRef->GetPlayer()->GetPos() + FieldManager::MatPixelSize.CastTo<double>() / 2.0);
     }
