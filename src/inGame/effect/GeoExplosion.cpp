@@ -26,7 +26,7 @@ namespace inGame::effect
             : ActorBase(effectManager->GetChildren()), m_Manager(effectManager)
     {
         effectManager->ApplyParentalPos(m_Texture);
-        m_Texture.SetGraph(effectManager->GetRoot()->RscImage->geo_explode_16x16.get());
+        m_Texture.SetGraph(effectManager->GetRoot()->RscImage->geo_explode_24x24.get());
         m_Texture.SetSrcRect(Rect<int>{0, 0, cellSize, cellSize});
         m_Texture.SetBlend(GraphBlend(0));
         util::SetTextureByCenter(m_Texture, pos);

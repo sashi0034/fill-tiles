@@ -2,7 +2,7 @@ GeoExplosion = {}
 
 
 local function divideFloorly(value, maxValue, numDivision)
-        while value>maxValue do
+    while value>maxValue do
         value = value - maxValue
     end
     while value<0 do
@@ -46,7 +46,6 @@ function GeoExplosion.ProduceEffects(
             produce(dx, dy)
         end
 
-        Println(count.."#")
         wait(0.05)
     end
 end

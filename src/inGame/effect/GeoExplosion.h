@@ -21,7 +21,7 @@ namespace inGame::effect
         GeoExplosion(EffectManager *effectManager, const Vec2<double> &pos);
         EffectManager* m_Manager;
         double m_Lifetime{};
-        static const inline int cellSize = 16;
+        static const inline int cellSize = 24;
 
         static CoroTask produceEffectAsync(CoroTaskYield& yield, EffectManager *manager, const Vec2<double> pos);
 
