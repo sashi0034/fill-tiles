@@ -34,6 +34,8 @@ namespace inGame::test
 
         EffectManager *GetEffectManager() override;
 
+        MainScene *ToSuper() override;
+
     private:
         GameRoot *m_Root;
         ChildrenPool<ActorBase> m_ChildrenPool{};

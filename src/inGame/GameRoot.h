@@ -31,6 +31,7 @@ namespace inGame
         IAppState* GetAppState();
         TextureAnimator& GetTextureAnimator();
         LuaEngine* GetLua();
+        IChildrenPool<ActorBase>* GetChildren();
     private:
         SpriteTexture m_Spr = SpriteTexture::Create();
         ChildrenPool<ActorBase> m_ChildrenPool{};

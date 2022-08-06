@@ -28,8 +28,10 @@ namespace inGame
 
         void initMineFlowerCount(MineFlowerClass& mineClass);
         bool checkBloomMineFlower(const MatPos& matPos, MineFlowerClass& mineClass);
+        void bloomNewMineFlower(const MatPos &matPos, MineFlowerClass &mineClass, IFieldManager *const field) const;
 
         static CoroTask driveClearingCheckpointBlocksEvent(CoroTaskYield &yield, MineFlowerManager *self, MineFlowerClass& mineClass);
+        CoroTask fadeMineFlowersOneByOne(CoroTaskYield& yield, MineFlowerClass& mineClass);
 
     };
 }

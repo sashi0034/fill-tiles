@@ -18,6 +18,7 @@ namespace inGame
 {
     class GameRoot;
     class Player;
+    class MainScene;
 
     class IMainScene
     {
@@ -28,16 +29,16 @@ namespace inGame
         virtual Player* GetPlayer() = 0;
         virtual FieldEventManager* GetFieldEventManager() = 0;
         virtual EffectManager* GetEffectManager() = 0;
+        virtual MainScene* ToSuper() = 0;
     };
 
     class MainScene: public ActorBase, public IMainScene
     {
     public:
-        explicit MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root);
+        explicit MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root, int initialLevel);
         ~MainScene();
 
         Player *GetPlayer() override;
-
         TextureAnimator& GetTextureAnimator();
         void Update(IAppState* appState) override;
         GameRoot *GetRoot() override;
@@ -45,8 +46,13 @@ namespace inGame
         ScrollManager *GetScrollManager() override;
         FieldEventManager *GetFieldEventManager() override;
         EffectManager* GetEffectManager() override;
+        void RequestResetScene(int level);
+        MainScene *ToSuper() override;
+
+        const int InitialLevel;
     private:
-        void init();
+        void initAfterBirth();
+        void resetScene();
 
         GameRoot* m_Root;
         ChildrenPool<ActorBase> m_ChildrenPool{};
@@ -56,6 +62,9 @@ namespace inGame
         FieldEventManager m_FieldEventManager{};
         unique_ptr<ScrollManager> m_ScrollManager{};
         EffectManager* m_EffectManager;
+
+        bool m_CanReset = false;
+        int m_ResetLevel = 0;
     };
 }
 

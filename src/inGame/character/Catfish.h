@@ -9,7 +9,7 @@
 #include "../MatPos.h"
 #include "../MainScene.h"
 #include "../CharacterViewModel.h"
-#include "../UppingFlag.h"
+#include "../UpFlag.h"
 #include "../ParabolaAnimation.h"
 
 namespace inGame::character
@@ -24,11 +24,11 @@ namespace inGame::character
         ParabolaAnimation * JumpWhenEat();
 
         void Update(IAppState *app) override;
-        UppingFlag& GetEatableFlag();
+        UpFlag& GetEatableFlag();
     private:
         IMainScene* m_Scene;
         CharacterViewModel m_View{};
-        UppingFlag m_EatableFlag{};
+        UpFlag m_EatableFlag{};
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         static const inline Vec2<int>cellSrcSize = Vec2<int>{24, 24};
         void move(CoroTaskYield& yield, EAngle angle);

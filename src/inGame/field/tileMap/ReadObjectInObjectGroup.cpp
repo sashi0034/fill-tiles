@@ -22,12 +22,6 @@ void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainSce
         int level = boost::lexical_cast<int>(objectProperty["level"]);
 
         field->GetMineFlowerManager()->GetMineFlowerClassByLevel(level)->SetRespawnMatPos(matPos);
-
-        if (level == 1)
-        {
-            auto player = mainScene->GetPlayer();
-            if (player!= nullptr) player->SetPos(pos.CastTo<double>());
-        }
     }
     else if (objectType=="fairy")
     {

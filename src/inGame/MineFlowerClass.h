@@ -13,6 +13,10 @@ namespace inGame
 {
     class IMainScene;
 
+    namespace character{
+        class MineFlower;
+    }
+
     class MineFlowerClass
     {
     public:
@@ -31,12 +35,16 @@ namespace inGame
 
         void SetRespawnMatPos(const MatPos& pos);
         [[nodiscard]] MatPos GetRespawnMatPos() const;
+
+        void PushBloomedMineFlower(character::MineFlower* element);
+        std::vector<character::MineFlower*>& GetBloomedMineFlowerList();
     private:
         int m_MaxMineFlowerCount = 0;
         int m_MineFlowerCount = 0;
         int m_ClassLevel{};
 
         unique_ptr<MatPos> m_RespawnMatPos{};
+        std::vector<character::MineFlower*> m_BloomedMineFlowerList;
     };
 
 } // inGame

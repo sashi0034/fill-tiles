@@ -58,4 +58,14 @@ namespace inGame
         return MatPos(m_RespawnMatPos->GetVec());
     }
 
+    void MineFlowerClass::PushBloomedMineFlower(character::MineFlower *element)
+    {
+        m_BloomedMineFlowerList.push_back(element);
+    }
+
+    std::vector<character::MineFlower*> &MineFlowerClass::GetBloomedMineFlowerList()
+    {
+        return m_BloomedMineFlowerList;
+    }
+
 } // inGame

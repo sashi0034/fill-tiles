@@ -9,6 +9,7 @@
 #include "ZIndex.h"
 #include "RemainingMineUi.h"
 #include "MineFlowerManager.h"
+#include "Player.h"
 
 namespace inGame
 {
@@ -33,6 +34,8 @@ namespace inGame
         m_Texture.SetSrcRect(Rect<int>{Vec2{0, 0}, m_BufferGraphSize});
 
         m_MineFlowerManager->Init();
+
+        initFieldByLevel(1);
     }
 
 
@@ -220,6 +223,15 @@ namespace inGame
     {
         return (CheckMoveTo(currPos, goingAngle).CanMove &&
             !m_MineFlowerManager->IsMineFlowerMat(currPos + MatPos(Angle(goingAngle).ToXY())));
+    }
+
+
+    void FieldManager::initFieldByLevel(int level)
+    {
+        const auto pos = m_MineFlowerManager->GetMineFlowerClassByLevel(level)->GetRespawnMatPos().GetVec() * PixelPerMat;
+
+        auto player = m_ParentalScene->GetPlayer();
+        if (player!= nullptr) player->SetPos(pos.CastTo<double>());
     }
 
 

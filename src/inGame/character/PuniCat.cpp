@@ -47,7 +47,7 @@ namespace inGame::character
     void PuniCat::searchCatfishEveryAngle(IMainScene *mainScene, Catfish *nullableTargetCatfish)
     {
         if (nullableTargetCatfish)
-            if (!nullableTargetCatfish->GetEatableFlag().IsUpping()) return;
+            if (!nullableTargetCatfish->GetEatableFlag().IsUp()) return;
 
         const auto currPos = m_View.GetMatPos();
 
@@ -81,7 +81,7 @@ namespace inGame::character
     void PuniCat::startGoToEatCatfish(IMainScene *mainScene, Catfish *targetCatfish, const Vec2<int> &stepVec,
                                       const MatPos &checkingPos, EAngle angle)
     {
-        targetCatfish->GetEatableFlag().DownFlag();
+        targetCatfish->GetEatableFlag().GoDown();
         mainScene->GetFieldManager()->GetCoroutine()->Start(
                 new CoroTaskCall([&](auto&& yield){
                     moveToEatFish(yield, targetCatfish, checkingPos + MatPos(stepVec), angle);}));

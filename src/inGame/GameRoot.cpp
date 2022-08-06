@@ -19,7 +19,7 @@ namespace inGame{
 #ifdef INGAME_DEBUG_FIELDVIEW
         m_ChildrenPool.Birth(new FieldViewDebugScene(&m_ChildrenPool, this, Vec2{0.0, 0.0}));
 #else
-        m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this));
+        m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this, 1));
 #endif
     }
 
@@ -49,6 +49,11 @@ namespace inGame{
     LuaEngine *GameRoot::GetLua()
     {
         return &m_LuaEngine;
+    }
+
+    IChildrenPool<ActorBase>* GameRoot::GetChildren()
+    {
+        return &m_ChildrenPool;
     }
 }
 

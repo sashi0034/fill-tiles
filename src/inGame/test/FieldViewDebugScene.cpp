@@ -113,4 +113,10 @@ namespace inGame{
     {
         return nullptr;
     }
+
+    MainScene *test::FieldViewDebugScene::ToSuper()
+    {
+        assert(false);
+        return nullptr;
+    }
 }

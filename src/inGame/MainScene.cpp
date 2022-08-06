@@ -14,8 +14,10 @@
 
 
 namespace inGame{
-    MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root)
-            : ActorBase(parent), m_Root(root)
+    MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root, int initialLevel)
+            : ActorBase(parent),
+            InitialLevel(initialLevel),
+            m_Root(root)
     {
         m_ScrollManager = std::make_unique<ScrollManager>(this);
 
@@ -32,7 +34,7 @@ namespace inGame{
         m_ChildrenPool.Birth(new test::EffectTest(this, &m_ChildrenPool));
 #endif
 
-        init();
+        initAfterBirth();
     }
 
     MainScene::~MainScene()
@@ -50,6 +52,8 @@ namespace inGame{
         m_ChildrenPool.ProcessEach([&](auto& child){ child.Update(appState);});
 
         m_TextureAnimator.Update(appState->GetTime().GetDeltaSec());
+
+        if (m_CanReset) resetScene();
     }
 
     GameRoot *MainScene::GetRoot()
@@ -67,7 +71,7 @@ namespace inGame{
         return m_ScrollManager.get();
     }
 
-    void MainScene::init()
+    void MainScene::initAfterBirth()
     {
         m_ChildrenPool.ProcessEach([&](auto& child){ child.Init();});
     }
@@ -85,6 +89,25 @@ namespace inGame{
     EffectManager *MainScene::GetEffectManager()
     {
         return m_EffectManager;
+    }
+
+    MainScene *MainScene::ToSuper()
+    {
+        return this;
+    }
+
+    void MainScene::RequestResetScene(int level)
+    {
+        m_CanReset = true;
+        m_ResetLevel = level;
+    }
+
+    void MainScene::resetScene()
+    {
+        auto const gameRoot = m_Root;
+        int nextLevel = m_ResetLevel;
+        gameRoot->GetChildren()->Destroy(this);
+        gameRoot->GetChildren()->Birth(new MainScene(gameRoot->GetChildren(), gameRoot, nextLevel));
     }
 
 }

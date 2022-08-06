@@ -24,7 +24,7 @@ namespace inGame{
         m_MineFlowerClass.emplace_back(kind::mine_flower_3, kind::checkpoint_block_3, 3);
         m_MineFlowerClass.emplace_back(kind::mine_flower_4, kind::checkpoint_block_4, 4);
 
-        m_CurrMineFlowerClass = &m_MineFlowerClass[0];
+        m_CurrMineFlowerClass = GetMineFlowerClassByLevel(mainScene->ToSuper()->InitialLevel);
     }
 
 
@@ -54,11 +54,13 @@ namespace inGame{
 
     void MineFlowerManager::CheckStepOnMine(const MatPos &pos)
     {
-        for (auto & mineClass : m_MineFlowerClass)
-        {
-            bool isExist = checkBloomMineFlower(pos, mineClass);
-            if (isExist) return;
-        }
+//        for (auto & mineClass : m_MineFlowerClass)
+//        {
+//            bool isExist = checkBloomMineFlower(pos, mineClass);
+//            if (isExist) return;
+//        }
+
+        checkBloomMineFlower(pos, *m_CurrMineFlowerClass);
     }
 
     bool MineFlowerManager::checkBloomMineFlower(const MatPos &matPos, MineFlowerClass &mineClass)
@@ -70,10 +72,11 @@ namespace inGame{
         if (field->GetTileMap()->GetElementAt(matPos.GetVec())->IsBloomedMineFlower())
         {
             LOG_INFO << "stepped on mine." << std::endl;
+            m_MainScene->ToSuper()->RequestResetScene(mineClass.GetClassLevel());
             return false;
         }
 
-        field->GetCharacterPool()->Birth(new character::MineFlower(m_MainScene, matPos));
+        bloomNewMineFlower(matPos, mineClass, field);
 
         auto writable = field->GetTileMap()->GetElementWritableAt(matPos.GetVec());
 
@@ -89,6 +92,15 @@ namespace inGame{
             field->GetCoroutine()->Start(new CoroTaskCall([&](auto&& yield){driveClearingCheckpointBlocksEvent(yield, this, mineClass); }));
         }
         return true;
+    }
+
+    void
+    MineFlowerManager::bloomNewMineFlower(const MatPos &matPos, MineFlowerClass &mineClass,
+                                          IFieldManager *const field) const
+    {
+        auto const newFlower = new character::MineFlower(m_MainScene, matPos);
+        mineClass.PushBloomedMineFlower(newFlower);
+        field->GetCharacterPool()->Birth(newFlower);
     }
 
     void MineFlowerManager::initMineFlowerCount(MineFlowerClass &mineClass)
@@ -148,6 +160,9 @@ namespace inGame{
 
         // ちょっと待機
         coroUtil::WaitForTime(yield, app->GetTime(), 0.5);
+
+        // 花が消えていく演出
+        field->GetCoroutine()->Start(new CoroTaskCall([&](auto&& yield){self->fadeMineFlowersOneByOne(yield, mineClass); }));
     }
 
     MineFlowerClass *MineFlowerManager::GetCurrMineFlowerClass()
@@ -176,6 +191,34 @@ namespace inGame{
 
         return false;
     }
+
+    // 花が消えていく演出
+    CoroTask MineFlowerManager::fadeMineFlowersOneByOne(CoroTaskYield& yield, MineFlowerClass& mineClass)
+    {
+        auto const player = m_MainScene->GetPlayer();
+        auto const playerMatPos = player->GetMatPos();
+        auto&& flowerList = mineClass.GetBloomedMineFlowerList();
+
+        std::stable_sort(flowerList.begin(), flowerList.end(), [&](character::MineFlower* left, character::MineFlower* right)->bool{
+            return playerMatPos.CalcManhattan(left->Position) < playerMatPos.CalcManhattan(right->Position);
+        });
+
+        int listSize = int(flowerList.size());
+        for (int i=0; i<listSize; ++i)
+        {
+            auto targetFlower = flowerList[i];
+            targetFlower->Destroy();
+
+            if (i>=listSize-1) continue;
+
+            auto nextTarget = flowerList[i+1];
+            if (playerMatPos.CalcManhattan(targetFlower->Position) == playerMatPos.CalcManhattan(nextTarget->Position)) continue;
+
+            coroUtil::WaitForTime(yield, 0.1);
+        }
+    }
+
+
 
 }
 

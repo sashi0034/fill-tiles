@@ -8,8 +8,9 @@
 namespace inGame::character{
 
     MineFlower::MineFlower(IMainScene *mainScene, const MatPos &matPos)
-            : CharacterBase(mainScene->GetFieldManager())
-            , m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->mine_flower_16x16.get())
+            : CharacterBase(mainScene->GetFieldManager()),
+              Position(matPos),
+              m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->mine_flower_16x16.get())
     {
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});
 

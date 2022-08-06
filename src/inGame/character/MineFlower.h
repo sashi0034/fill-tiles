@@ -16,8 +16,9 @@ namespace inGame::character
     {
     public:
         MineFlower(IMainScene *mainScene, const MatPos &matPos);
-        CharacterViewModel m_View;
+        const MatPos Position;
     private:
+        CharacterViewModel m_View;
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
     };
 }

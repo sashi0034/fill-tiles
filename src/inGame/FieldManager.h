@@ -102,6 +102,8 @@ namespace inGame
 
         std::unordered_map<field::ETileKind, WeakCollection<character::CheckpointBlock>> m_CheckpointBlockList{};
 
+        void initFieldByLevel(int level);
+
         void renderTileMapUnsafely(const Vec2<int> &renderingChipStartingPoint, const Vec2<int> &renderingChipEndPoint,
                                    SDL_Renderer *const sdlRenderer, SDL_Texture *renderingTarget);
     };
