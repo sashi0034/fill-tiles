@@ -11,56 +11,28 @@
 
 namespace inGame{
 
-    MineFlowerClass::MineFlowerClass(field::ETileKind mineFlowerTile, field::ETileKind blockTile, int classLevel)
-            : MineFlowerTile(mineFlowerTile), BlockTile(blockTile), m_ClassLevel{classLevel}
-    {}
-
-    void MineFlowerClass::IncreaseMineFlower()
-    {
-        ++m_MineFlowerCount;
-    }
-
-    void MineFlowerClass::DecreaseMineFlower()
-    {
-        --m_MineFlowerCount;
-    }
-
-    bool MineFlowerClass::HasMineFlower()
-    {
-        return m_MineFlowerCount>0;
-    }
-
-    int MineFlowerClass::GetClassLevel() const
-    {
-        return m_ClassLevel;
-    }
-
-    int MineFlowerClass::GetMaxMineFlowerCount() const
-    {
-        return m_MaxMineFlowerCount;
-    }
-
-    void MineFlowerClass::FixMaxMineFlowerCount()
-    {
-        assert(m_MaxMineFlowerCount==0);
-        m_MaxMineFlowerCount = m_MineFlowerCount;
-    }
-
-    int MineFlowerClass::GetMineFlowerCount() const
-    {
-        return m_MineFlowerCount;
-    }
 
     MineFlowerManager::MineFlowerManager(IMainScene *mainScene)
         : m_MainScene(mainScene)
     {
         using kind = field::ETileKind;
+
+        // 同じレベルは連続させて配置する
+        // 配置は1-indexである
         m_MineFlowerClass.emplace_back(kind::mine_flower_1, kind::checkpoint_block_1, 1);
         m_MineFlowerClass.emplace_back(kind::mine_flower_2, kind::checkpoint_block_2, 2);
         m_MineFlowerClass.emplace_back(kind::mine_flower_3, kind::checkpoint_block_3, 3);
         m_MineFlowerClass.emplace_back(kind::mine_flower_4, kind::checkpoint_block_4, 4);
 
         m_CurrMineFlowerClass = &m_MineFlowerClass[0];
+    }
+
+
+    MineFlowerClass *MineFlowerManager::GetMineFlowerClassByLevel(int level)
+    {
+        auto&& result = m_MineFlowerClass[level-1];
+        assert(result.GetClassLevel() == level);
+        return &result;
     }
 
     void MineFlowerManager::Init()
@@ -114,8 +86,7 @@ namespace inGame{
         if (!mineClass.HasMineFlower())
         {
             // 全消し演出
-            field->GetCoroutine()->Start(new CoroTaskCall(std::bind(driveClearingCheckpointBlocksEvent,
-                                                                    std::placeholders::_1, this, mineClass)));
+            field->GetCoroutine()->Start(new CoroTaskCall([&](auto&& yield){driveClearingCheckpointBlocksEvent(yield, this, mineClass); }));
         }
         return true;
     }

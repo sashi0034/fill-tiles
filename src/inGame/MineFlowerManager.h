@@ -6,44 +6,19 @@
 #define FILL_TILES_MINEFLOWERMANAGER_H
 
 
-#include "ActorBase.h"
-#include "field/TileMapMatElement.h"
-#include "MatPos.h"
+#include "MineFlowerClass.h"
 
 namespace inGame
 {
-    class IMainScene;
-
-
-    class MineFlowerClass
-    {
-    public:
-        MineFlowerClass(field::ETileKind mineFlowerTile, field::ETileKind blockTile, int classLevel);
-
-        const field::ETileKind MineFlowerTile;
-        const field::ETileKind BlockTile;
-        void IncreaseMineFlower();
-        void DecreaseMineFlower();
-        bool HasMineFlower();
-        void FixMaxMineFlowerCount();
-
-        int GetClassLevel() const;
-        int GetMaxMineFlowerCount() const;
-        int GetMineFlowerCount() const;
-    private:
-        int m_MaxMineFlowerCount = 0;
-        int m_MineFlowerCount = 0;
-        int m_ClassLevel{};
-    };
-
-
     class MineFlowerManager
     {
     public:
-        MineFlowerManager(IMainScene *mainScene);
+        explicit MineFlowerManager(IMainScene *mainScene);
         void Init();
         MineFlowerClass* GetCurrMineFlowerClass();
         MineFlowerClass* GetNextMineFlowerClass();
+        MineFlowerClass* GetMineFlowerClassByLevel(int level);
+
         bool IsMineFlowerMat(const MatPos& matPos) const;
         void CheckStepOnMine(const MatPos &pos);
     private:

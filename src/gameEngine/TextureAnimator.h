@@ -8,11 +8,11 @@
 #include "SpriteTexture.h"
 #include "ChildrenPool.h"
 #include "boost/coroutine2/coroutine.hpp"
-#include "detail/TextureAnimationProcessor.h"
+#include "textureAnimator/TextureAnimationProcessor.h"
 
 namespace gameEngine
 {
-    namespace detail
+    namespace textureAnimator
     {
         class ITextureAnimationStarter;
     }
@@ -24,19 +24,19 @@ namespace gameEngine
     };
 
 
-    using TextureAnimationWeakPtr = WeakPtr<detail::ITextureAnimationPointer>;
+    using TextureAnimationWeakPtr = WeakPtr<textureAnimator::ITextureAnimationPointer>;
 
     class ITextureAnimator
     {
     public:
-        virtual detail::ITextureAnimationStarter * TargetTo(SpriteTexture &texture) = 0;
+        virtual textureAnimator::ITextureAnimationStarter * TargetTo(SpriteTexture &texture) = 0;
         virtual bool Destroy(TextureAnimationWeakPtr& target) = 0;
     };
 
     class TextureAnimator : public ITextureAnimator
     {
     public:
-        detail::ITextureAnimationStarter * TargetTo(SpriteTexture &texture) override;
+        textureAnimator::ITextureAnimationStarter * TargetTo(SpriteTexture &texture) override;
 
         bool Destroy(TextureAnimationWeakPtr &target) override;
         //unique_ptr<TextureAnimationCreator> VirtualTo();
@@ -45,7 +45,7 @@ namespace gameEngine
         void Release();
         ~TextureAnimator();
     private:
-        ChildrenPool<detail::TextureAnimationProcessor> m_Pool;
+        ChildrenPool<textureAnimator::TextureAnimationProcessor> m_Pool;
     };
 
 
