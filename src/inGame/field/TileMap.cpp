@@ -16,9 +16,7 @@
 #include "../Player.h"
 #include "../character/CheckpointBlock.h"
 #include "../FieldManager.h"
-#include "../character/Fairy.h"
-#include "../character/Catfish.h"
-#include "../character/PuniCat.h"
+#include "tileMap/ReadObjectInObjectGroup.h"
 
 
 namespace inGame::field
@@ -298,45 +296,8 @@ namespace inGame::field
                     objectProperty[propertyName] = propertyValue;
                 }
 
-            readObjectInObjectGroup(objectType, objectName, Vec2<int>{objectX, objectY}, objectProperty);
+            tileMap::ReadObjectInObjectGroup(m_MainScene, objectType, objectName, Vec2<int>{objectX, objectY}, objectProperty);
         }
-    }
-
-    // @tileSwitch
-    void
-    TileMap::readObjectInObjectGroup(const std::string &objectType, const std::string &objectName, const Vec2<int> &pos,
-                                     std::unordered_map<std::string, std::string> &objectProperty)
-    {
-        auto field = m_MainScene->GetFieldManager()->GetCharacterPool();
-        auto matPos = MatPos(pos / FieldManager::PixelPerMat);
-
-        if (objectType=="player")
-        {
-            auto player = m_MainScene->GetPlayer();
-            if (player!= nullptr) player->SetPos(pos.CastTo<double>());
-        }
-        else if (objectType=="fairy")
-        {
-            field->Birth(new character::Fairy(m_MainScene, matPos, objectProperty["talk"]));
-        }
-        else if (objectType=="catfish")
-        {
-            field->Birth(new character::Catfish(m_MainScene, matPos));
-        }
-        else if (objectType=="punicat")
-        {
-            field->Birth(new character::PuniCat(m_MainScene, matPos));
-        }
-        else if (objectType=="test")
-        {
-            std::cout << pos.ToString() << std::endl;
-        }
-        else
-        {
-            assert(!"Invalid Object Exits In objectgroup.");
-        }
-        (void)objectName;
-        (void)objectProperty;
     }
 
 

@@ -65,8 +65,6 @@ namespace inGame::field
         void readLayerData(
                 const boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> &treeData);
         void readObjectGroup(const boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> &treeObjectGroup);
-        void readObjectInObjectGroup(const std::string& objectType, const std::string& objectName,
-                                     const Vec2<int>& pos, std::unordered_map<std::string, std::string>& objectProperty);
 
         template<typename T>
         static std::vector<T> parseCsv(const std::string &source);
