@@ -49,7 +49,20 @@ namespace inGame{
             CheckStepOnMine(playerPos);
         });
 
+        removeAlreadyClearedBlocks();
+    }
 
+    // 既に通過したチェックポイントまでブロックを取り除く
+    void MineFlowerManager::removeAlreadyClearedBlocks()
+    {
+        for (int level=1; level < m_MainScene->ToSuper()->InitialLevel; ++level)
+        {
+            auto mineClass = GetMineFlowerClassByLevel(level);
+            auto& blockList = m_MainScene->GetFieldManager()->GetCheckpointBlockList(mineClass->BlockTile);
+            blockList.ForEach([&](character::CheckpointBlock* block){
+               block->Destroy();
+            });
+        }
     }
 
     void MineFlowerManager::CheckStepOnMine(const MatPos &pos)
@@ -163,6 +176,9 @@ namespace inGame{
 
         // 花が消えていく演出
         field->GetCoroutine()->Start(new CoroTaskCall([&](auto&& yield){self->fadeMineFlowersOneByOne(yield, mineClass); }));
+
+        // クリア済みレベルを上げる
+        self->m_CurrMineFlowerClass = self->GetNextMineFlowerClass();
     }
 
     MineFlowerClass *MineFlowerManager::GetCurrMineFlowerClass()

@@ -35,7 +35,7 @@ namespace inGame
 
         m_MineFlowerManager->Init();
 
-        initFieldByLevel(1);
+        initFieldByLevel(m_MineFlowerManager->GetCurrMineFlowerClass()->GetClassLevel());
     }
 
 

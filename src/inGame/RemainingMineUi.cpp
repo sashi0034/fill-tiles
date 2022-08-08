@@ -12,6 +12,9 @@ namespace inGame
         m_SceneRef(scene), m_MineFlowerManagerRef(mineFlowerManager)
     {
         m_SpriteRoot.SetPositionParent(m_SpriteRootParent);
+
+        m_SceneRef->GetEffectManager()->GetCoroutineManager()->Start(
+                new CoroTaskCall([&](auto&& yield){ updateViewAsync(yield, scene->GetRoot()->GetAppState());}));
     }
 
 
@@ -57,13 +60,24 @@ namespace inGame
 
     void RemainingMineUi::Update(IAppState *appState)
     {
-        constexpr double margin = 12;
-        m_SpriteRootParent.SetPosition(Vec2{appState->GetScreenSize().X  - margin, margin} + Vec2{-bgSize.X / 2.0, bgSize.Y / 2.0});
-
-        checkUpdateText();
+        (void)appState;
     }
 
-    void RemainingMineUi::checkUpdateText()
+
+    void RemainingMineUi::updateViewAsync(CoroTaskYield &yield, IAppState *appState)
+    {
+        while (true)
+        {
+            yield();
+
+            constexpr double margin = 12;
+            m_SpriteRootParent.SetPosition(Vec2{appState->GetScreenSize().X  - margin, margin} + Vec2{-bgSize.X / 2.0, bgSize.Y / 2.0});
+
+            checkUpdateText(yield);
+        }
+    }
+
+    void RemainingMineUi::checkUpdateText(CoroTaskYield &yield)
     {
         auto&& mineClass = m_MineFlowerManagerRef->GetCurrMineFlowerClass();
 
@@ -74,8 +88,8 @@ namespace inGame
         if (remainingCount != m_RemainingCountBefore)
         {
             m_RemainingCountBefore = remainingCount;
-            m_SceneRef->GetEffectManager()->GetCoroutineManager()->Start(
-                    new CoroTaskCall([&](auto&& yield){ animCountDown(yield, mineClass);}));
+
+            animCountDown(yield, mineClass);
         }
     }
 
@@ -90,11 +104,11 @@ namespace inGame
 
         if (remainingCount == 0)
         {
-            startAnimCountToZero(yield);
+            startAnimCountToZero(yield, m_MineFlowerManagerRef->GetNextMineFlowerClass());
         }
     }
 
-    CoroTask RemainingMineUi::startAnimCountToZero(CoroTaskYield &yield)
+    CoroTask RemainingMineUi::startAnimCountToZero(CoroTaskYield &yield, MineFlowerClass *const nextMineClass)
     {
         constexpr double enoughBigWidth = 200;
         constexpr double duration = 0.5;
@@ -109,8 +123,6 @@ namespace inGame
                                         ->ToWeakPtr());
 
         coroUtil::WaitForTrue(yield, [&]() { return !m_SceneRef->GetFieldEventManager()->IsRunning(); });
-
-        auto&& nextMineClass = m_MineFlowerManagerRef->GetNextMineFlowerClass();
 
         if (nextMineClass== nullptr) return;
         if (nextMineClass->GetMaxMineFlowerCount()==0) return;

@@ -45,7 +45,6 @@ namespace inGame::character
 
     void CheckpointBlock::Destroy()
     {
-        InvokeDestroyEffect();
         getParentField()->GetTileMap()->GetElementWritableAt(m_MatPos.GetVec())->SetWallByTopTile();
         CharacterBase::Destroy();
     }

@@ -27,6 +27,8 @@ namespace inGame
         MineFlowerClass* m_CurrMineFlowerClass{};
 
         void initMineFlowerCount(MineFlowerClass& mineClass);
+        void removeAlreadyClearedBlocks();
+
         bool checkBloomMineFlower(const MatPos& matPos, MineFlowerClass& mineClass);
         void bloomNewMineFlower(const MatPos &matPos, MineFlowerClass &mineClass, IFieldManager *const field) const;
 

@@ -38,13 +38,15 @@ namespace inGame
 
         void initBackground(IMainScene *scene);
 
-        void checkUpdateText();
+        void updateViewAsync(CoroTaskYield &yield, IAppState *appState);
+
+        void checkUpdateText(CoroTaskYield &yield);
 
         CoroTask animCountDown(CoroTaskYield &yield, MineFlowerClass *mineClass);
 
         void updateText(const int remainingCount, const int maxRemainingCount);
 
-        void startAnimCountToZero(CoroTaskYield &yield);
+        CoroTask startAnimCountToZero(CoroTaskYield &yield, MineFlowerClass *const nextMineClass);
     };
 
 } // inGame
