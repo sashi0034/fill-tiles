@@ -1,7 +1,7 @@
 
 # 参考: https://github.com/aminosbh/sdl2-image-sample
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 
 # Define the project name
@@ -14,24 +14,8 @@ cmake_minimum_required(VERSION 3.5.1)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
 
-# Enable ExternalProject
-include(ExternalProject)
-set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
-include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
-link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
-
-
-# Download and build lua
-ExternalProject_Add(
-        lua-ext
-        GIT_REPOSITORY https://github.com/LuaDist/lua.git
-        GIT_TAG master
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION} -DBUILD_SHARED_LIBS=OFF
-)
-
-ADD_LIBRARY(lua IMPORTED STATIC)
-SET_TARGET_PROPERTIES(lua PROPERTIES IMPORTED_LOCATION ${EXTERNAL_INSTALL_LOCATION}/lib/liblua.a)
-ADD_DEPENDENCIES(lua lua-ext)
+# Add Lua Files
+add_subdirectory(Lua)
 
 
 # Set Cmake modules
@@ -90,7 +74,7 @@ target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 target_link_libraries(${PROJECT_NAME} Boost::boost Boost::context)
 
 # Link Lua
-target_link_libraries(${PROJECT_NAME} m dl lua ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} lua_static)
 
 # Copy assets
 #file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
