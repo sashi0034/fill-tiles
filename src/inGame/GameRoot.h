@@ -37,7 +37,7 @@ namespace inGame
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         IAppState* m_AppState;
-        LuaEngine m_LuaEngine{};
+        LuaEngine m_LuaEngine{this};
         void createSelfSpr();
     };
 }

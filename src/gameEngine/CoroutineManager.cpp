@@ -16,6 +16,11 @@ namespace gameEngine{
     }
 
 
+    WeakPtr<CoroutineElement> CoroutineManager::Start(std::function<void(CoroTaskYield&)> task)
+    {
+        return Start(new CoroTaskCall(task));
+    }
+
     WeakPtr<CoroutineElement> CoroutineManager::Start(boost::coroutines2::coroutine<CoroTask>::pull_type *task)
     {
         return m_Pool.Birth(new CoroutineElement(task))->GetWeakPtr();

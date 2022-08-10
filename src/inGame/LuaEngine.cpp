@@ -5,12 +5,13 @@
 #include "string"
 #include "../gameEngine/gameEngine.h"
 #include "LuaEngine.h"
+#include "GameRoot.h"
 
 
 namespace inGame
 {
 
-    LuaEngine::LuaEngine()
+    LuaEngine::LuaEngine(GameRoot* gameRoot) : m_GameRoot(gameRoot)
     {
         m_Lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::coroutine, sol::lib::string, sol::lib::os, sol::lib::math,
                              sol::lib::table, sol::lib::debug, sol::lib::bit32, sol::lib::io, sol::lib::ffi, sol::lib::utf8);
@@ -24,7 +25,7 @@ namespace inGame
         bool isSuccess = true;
         namespace  fs = std::filesystem;
 
-        for (const auto& file : fs::directory_iterator(directoryPath))
+        for (const auto& file : fs::recursive_directory_iterator(directoryPath))
         {
             if (!file.is_regular_file()) continue;
 
@@ -53,6 +54,11 @@ namespace inGame
     void LuaEngine::ReloadAllFiles()
     {
         tryInit();
+    }
+
+    double LuaEngine::getDeltaTime()
+    {
+        return m_GameRoot->GetAppState()->GetTime().GetDeltaSec();
     }
 
 } // inGame

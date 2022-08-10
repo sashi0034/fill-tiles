@@ -15,6 +15,7 @@ namespace inGame
         explicit MatPos(const Vec2<int>& pos);
         MatPos(int x, int y);
         [[nodiscard]] Vec2<int> GetVec() const;
+        [[nodiscard]] Vec2<double> GetVecByFiledPixel() const;
         [[nodiscard]] Vec2<double> ToPixelPos() const;
 
         MatPos operator+(const MatPos& other) const;

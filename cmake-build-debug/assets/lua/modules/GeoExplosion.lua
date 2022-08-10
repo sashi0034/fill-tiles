@@ -33,8 +33,9 @@ function GeoExplosion.Update(
     
 end
 
+
 function GeoExplosion.ProduceEffects(
-    wait,
+    yield,
     produce
 )
     for count = 1, 10, 1 do
@@ -46,7 +47,7 @@ function GeoExplosion.ProduceEffects(
             produce(dx, dy)
         end
 
-        wait(0.05)
+        yield(0.05)
     end
 end
 

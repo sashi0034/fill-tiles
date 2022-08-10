@@ -40,10 +40,14 @@ namespace inGame::effect
 
     CoroTask GeoExplosion::produceEffectAsync(CoroTaskYield &yield, EffectManager *manager, const Vec2<double> pos)
     {
+        yield();
+
         auto const lua = manager->GetRoot()->GetLua();
-        lua->GetState()["GeoExplosion"]["ProduceEffects"](
-                [&](double time){coroUtil::WaitForTime(yield, time); },
-                [&](double x, double y){manager->GetChildren()->Birth(new GeoExplosion(manager, pos + Vec2{x, y}));}
+
+        lua->RunCoroutine(
+                yield,
+                (sol::function)lua->GetState()["GeoExplosion"]["ProduceEffects"],
+                [&](double x, double y)->void {manager->GetChildren()->Birth(new GeoExplosion(manager, pos + Vec2{x, y}));}
         );
 
     }

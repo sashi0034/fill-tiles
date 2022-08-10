@@ -6,20 +6,48 @@
 #define FILL_TILES_LUAENGINE_H
 
 #include "sol.hpp"
+#include "../gameEngine/gameEngine.h"
 
 namespace inGame
 {
+    class GameRoot;
 
     class LuaEngine
     {
     public:
-        LuaEngine();
+        explicit LuaEngine(GameRoot* gameRoot);
         sol::state& GetState();
         void ReloadAllFiles();
+
     private:
+        GameRoot* m_GameRoot;
         const std::string  directoryPath = "assets/lua";
+        static const inline std::string yieldGetterPath = "assets/lua/getYield.lua";
         sol::state m_Lua{};
         bool tryInit();
+        double getDeltaTime();
+
+    public:
+        template <class... Args> void RunCoroutine(CoroTaskYield& yield, sol::function function, Args... args)
+        {
+            sol::coroutine task = m_Lua["coroutine"]["create"](function);
+            sol::function yieldGetter = m_Lua.script_file(yieldGetterPath);
+            sol::function yieldFunc = yieldGetter([&](){return getDeltaTime(); });
+
+            while (true)
+            {
+                m_Lua["coroutine"]["resume"](
+                        task,
+                        yieldFunc,
+                        args...
+                );
+
+                std::string status = m_Lua["coroutine"]["status"](task);
+                if (status == "dead") break;
+
+                yield();
+            }
+        }
     };
 
 } // gameEngine

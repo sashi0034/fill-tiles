@@ -37,7 +37,9 @@ namespace inGame
         [[nodiscard]] MatPos GetRespawnMatPos() const;
 
         void PushBloomedMineFlower(character::MineFlower* element);
-        std::vector<character::MineFlower*>& GetBloomedMineFlowerList();
+        std::vector<character::MineFlower*>& GetBloomedList();
+
+        MineFlowerClass* SortBloomedListByPos(const MatPos& centerPos);
     private:
         int m_MaxMineFlowerCount = 0;
         int m_MineFlowerCount = 0;

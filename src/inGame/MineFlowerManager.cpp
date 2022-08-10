@@ -8,6 +8,7 @@
 #include "character/MineFlower.h"
 #include "character/CheckpointBlock.h"
 #include "PlayerMoveData.h"
+#include "SteppedOnMineEvent.h"
 
 namespace inGame{
 
@@ -84,8 +85,8 @@ namespace inGame{
 
         if (field->GetTileMap()->GetElementAt(matPos.GetVec())->IsBloomedMineFlower())
         {
-            LOG_INFO << "stepped on mine." << std::endl;
-            m_MainScene->ToSuper()->RequestResetScene(mineClass.GetClassLevel());
+            // 地雷を踏んでしまった
+            SteppedOnMineEvent().StartEvent(SteppedOnMineEventArgs{m_MainScene, GetCurrMineFlowerClass(), matPos});
             return false;
         }
 
@@ -213,11 +214,7 @@ namespace inGame{
     {
         auto const player = m_MainScene->GetPlayer();
         auto const playerMatPos = player->GetMatPos();
-        auto&& flowerList = mineClass.GetBloomedMineFlowerList();
-
-        std::stable_sort(flowerList.begin(), flowerList.end(), [&](character::MineFlower* left, character::MineFlower* right)->bool{
-            return playerMatPos.CalcManhattan(left->Position) < playerMatPos.CalcManhattan(right->Position);
-        });
+        auto&& flowerList = mineClass.SortBloomedListByPos(playerMatPos)->GetBloomedList();
 
         int listSize = int(flowerList.size());
         for (int i=0; i<listSize; ++i)

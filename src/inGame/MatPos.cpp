@@ -17,6 +17,11 @@ namespace inGame
         return m_Pos;
     }
 
+    Vec2<double> MatPos::GetVecByFiledPixel() const
+    {
+        return m_Pos.CastTo<double>() * FieldManager::PixelPerMat;
+    }
+
     MatPos MatPos::operator+(const MatPos &other) const
     {
         return MatPos(this->m_Pos + other.m_Pos);

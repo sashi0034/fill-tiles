@@ -3,6 +3,7 @@
 //
 
 #include "MineFlowerClass.h"
+#include "character/MineFlower.h"
 
 namespace inGame
 {
@@ -63,9 +64,17 @@ namespace inGame
         m_BloomedMineFlowerList.push_back(element);
     }
 
-    std::vector<character::MineFlower*> &MineFlowerClass::GetBloomedMineFlowerList()
+    std::vector<character::MineFlower*> &MineFlowerClass::GetBloomedList()
     {
         return m_BloomedMineFlowerList;
+    }
+
+    MineFlowerClass *MineFlowerClass::SortBloomedListByPos(const MatPos &centerPos)
+    {
+        std::stable_sort(m_BloomedMineFlowerList.begin(), m_BloomedMineFlowerList.end(), [&](character::MineFlower* left, character::MineFlower* right)->bool{
+            return centerPos.CalcManhattan(left->Position) < centerPos.CalcManhattan(right->Position);
+        });
+        return this;
     }
 
 } // inGame

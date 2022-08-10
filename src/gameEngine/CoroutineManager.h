@@ -9,6 +9,7 @@
 #include "ChildrenPool.h"
 #include "CoroTask.h"
 #include "boost/coroutine2/coroutine.hpp"
+#include <functional>
 
 namespace gameEngine
 {
@@ -25,6 +26,7 @@ namespace gameEngine
     class ICoroutineManager
     {
     public:
+        virtual WeakPtr<CoroutineElement> Start(std::function<void(CoroTaskYield&)> Task) = 0;
         virtual WeakPtr<CoroutineElement> Start(boost::coroutines2::coroutine<CoroTask>::pull_type *Task) = 0;
         virtual WeakPtr<CoroutineElement> Start(CoroutineElement *task) = 0;
         virtual bool Destroy(CoroutineElement *task) = 0;
@@ -33,6 +35,7 @@ namespace gameEngine
     class CoroutineManager : public ICoroutineManager
     {
     public:
+        WeakPtr<CoroutineElement> Start(std::function<void(CoroTaskYield&)> task) override;
         WeakPtr<CoroutineElement> Start(boost::coroutines2::coroutine<CoroTask>::pull_type *task) override;
         WeakPtr<CoroutineElement> Start(CoroutineElement *task) override;
         bool Destroy(CoroutineElement *task) override;
