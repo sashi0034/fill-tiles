@@ -12,8 +12,9 @@ namespace inGame
 {
     enum class EPlayerState
     {
-        Wait,
-        Walk,
+        Waiting,
+        Walking,
+        Dead,
     };
 
     class PlayerState
@@ -24,7 +25,7 @@ namespace inGame
         bool UpdateAction();
         void ChangeState(EPlayerState newState, CoroTaskCall* newAction);
     private:
-        EPlayerState m_State = EPlayerState::Wait;
+        EPlayerState m_State = EPlayerState::Waiting;
         unique_ptr<CoroTaskCall> m_Action{};
     };
 }

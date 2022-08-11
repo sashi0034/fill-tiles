@@ -6,6 +6,8 @@
 #include "MainScene.h"
 #include "character/MineFlower.h"
 #include "effect/GeoExplosion.h"
+#include "Player.h"
+
 
 namespace inGame
 {
@@ -28,6 +30,8 @@ namespace inGame
         LOG_INFO << "stepped on mine." << std::endl;
 
         args.GetFieldManager()->GetCoroutine()->Start([this, &args](auto&& yield){explodeFlowersAsync(yield, args); });
+
+        args.MainScene->GetPlayer()->ChangeStateToDead();
 
         coroUtil::WaitForTime(yield, 3.0);
 

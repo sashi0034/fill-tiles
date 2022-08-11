@@ -15,6 +15,7 @@
 #include "PlayerMoveData.h"
 #include "PlayerActionData.h"
 #include "character/Catfish.h"
+#include "PlayerAnimation.h"
 
 namespace inGame
 {
@@ -32,6 +33,8 @@ namespace inGame
         [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveBegin() const;
         [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveFinish() const;
         [[nodiscard]] rx::observable<PlayerActionData*> OnAction() const;
+        void ChangeStateToDead();
+
         static inline const Vec2<int> CellSize{32, 32};
     private:
         void setPos(Vec2<double> newPos);
@@ -44,10 +47,12 @@ namespace inGame
         static bool isDashing(const Uint8 *keyState);
 
         unique_ptr<CharacterViewModel> m_View{};
+        unique_ptr<PlayerAnimation> m_AnimationLogic{};
+
         Graph* m_Image;
 
         TextureAnimator m_PlayerAnimator{};
-        PlayerState m_State = PlayerState(EPlayerState::Walk);
+        PlayerState m_State = PlayerState(EPlayerState::Walking);
         EAngle m_Angle = EAngle::Down;
         IMainScene* m_ParentalScene;
         IFieldManager* m_Field;
@@ -59,13 +64,11 @@ namespace inGame
         bool m_ShouldResetScroll = true;
 
         static EAngle getInputAngle(const Uint8 *keyState);
-        void changeAnimation(const std::function<void()>& animation);
-        void animWait(EAngle angle);
-        void animWalk(EAngle angle, double frameSpeed);
-        void changeStateToWalk(IAppState *yield, EAngle newAngle, bool canChangeAnim);
+        void changeStateToWalking(IAppState *appState, EAngle newAngle, bool canChangeAnim);
 
-        static CoroTask wait(CoroTaskYield &yield, Player *self, IAppState *appState);
-        static CoroTask walk(CoroTaskYield &yield, Player *self, IAppState *appState, EAngle goingAngle, bool canChangeAnim);
+        CoroTask wait(CoroTaskYield &yield, IAppState *appState);
+        CoroTask walk(CoroTaskYield &yield, IAppState *appState, EAngle goingAngle, bool canChangeAnim);
+        CoroTask performDead(CoroTaskYield& yield, IAppState* appState);
 
         EAngle tryWalkOrActionByInput(CoroTaskYield &yield, const IAppState *appState);
 

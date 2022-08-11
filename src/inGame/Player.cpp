@@ -16,12 +16,14 @@ using namespace boost::coroutines2;
 namespace inGame
 {
     Player::Player(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene)
-            : ActorBase(belonging), m_State(inGame::EPlayerState::Walk), m_ParentalScene(mainScene), m_Field(mainScene->GetFieldManager())
+            : ActorBase(belonging), m_State(inGame::EPlayerState::Walking), m_ParentalScene(mainScene), m_Field(mainScene->GetFieldManager())
 {
         m_Image = mainScene->GetRoot()->RscImage->kisaragi_32x32.get();
 
         initViewModel();
 
+        m_AnimationLogic = std::make_unique<PlayerAnimation>(m_ParentalScene, CellSize, m_PlayerAnimator, m_View.get());
+        
         initAction();
     }
 
@@ -37,24 +39,24 @@ namespace inGame
 
 
 
-    CoroTask Player::wait(CoroTaskYield &yield, Player *self, IAppState *appState)
+    CoroTask Player::wait(CoroTaskYield &yield, IAppState *appState)
     {
         yield();
 
-        self->changeAnimation([&](){self->animWait(self->m_Angle);});
+        this->m_AnimationLogic->AnimWait(this->m_Angle);
 
         // フィールド上でイベントが発生していたら待機する
-        self->waitFieldEvent(yield);
+        this->waitFieldEvent(yield);
 
         EAngle goingAngle = EAngle::None;
         while (goingAngle == EAngle::None)
         {
-            goingAngle = self->tryWalkOrActionByInput(yield, appState);
+            goingAngle = this->tryWalkOrActionByInput(yield, appState);
 
             yield();
         }
 
-        self->changeStateToWalk(appState, goingAngle, true);
+        this->changeStateToWalking(appState, goingAngle, true);
     }
 
     void Player::waitFieldEvent(CoroTaskYield &yield)
@@ -77,7 +79,7 @@ namespace inGame
             else if (this->m_Angle != inputAngle)
             {
                 this->m_Angle = inputAngle;
-                this->changeAnimation([&](){this->animWait(this->m_Angle);});
+                this->m_AnimationLogic->AnimWait(this->m_Angle);
             }
 
             auto collidedObject = checkingMove.CollidedObject;
@@ -121,12 +123,19 @@ namespace inGame
 
     void Player::initAction()
     {
-        IAppState* app = const_cast<IAppState*>(GameRoot::GetInstance().GetAppState());
-        m_State.ChangeState(EPlayerState::Wait, new CoroTaskCall(
-                std::bind(wait, std::placeholders::_1, this, app)));
+        IAppState* app = const_cast<IAppState*>(m_ParentalScene->GetRoot()->GetAppState());
+        m_State.ChangeState(EPlayerState::Waiting, new CoroTaskCall(
+                [&](auto&& yield){this->wait(yield, app); }));
     }
 
-    CoroTask Player::walk(CoroTaskYield &yield, Player *self, IAppState *appState, EAngle goingAngle, bool canChangeAnim)
+    void Player::ChangeStateToDead()
+    {
+        IAppState* app = const_cast<IAppState*>(m_ParentalScene->GetRoot()->GetAppState());
+        m_State.ChangeState(EPlayerState::Dead, new CoroTaskCall(
+                [&](auto&& yield){this->performDead(yield, app); }));
+    }
+
+    CoroTask Player::walk(CoroTaskYield &yield, IAppState *appState, EAngle goingAngle, bool canChangeAnim)
     {
         yield();
 
@@ -135,37 +144,37 @@ namespace inGame
         double movingTIme = isDash ? 0.2 : 0.4;
 
         if (canChangeAnim)
-            self->changeAnimation([&](){self->animWalk(goingAngle, isDash ? 0.5 : 1.0);});
+            this->m_AnimationLogic->AnimWalk(goingAngle, isDash ? 0.5 : 1.0);
 
-        self->m_Angle = goingAngle;
+        this->m_Angle = goingAngle;
 
         PlayerMoveData moveData(
-            self->GetMatPos(),
-            self->GetMatPos() +  MatPos(Angle(self->m_Angle).ToXY()),
-            self->m_Angle,
+            this->GetMatPos(),
+            this->GetMatPos() +  MatPos(Angle(this->m_Angle).ToXY()),
+            this->m_Angle,
             isDash);
 
         // 移動開始時のフィールドイベントを発火
-        self->m_OnMoveBegin.get_subscriber().on_next(&moveData);
+        this->m_OnMoveBegin.get_subscriber().on_next(&moveData);
 
         // 歩行アニメーション
-        auto moveAnim = self->m_PlayerAnimator.TargetTo(self->m_View->GetModel())
+        auto moveAnim = this->m_PlayerAnimator.TargetTo(this->m_View->GetModel())
                 ->AnimPosition(moveVector, movingTIme)->SetEase(EAnimEase::Linear)->SetRelative(true)
                 ->ToWeakPtr();
 
         coroUtil::WaitForExpire<>(yield, moveAnim);
 
         // 移動終了時のフィールドイベントを発火
-        self->m_OnMoveFinish.get_subscriber().on_next(&moveData);
+        this->m_OnMoveFinish.get_subscriber().on_next(&moveData);
 
         // フィールドイベントが発生したら待機にする
-        if (self->isRunningFieldEvent()) return;
+        if (this->isRunningFieldEvent()) return;
 
-        //LOG_INFO << "Moved: " << self->GetMatPos().ToString() << std::endl;
+        //LOG_INFO << "Moved: " << this->GetMatPos().ToString() << std::endl;
 
-        if (self->getInputAngle(appState->GetKeyboardState())==self->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
-            if (self->m_Field->CheckMoveTo(self->GetMatPos(), goingAngle).CanMove)
-                self->changeStateToWalk(appState, goingAngle, false);
+        if (this->getInputAngle(appState->GetKeyboardState())==this->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
+            if (this->m_Field->CheckMoveTo(this->GetMatPos(), goingAngle).CanMove)
+                this->changeStateToWalking(appState, goingAngle, false);
 
     }
 
@@ -191,70 +200,7 @@ namespace inGame
         const auto dashKey = SDL_Scancode ::SDL_SCANCODE_LSHIFT;
         return keyState[dashKey];
     }
-
-    void Player::animWalk(EAngle angle, double frameSpeed)
-    {
-        const Vec2<int>& cellSize = CellSize;
-        const double baseTemp = 0.2 * frameSpeed;
-
-        switch (angle)
-        {
-            case EAngle::Up:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 5}, baseTemp)->AddFrame(Vec2{1, 5}, baseTemp)->AddFrame(Vec2{2, 5}, baseTemp)->AddFrame(Vec2{3, 5}, baseTemp);
-                break;
-            case EAngle::Right:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 4}, baseTemp)->AddFrame(Vec2{1, 4}, baseTemp)->AddFrame(Vec2{2, 4}, baseTemp)
-                        ->AddFrame(Vec2{3, 4}, baseTemp)->AddFrame(Vec2{4, 4}, baseTemp)->AddFrame(Vec2{5, 4}, baseTemp);
-                break;
-            case EAngle::Left:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrameFlipped(Vec2{0, 4}, baseTemp)->AddFrameFlipped(Vec2{1, 4}, baseTemp)->AddFrameFlipped(Vec2{2, 4}, baseTemp)
-                        ->AddFrameFlipped(Vec2{3, 4}, baseTemp)->AddFrameFlipped(Vec2{4, 4}, baseTemp)->AddFrameFlipped(Vec2{5, 4}, baseTemp);
-                break;
-            case EAngle::Down:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 3}, baseTemp)->AddFrame(Vec2{1, 3}, baseTemp)->AddFrame(Vec2{2, 3}, baseTemp)->AddFrame(Vec2{3, 3}, baseTemp);
-                break;
-            default:
-                assert(false);
-        }
-    }
-
-    void Player::animWait(EAngle angle)
-    {
-        const Vec2<int>& cellSize = CellSize;
-        const double baseTemp = 0.25;
-
-        switch (angle)
-        {
-            case EAngle::Up:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 2}, baseTemp)->AddFrame(Vec2{1, 2}, baseTemp)->AddFrame(Vec2{2, 2}, baseTemp)->AddFrame(Vec2{3, 2}, baseTemp);
-                break;
-            case EAngle::Right:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp)
-                        ->AddFrame(Vec2{0, 1}, baseTemp)->AddFrame(Vec2{1, 1}, baseTemp)->AddFrame(Vec2{2, 1}, baseTemp)
-                        ->AddFrame(Vec2{3, 1}, baseTemp);
-                break;
-            case EAngle::Left:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp)
-                        ->AddFrameFlipped(Vec2{0, 1}, baseTemp)->AddFrameFlipped(Vec2{1, 1}, baseTemp)->AddFrameFlipped(Vec2{2, 1}, baseTemp)
-                        ->AddFrameFlipped(Vec2{3, 1}, baseTemp);
-                break;
-            case EAngle::Down:
-                m_PlayerAnimator.TargetTo(m_View->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                        ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp)
-                        ->AddFrame(Vec2{0, 0}, baseTemp)->AddFrame(Vec2{1, 0}, baseTemp)->AddFrame(Vec2{2, 0}, baseTemp)->AddFrame(Vec2{3, 0}, baseTemp)
-                        ->AddFrame(Vec2{4, 0}, baseTemp);
-                break;
-            default:
-                assert(false);
-        }
-    }
+    
 
     EAngle Player::getInputAngle(const Uint8 *keyState)
     {
@@ -265,23 +211,17 @@ namespace inGame
         return EAngle::None;
     }
 
-    void Player::changeStateToWalk(IAppState *appState, EAngle newAngle, bool canChangeAnim)
+    void Player::changeStateToWalking(IAppState *appState, EAngle newAngle, bool canChangeAnim)
     {
-        m_State.ChangeState(EPlayerState::Walk,
+        m_State.ChangeState(EPlayerState::Walking,
                                   new CoroTaskCall([this, appState, newAngle, canChangeAnim](auto&& yield) {
-                                  walk(std::forward<decltype(yield)>(yield), this, appState, newAngle, canChangeAnim); }));
+                                  walk(std::forward<decltype(yield)>(yield), appState, newAngle, canChangeAnim); }));
     }
 
     MatPos Player::GetMatPos()
     {
         auto pixelPos = GetPos().CastTo<int>();
         return MatPos((pixelPos + FieldManager::MatPixelSize / 2) / FieldManager::PixelPerMat);
-    }
-
-    void Player::changeAnimation(const std::function<void()>& animation)
-    {
-        this->m_PlayerAnimator.Release();
-        animation();
     }
 
     rx::observable<PlayerMoveData *> Player::OnMoveBegin() const
@@ -327,7 +267,7 @@ namespace inGame
             auto scrollPos = m_ParentalScene->GetScrollManager()->CalcScrollToCenter(GetPos());
             scrollPos = m_ParentalScene->GetScrollManager()->MakePosInFieldRange(scrollPos);
 //            constexpr int overhangByWalk = 60;
-//            if (m_State.GetState()==EPlayerState::Walk)
+//            if (m_State.GetState()==EPlayerState::Walking)
 //                scrollPos = scrollPos - Angle(m_Angle).ToXY().CastTo<double>() * overhangByWalk;
             scrollByTracking(scrollPos);
             return EProcessStatus::Running;
@@ -361,6 +301,12 @@ namespace inGame
 
         coroUtil::WaitForExpire(yield, endTacklingAnimation);
     }
+
+    CoroTask Player::performDead(CoroTaskYield& yield, IAppState* appState)
+    {
+        m_AnimationLogic->PerformDead(yield, appState);
+    }
+
 
 
 }
