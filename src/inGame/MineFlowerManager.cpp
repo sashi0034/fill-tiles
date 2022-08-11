@@ -9,6 +9,7 @@
 #include "character/CheckpointBlock.h"
 #include "PlayerMoveData.h"
 #include "SteppedOnMineEvent.h"
+#include "effect/SakuraFormation.h"
 
 namespace inGame{
 
@@ -220,6 +221,11 @@ namespace inGame{
         for (int i=0; i<listSize; ++i)
         {
             auto targetFlower = flowerList[i];
+
+            effect::SakuraFormation::Produce(
+                    m_MainScene->GetEffectManager(),
+                    targetFlower->Position.GetVecByFiledPixel() + FieldManager::MatPixelSize.CastTo<double>() / 2.0);
+
             targetFlower->Destroy();
 
             if (i>=listSize-1) continue;

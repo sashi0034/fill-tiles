@@ -38,6 +38,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(burning_192x192);
         REGISTER_RESOURCE_PNG(geo_explode_16x16);
         REGISTER_RESOURCE_PNG(geo_explode_24x24);
+        REGISTER_RESOURCE_PNG(sakura_32x32);
 
         explicit Image(IAppState* appState);
     private:
