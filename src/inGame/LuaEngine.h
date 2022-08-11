@@ -26,19 +26,19 @@ namespace inGame
         sol::state m_Lua{};
         bool tryInit();
         double getDeltaTime();
+        sol::function m_YieldFunc{};
 
+        void initYieldFunc();
     public:
         template <class... Args> void RunCoroutine(CoroTaskYield& yield, sol::function function, Args... args)
         {
             sol::coroutine task = m_Lua["coroutine"]["create"](function);
-            sol::function yieldGetter = m_Lua.script_file(yieldGetterPath);
-            sol::function yieldFunc = yieldGetter([&](){return getDeltaTime(); });
 
             while (true)
             {
                 m_Lua["coroutine"]["resume"](
                         task,
-                        yieldFunc,
+                        m_YieldFunc,
                         args...
                 );
 

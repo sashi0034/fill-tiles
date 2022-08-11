@@ -43,7 +43,15 @@ namespace inGame
         m_Lua["NotImplementation"] = [](){ LOG_ASSERT(false, "Not Implementation."); };
         m_Lua["Println"] = [](const std::string& str){std::cout << str << "\n"; };
 
+        initYieldFunc();
+
         return isSuccess;
+    }
+
+    void LuaEngine::initYieldFunc()
+    {
+        sol::function yieldGetter = m_Lua.script_file(yieldGetterPath);
+        m_YieldFunc = yieldGetter([&](){return getDeltaTime(); });
     }
 
     sol::state &LuaEngine::GetState()

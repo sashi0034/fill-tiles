@@ -5,6 +5,7 @@
 #include "TalkingBalloon.h"
 #include "MainScene.h"
 #include "ZIndex.h"
+#include "LuaEngine.h"
 
 namespace inGame{
 
@@ -58,10 +59,26 @@ namespace inGame{
         coroUtil::WaitForExpire(yield, scaling);
 
         std::string currStr{};
-        for (int i=0; i<int(m_Text.size()); ++i)
+
+        sol::table multiByteChar = m_Scene->GetRoot()->GetLua()->GetState()["MultiByteChar"];
+        int textLength = multiByteChar["Length"](m_Text);
+
+        bool isInTag = false;
+
+        for (int i=0; i<textLength; ++i)
         {
-            currStr += m_Text[i];
+            std::string nextStr = multiByteChar["GetAt"](m_Text, i);
+
+            if (!isInTag && nextStr=="<") isInTag = true;
+            if (isInTag && nextStr==">") isInTag = false;
+
+            currStr += nextStr;
             m_TextPassage.UpdateTextAndView(currStr);
+
+            if (isInTag) continue;
+
+            if (i % 4 == 0) performAnimRotatingChar(yield, duration/10.0, currStr);
+
             coroUtil::WaitForTime(yield, m_Text[i]!='>' ? duration/10.0 : duration);
         }
 
@@ -70,6 +87,33 @@ namespace inGame{
         getBelongingPool()->Destroy(this);
     }
 
+    void TalkingBalloon::performAnimRotatingChar(CoroTaskYield &yield, const double duration, std::string &currStr)
+    {
+        currStr += " ";
+
+        for (int count=0; count < 4; count++)
+        {
+            char animChar = ' ';
+            switch (count % 4)
+            {
+                case 0:
+                    animChar = '|'; break;
+                case 1:
+                    animChar = '/'; break;
+                case 2:
+                    animChar = '-'; break;
+                case 3:
+                    animChar = '\\'; break;
+            }
+            currStr[currStr.length()-1] = animChar;
+
+            m_TextPassage.UpdateTextAndView(currStr);
+            coroUtil::WaitForTime(yield, duration);
+        }
+
+        currStr.pop_back();
+        m_TextPassage.UpdateTextAndView(currStr);
+    }
 
 
     TalkingBalloon* TalkingBalloon::Create(IMainScene *scene, const std::string &text, const MatPos &pos)
