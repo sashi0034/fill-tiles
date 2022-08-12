@@ -25,19 +25,15 @@ namespace inGame
         bool isSuccess = true;
         namespace  fs = std::filesystem;
 
+        std::string packagePath = m_Lua["package"]["path"];
+        m_Lua["package"]["path"] = packagePath + ";" + directoryPath + "/util/?.lua";
+
         for (const auto& file : fs::recursive_directory_iterator(directoryPath))
         {
             if (!file.is_regular_file()) continue;
 
             const auto& filePath = file.path().string();
-            sol::protected_function_result result = m_Lua.safe_script_file(filePath, &sol::script_pass_on_error);
-
-            if (!result.valid())
-            {
-                sol::error error = result;
-                LOG_ERR << filePath  << ": " << error.what() << std::endl;
-                isSuccess = false;
-            }
+            isSuccess = isSuccess && loadFile(filePath);
         }
 
         m_Lua["NotImplementation"] = [](){ LOG_ASSERT(false, "Not Implementation."); };
@@ -46,6 +42,19 @@ namespace inGame
         initYieldFunc();
 
         return isSuccess;
+    }
+
+    bool LuaEngine::loadFile(const std::string &filePath)
+    {
+        sol::protected_function_result result = m_Lua.safe_script_file(filePath, &sol::script_pass_on_error);
+
+        if (!result.valid())
+        {
+            sol::error error = result;
+            LOG_ERR << filePath  << ": " << error.what() << std::endl;
+            return false;
+        }
+        return true;
     }
 
     void LuaEngine::initYieldFunc()

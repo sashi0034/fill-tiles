@@ -21,8 +21,8 @@ namespace inGame
 
     private:
         GameRoot* m_GameRoot;
-        const std::string  directoryPath = "assets/lua";
-        static const inline std::string yieldGetterPath = "assets/lua/getYield.lua";
+        const std::string  directoryPath = "./assets/lua";
+        static const inline std::string yieldGetterPath = "./assets/lua/getYield.lua";
         sol::state m_Lua{};
         bool tryInit();
         double getDeltaTime();
@@ -48,6 +48,8 @@ namespace inGame
                 yield();
             }
         }
+
+        bool loadFile(const std::string &filePath);
     };
 
 } // gameEngine

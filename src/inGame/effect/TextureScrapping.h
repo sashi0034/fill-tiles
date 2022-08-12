@@ -21,6 +21,7 @@ namespace inGame::effect
 
     class TextureScrapping : public ActorBase
     {
+        static inline const std::string className = "TextureScrapping";
     public:
         static void Produce(const TextureScrappingArgs &args);
 
@@ -32,6 +33,8 @@ namespace inGame::effect
         double m_Lifetime{};
         Vec2<double> m_Pos{};
         Vec2<double> m_Vel{};
+        double m_Gravity{};
+        double m_MaxLifetime;
 
         SpriteTexture m_Texture = SpriteTexture::Create();
     };
