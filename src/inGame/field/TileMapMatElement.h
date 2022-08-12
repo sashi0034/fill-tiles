@@ -10,6 +10,11 @@
 #include <bitset>
 #include "../Angle.h"
 
+namespace inGame::character
+{
+    class GlassFloor;
+}
+
 namespace inGame::field
 {
     enum class ETileKind
@@ -37,7 +42,7 @@ namespace inGame::field
         checkpoint_block_3,
         checkpoint_block_4,
         glass,
-        
+
         max,
     };
 
@@ -55,6 +60,7 @@ namespace inGame::field
         [[nodiscard]] virtual bool IsWall() const = 0;
         [[nodiscard]] virtual bool IsBloomedMineFlower() const = 0;
         virtual bool GetCliffFlag(EAngle aspect) = 0;
+        virtual character::GlassFloor* GetGlassFloor() = 0;
     };
 
     class ITileMapMatElementWritable
@@ -69,6 +75,7 @@ namespace inGame::field
 
         virtual void OverwriteIsWall(bool isWall) = 0;
         virtual void SetIsBloomedMineFlower(bool flag) = 0;
+        virtual void SetGlassFloor(character::GlassFloor* glassFloor) = 0;
     };
 
     class TileMapMatElement final: public ITileMapMatElement, public ITileMapMatElementWritable
@@ -98,6 +105,10 @@ namespace inGame::field
 
         void SetCliffFlag(EAngle aspect, bool flag);
 
+        character::GlassFloor *GetGlassFloor() override;
+
+        void SetGlassFloor(character::GlassFloor *glassFloor) override;
+
         void OverwriteIsWall(bool isWall) override;
     private:
         std::vector<const TilePropertyChip *> m_ChipList;
@@ -106,6 +117,7 @@ namespace inGame::field
 
         bool m_IsWall = false;
         bool m_IsBloomedMineFlower = false;
+        WeakPtr<character::GlassFloor> m_GlassFloor{};
 
         std::bitset<4> m_CliffAspect{};
     };

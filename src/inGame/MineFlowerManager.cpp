@@ -10,6 +10,7 @@
 #include "PlayerMoveData.h"
 #include "SteppedOnMineEvent.h"
 #include "effect/SakuraFormation.h"
+#include "character/GlassFloor.h"
 
 namespace inGame{
 
@@ -91,9 +92,18 @@ namespace inGame{
             return false;
         }
 
+        auto const tileMap = field->GetTileMap();
+
+        if (auto glass = tileMap->GetElementAt(matPos.GetVec())->GetGlassFloor())
+        {
+            // ガラスの床があった
+            glass->MakeBrokenAndDestroy();
+            return false;
+        }
+
         bloomNewMineFlower(matPos, mineClass, field);
 
-        auto writable = field->GetTileMap()->GetElementWritableAt(matPos.GetVec());
+        auto writable = tileMap->GetElementWritableAt(matPos.GetVec());
 
         writable->SetIsBloomedMineFlower(true);
 

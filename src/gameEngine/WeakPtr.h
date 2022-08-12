@@ -53,73 +53,74 @@ namespace gameEngine
     {
         friend class WeakPtrController<T>;
 
-        gameEngine::PtrInfo *m_pPtrInfo = nullptr;
+        gameEngine::PtrInfo *m_PtrInfo = nullptr;
     public:
         ~WeakPtr()
         {
-            gameEngine::PtrInfo::Dec(m_pPtrInfo);
+            gameEngine::PtrInfo::Dec(m_PtrInfo);
         }
 
         WeakPtr()
         {
         }
 
-        explicit WeakPtr(gameEngine::PtrInfo *p_ptrInfo) : m_pPtrInfo(p_ptrInfo)
+        explicit WeakPtr(gameEngine::PtrInfo *p_ptrInfo) : m_PtrInfo(p_ptrInfo)
         {
-            if (m_pPtrInfo)
+            if (m_PtrInfo)
             {
-                m_pPtrInfo->Inc();
+                m_PtrInfo->Inc();
             }
         }
 
-        WeakPtr(const WeakPtr &other) : m_pPtrInfo(other.m_pPtrInfo)
+        WeakPtr(const WeakPtr &other) : m_PtrInfo(other.m_PtrInfo)
         {
-            if (m_pPtrInfo)
+            if (m_PtrInfo)
             {
-                m_pPtrInfo->Inc();
+                m_PtrInfo->Inc();
             }
         }
 
         WeakPtr &operator=(const WeakPtr &other)
         {
-            gameEngine::PtrInfo::Dec(m_pPtrInfo);
-            m_pPtrInfo = other.m_pPtrInfo;
-            if (m_pPtrInfo)
+            gameEngine::PtrInfo::Dec(m_PtrInfo);
+            m_PtrInfo = other.m_PtrInfo;
+            if (m_PtrInfo)
             {
-                m_pPtrInfo->Inc();
+                m_PtrInfo->Inc();
             }
             return *this;
         }
 
         void Clear()
         {
-            gameEngine::PtrInfo::Dec(m_pPtrInfo);
-            m_pPtrInfo = nullptr;
+            gameEngine::PtrInfo::Dec(m_PtrInfo);
+            m_PtrInfo = nullptr;
         }
 
         template<class U>
-        WeakPtr<U> GetUpcasted()
+        WeakPtr<U> ToUpCasted()
         {
-            static_assert(std::is_base_of<U, T>::value, ""); // U が T の基底クラスである必要がある
-            return WeakPtr<U>(m_pPtrInfo);
+            static_assert(std::is_base_of<U, T>::value, "UがTの基底クラスでありません。");
+            return WeakPtr<U>(m_PtrInfo);
         }
 
         template<class U>
-        WeakPtr<U> GetDowncasted()
+        WeakPtr<U> ToDownCasted()
         {
-            //static_assert(std::is_base_of<T, U>::value, ""); // U は T の派生クラスである必要がある
-            if (dynamic_cast<U *>( GetPtr())) // ポインタが実際に U型 インスタンスであるかどうかをチェック
+            static_assert(std::is_base_of<T, U>::value, "UはTの派生クラスである必要があります。");
+            if (dynamic_cast<U*>(GetPtr()))
             {
-                return WeakPtr<U>(m_pPtrInfo);
+                return WeakPtr<U>(m_PtrInfo);
             }
-            return WeakPtr<U>(nullptr); // ダウンキャストに失敗したらNULLポインタ(のWeakPtr)を返す
+            // ダウンキャストに失敗
+            return WeakPtr<U>(nullptr);
         }
 
-        bool IsNull(void) const
-        { return !m_pPtrInfo || m_pPtrInfo->IsNull(); }
+        bool IsNull() const
+        { return !m_PtrInfo || m_PtrInfo->IsNull(); }
 
-        T *GetPtr(void) const
-        { return m_pPtrInfo ? m_pPtrInfo->GetPtr<T>() : nullptr; }
+        T *GetPtr() const
+        { return m_PtrInfo ? m_PtrInfo->GetPtr<T>() : nullptr; }
 
         T &operator*() const
         {
@@ -137,7 +138,7 @@ namespace gameEngine
         { return GetPtr(); }
 
         int GetRefCount() const
-        { return m_pPtrInfo ? m_pPtrInfo->GetRefCount() : 0; }
+        { return m_PtrInfo ? m_PtrInfo->GetRefCount() : 0; }
     };
 
     template<class T>
@@ -147,9 +148,9 @@ namespace gameEngine
     public:
         ~WeakPtrController()
         {
-            if (m_WeakPtr.m_pPtrInfo)
+            if (m_WeakPtr.m_PtrInfo)
             {
-                m_WeakPtr.m_pPtrInfo->m_Ptr = nullptr;
+                m_WeakPtr.m_PtrInfo->m_Ptr = nullptr;
             }
         }
 
@@ -163,11 +164,11 @@ namespace gameEngine
         WeakPtrController &operator=(const WeakPtrController &other) = default;
 
         template<class U>
-        WeakPtr<U> GetDowncasted_unsafe(U *p_this)
+        WeakPtr<U> ToDownCastedUnsafely(U *self)
         {
-            (void) p_this;
+            (void) self;
             static_assert(std::is_base_of<T, U>::value, "");
-            return WeakPtr<U>(m_WeakPtr.m_pPtrInfo);
+            return WeakPtr<U>(m_WeakPtr.m_PtrInfo);
         }
 
         WeakPtr<T> GetWeakPtr()
@@ -175,11 +176,11 @@ namespace gameEngine
     };
 }
 
-#define DEF_WEAK_CONTROLLER(type_) \
-    public:  WeakPtr<type_> GetWeakPtr( void ){ return m_WeakPtrController.GetWeakPtr(); } \
-    protected: WeakPtrController<type_> m_WeakPtrController{this}
+#define DEF_WEAK_CONTROLLER(type) \
+    public:  WeakPtr<type> GetWeakPtr(){ return m_WeakPtrController.GetWeakPtr(); } \
+    protected: WeakPtrController<type> m_WeakPtrController{this}
 
-#define DEF_WEAK_GET(type_) public: WeakPtr<type_> GetWeakPtr( void ){ return m_WeakPtrController.GetDowncasted_unsafe<type_>( this ); }
+#define DEF_WEAK_GET(type) public: WeakPtr<type> GetWeakPtr(){ return m_WeakPtrController.ToDownCastedUnsafely<type>(this); }
 
 
 #endif //FILL_TILES_WEAKPTR_H

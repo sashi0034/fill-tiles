@@ -12,7 +12,7 @@ namespace inGame::character
 {
     class CheckpointBlock : public CharacterBase
     {
-        DEF_WEAK_GET(CheckpointBlock);
+    DEF_WEAK_GET(CheckpointBlock);
     public:
         CheckpointBlock(IMainScene *mainScene, const MatPos &matPos, field::ETileKind tileKind);
         MatPos GetMatPos() const;

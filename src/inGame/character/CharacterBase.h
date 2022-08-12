@@ -16,7 +16,7 @@ namespace inGame::character
 {
     class CharacterBase : public ChildBase<CharacterBase>
     {
-        DEF_WEAK_GET(CharacterBase);
+    DEF_WEAK_GET(CharacterBase);
     public:
         explicit CharacterBase(IFieldManager *parentField);
         virtual ~CharacterBase() = default;

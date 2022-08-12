@@ -4,6 +4,7 @@
 
 #include "TileMapMatElement.h"
 #include "magic_enum.h"
+#include "../character/GlassFloor.h"
 
 namespace inGame::field{
 
@@ -111,6 +112,16 @@ namespace inGame::field{
     {
         const auto &lastChip = *(m_ChipList.end() - 1);
         m_IsWall = lastChip->IsWall;
+    }
+
+    character::GlassFloor *TileMapMatElement::GetGlassFloor()
+    {
+        return m_GlassFloor.GetPtr();
+    }
+
+    void TileMapMatElement::SetGlassFloor(character::GlassFloor *glassFloor)
+    {
+        m_GlassFloor = glassFloor->GetWeakPtr();
     }
 
 

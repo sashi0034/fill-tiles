@@ -16,9 +16,12 @@ namespace inGame::character
 
     class GlassFloor : public CharacterBase
     {
+        DEF_WEAK_GET(GlassFloor);
     public:
         GlassFloor(IMainScene *mainScene, const MatPos &matPos);
+        void MakeBrokenAndDestroy();
     private:
+        IMainScene* mainScene;
         CharacterViewModel m_View;
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         static const inline Vec2<int>cellSrcSize = Vec2<int>{16, 16};

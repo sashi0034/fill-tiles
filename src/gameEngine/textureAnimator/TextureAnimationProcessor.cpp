@@ -204,7 +204,7 @@ namespace gameEngine::textureAnimator
 
     WeakPtr<ITextureAnimationPointer> TextureAnimationProcessor::ToWeakPtr()
     {
-        return this->GetWeakPtr().GetDowncasted<ITextureAnimationEaseProperty>().GetDowncasted<ITextureAnimationPointer>();
+        return this->GetWeakPtr().ToUpCasted<ITextureAnimationEaseProperty>().ToUpCasted<ITextureAnimationPointer>();
     }
 
 }
