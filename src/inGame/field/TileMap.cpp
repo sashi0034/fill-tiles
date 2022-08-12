@@ -11,12 +11,10 @@
 #include <regex>
 #include "magic_enum.h"
 #include "../GameRoot.h"
-#include "../character/SmallTree.h"
-#include "../character/BigTree.h"
 #include "../Player.h"
-#include "../character/CheckpointBlock.h"
 #include "../FieldManager.h"
 #include "tileMap/ReadObjectInObjectGroup.h"
+#include "tileMap/SummonCharacterByChip.h"
 
 
 namespace inGame::field
@@ -207,33 +205,6 @@ namespace inGame::field
 
 
 
-    // @tileSwitch
-    bool TileMap::summonCharacterByChip(const Vec2<int> &pos, ETileKind kind)
-    {
-        const auto matPos = MatPos(pos);
-        const auto field = m_MainScene->GetFieldManager()->GetCharacterPool();
-
-        switch (kind)
-        {
-            case ETileKind::small_tree:
-                field->Birth(new character::SmallTree(m_MainScene, matPos));
-                break;
-            case ETileKind::big_tree:
-                field->Birth(new character::BigTree(m_MainScene, matPos));
-                break;
-            case ETileKind::checkpoint_block_1:
-            case ETileKind::checkpoint_block_2:
-            case ETileKind::checkpoint_block_3:
-            case ETileKind::checkpoint_block_4:
-                field->Birth(new character::CheckpointBlock(m_MainScene, matPos, kind));
-                break;
-            default:
-                return false;
-        }
-
-        return true;
-    }
-
 
     void TileMap::readLayerData(
             const boost::property_tree::basic_ptree<std::basic_string<char>, std::basic_string<char>> &treeData)
@@ -259,7 +230,7 @@ namespace inGame::field
                 if (m_Tileset.count(chipId) != 0)
                 {
                     TilePropertyChip *chipPtr = &m_Tileset[chipId];
-                    bool isSummoned = summonCharacterByChip(Vec2<int>{x, y}, chipPtr->Kind);
+                    bool isSummoned = tileMap::SummonCharacterByChip(m_MainScene, Vec2<int>{x, y}, chipPtr->Kind);
                     if (!isSummoned) getElementAt(Vec2{x, y})->AddChip(chipPtr);
                 } else
                 {

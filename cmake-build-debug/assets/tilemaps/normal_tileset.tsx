@@ -66,6 +66,11 @@
    <property name="kind" value="big_tree"/>
   </properties>
  </tile>
+ <tile id="72">
+  <properties>
+   <property name="kind" value="glass"/>
+  </properties>
+ </tile>
  <tile id="100">
   <properties>
    <property name="kind" value="fines"/>

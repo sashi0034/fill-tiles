@@ -36,7 +36,8 @@ namespace inGame::field
         checkpoint_block_2,
         checkpoint_block_3,
         checkpoint_block_4,
-
+        glass,
+        
         max,
     };
 

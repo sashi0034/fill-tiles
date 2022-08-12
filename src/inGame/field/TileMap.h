@@ -76,8 +76,6 @@ namespace inGame::field
 
         TileMapMatElement* getElementAt(const Vec2<int>& pos);
 
-        bool summonCharacterByChip(const Vec2<int> &pos, ETileKind kind);
-
         void initMatElementsAfterLoaded();
 
         void checkCliff(const Vec2<int> &pos);
