@@ -70,11 +70,7 @@ namespace inGame{
 
     void MineFlowerManager::CheckStepOnMine(const MatPos &pos)
     {
-//        for (auto & mineClass : m_MineFlowerClass)
-//        {
-//            bool isExist = checkBloomMineFlower(pos, mineClass);
-//            if (isExist) return;
-//        }
+        if (!AliveFlag.IsUp()) return;
 
         checkBloomMineFlower(pos, *m_CurrMineFlowerClass);
     }
@@ -88,7 +84,7 @@ namespace inGame{
         if (field->GetTileMap()->GetElementAt(matPos.GetVec())->IsBloomedMineFlower())
         {
             // 地雷を踏んでしまった
-            SteppedOnMineEvent().StartEvent(SteppedOnMineEventArgs{m_MainScene, GetCurrMineFlowerClass(), matPos});
+            onStepOnMine(matPos);
             return false;
         }
 
@@ -117,6 +113,12 @@ namespace inGame{
             field->GetCoroutine()->Start(new CoroTaskCall([&](auto&& yield){driveClearingCheckpointBlocksEvent(yield, this, mineClass); }));
         }
         return true;
+    }
+
+    void MineFlowerManager::onStepOnMine(const MatPos &matPos)
+    {
+        AliveFlag.GoDown();
+        SteppedOnMineEvent().StartEvent(SteppedOnMineEventArgs{m_MainScene, GetCurrMineFlowerClass(), matPos});
     }
 
     void

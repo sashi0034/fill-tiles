@@ -56,7 +56,7 @@ namespace inGame
             yield();
         }
 
-        this->changeStateToWalking(appState, goingAngle, true);
+        this->changeStateToWalking(PlayerWalkArgs{appState, goingAngle, true, isDashing(appState->GetKeyboardState()), false});
     }
 
     void Player::waitFieldEvent(CoroTaskYield &yield)
@@ -135,16 +135,19 @@ namespace inGame
                 [&](auto&& yield){this->performDead(yield, app); }));
     }
 
-    CoroTask Player::walk(CoroTaskYield &yield, IAppState *appState, EAngle goingAngle, bool canChangeAnim)
+    CoroTask Player::walk(CoroTaskYield &yield, PlayerWalkArgs args)
     {
         yield();
 
-        auto moveVector = Angle(goingAngle).ToXY().CastTo<double>() * FieldManager::PixelPerMat;
-        bool isDash = isDashing(appState->GetKeyboardState());
-        double movingTIme = isDash ? 0.2 : 0.4;
+        auto const goingAngle = args.NewAngle;
+        auto const appState = args.AppStateRef;
+        const bool isDash = args.IsDash;
 
-        if (canChangeAnim)
-            this->m_AnimationLogic->AnimWalk(goingAngle, isDash ? 0.5 : 1.0);
+        auto moveVector = Angle(goingAngle).ToXY().CastTo<double>() * FieldManager::PixelPerMat;
+        double movingTIme = args.IsDash ? 0.2 : 0.4;
+
+        if (args.CanChangeAnim)
+            this->m_AnimationLogic->AnimWalk(goingAngle, args.IsDash ? 0.5 : 1.0);
 
         this->m_Angle = goingAngle;
 
@@ -172,9 +175,24 @@ namespace inGame
 
         //LOG_INFO << "Moved: " << this->GetMatPos().ToString() << std::endl;
 
+        const bool canMoveToNext = this->m_Field->CheckMoveTo(this->GetMatPos(), goingAngle).CanMove;
+        if (!canMoveToNext) return;
+
+        // 氷の床
+        if (m_Field->GetTileMap()->GetElementAt(this->GetMatPos().GetVec())->IsIceFloor())
+        {
+            if (!args.IsFromOnIce) this->m_AnimationLogic->AnimWait(goingAngle);
+            changeStateToWalking(PlayerWalkArgs{appState, goingAngle, false, false, true});
+            return;
+        }
+
+        // 引き続き歩行
         if (this->getInputAngle(appState->GetKeyboardState())==this->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
-            if (this->m_Field->CheckMoveTo(this->GetMatPos(), goingAngle).CanMove)
-                this->changeStateToWalking(appState, goingAngle, false);
+        {
+            bool canRestartChangeAnim = args.IsFromOnIce;
+            changeStateToWalking(PlayerWalkArgs{appState, goingAngle, canRestartChangeAnim, isDash, false});
+            return;
+        }
 
     }
 
@@ -211,11 +229,11 @@ namespace inGame
         return EAngle::None;
     }
 
-    void Player::changeStateToWalking(IAppState *appState, EAngle newAngle, bool canChangeAnim)
+    void Player::changeStateToWalking(const PlayerWalkArgs& args)
     {
         m_State.ChangeState(EPlayerState::Walking,
-                                  new CoroTaskCall([this, appState, newAngle, canChangeAnim](auto&& yield) {
-                                  walk(std::forward<decltype(yield)>(yield), appState, newAngle, canChangeAnim); }));
+                                  new CoroTaskCall([this, args](auto&& yield) {
+                                      walk(std::forward<decltype(yield)>(yield), args); }));
     }
 
     MatPos Player::GetMatPos()

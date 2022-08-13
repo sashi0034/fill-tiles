@@ -20,6 +20,14 @@
 namespace inGame
 {
 
+    struct PlayerWalkArgs
+    {
+        IAppState *AppStateRef;
+        EAngle NewAngle;
+        bool CanChangeAnim;
+        bool IsDash;
+        bool IsFromOnIce;
+    };
 
     class Player final : public ActorBase
     {
@@ -64,10 +72,10 @@ namespace inGame
         bool m_ShouldResetScroll = true;
 
         static EAngle getInputAngle(const Uint8 *keyState);
-        void changeStateToWalking(IAppState *appState, EAngle newAngle, bool canChangeAnim);
+        void changeStateToWalking(const PlayerWalkArgs& args);
 
         CoroTask wait(CoroTaskYield &yield, IAppState *appState);
-        CoroTask walk(CoroTaskYield &yield, IAppState *appState, EAngle goingAngle, bool canChangeAnim);
+        CoroTask walk(CoroTaskYield &yield, PlayerWalkArgs args);
         CoroTask performDead(CoroTaskYield& yield, IAppState* appState);
 
         EAngle tryWalkOrActionByInput(CoroTaskYield &yield, const IAppState *appState);

@@ -42,6 +42,7 @@ namespace inGame::field
         checkpoint_block_3,
         checkpoint_block_4,
         glass,
+        ice,
 
         max,
     };
@@ -61,6 +62,7 @@ namespace inGame::field
         [[nodiscard]] virtual bool IsBloomedMineFlower() const = 0;
         virtual bool GetCliffFlag(EAngle aspect) = 0;
         virtual character::GlassFloor* GetGlassFloor() = 0;
+        virtual bool IsIceFloor() = 0;
     };
 
     class ITileMapMatElementWritable
@@ -110,6 +112,8 @@ namespace inGame::field
         void SetGlassFloor(character::GlassFloor *glassFloor) override;
 
         void OverwriteIsWall(bool isWall) override;
+
+        bool IsIceFloor() override;
     private:
         std::vector<const TilePropertyChip *> m_ChipList;
 

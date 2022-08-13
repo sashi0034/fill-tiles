@@ -124,5 +124,10 @@ namespace inGame::field{
         m_GlassFloor = glassFloor->GetWeakPtr();
     }
 
+    bool TileMapMatElement::IsIceFloor()
+    {
+        return HasChip(ETileKind::ice);
+    }
+
 
 }

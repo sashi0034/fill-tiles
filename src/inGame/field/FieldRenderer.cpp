@@ -63,6 +63,11 @@ namespace inGame::field
                     //return isNeighbor(x, y, ETileKind::high_plateau_cliff, ETileKind::high_plateau);
                 });
                 break;
+            case ETileKind::ice:
+                renderAutoTile(m_ResImage->ice_floor_16x16.get(), [&](int x, int y) {
+                    return isNeighbor(x, y, ETileKind::ice);
+                });
+                break;
             default:
                 return false;
         }

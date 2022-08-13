@@ -7,6 +7,7 @@
 
 
 #include "MineFlowerClass.h"
+#include "UpFlag.h"
 
 namespace inGame
 {
@@ -25,6 +26,7 @@ namespace inGame
         IMainScene* m_MainScene;
         std::vector<MineFlowerClass> m_MineFlowerClass{};
         MineFlowerClass* m_CurrMineFlowerClass{};
+        UpFlag AliveFlag{};
 
         void initMineFlowerCount(MineFlowerClass& mineClass);
         void removeAlreadyClearedBlocks();
@@ -35,6 +37,7 @@ namespace inGame
         static CoroTask driveClearingCheckpointBlocksEvent(CoroTaskYield &yield, MineFlowerManager *self, MineFlowerClass& mineClass);
         CoroTask fadeMineFlowersOneByOne(CoroTaskYield& yield, MineFlowerClass& mineClass);
 
+        void onStepOnMine(const MatPos &matPos);
     };
 }
 

@@ -227,15 +227,12 @@ namespace inGame::field
 
                 if (chipId == -1) continue;
 
-                if (m_Tileset.count(chipId) != 0)
-                {
-                    TilePropertyChip *chipPtr = &m_Tileset[chipId];
-                    bool isSummoned = tileMap::SummonCharacterByChip(m_MainScene, Vec2<int>{x, y}, chipPtr->Kind);
-                    if (!isSummoned) getElementAt(Vec2{x, y})->AddChip(chipPtr);
-                } else
-                {
-                    assert(false);
-                }
+                LOG_ASSERT(m_Tileset.count(chipId) != 0, "登録されていないマップチップがあります。");
+
+                TilePropertyChip *chipPtr = &m_Tileset[chipId];
+                bool isSummoned = tileMap::SummonCharacterByChip(m_MainScene, Vec2<int>{x, y}, chipPtr->Kind);
+                if (!isSummoned) getElementAt(Vec2{x, y})->AddChip(chipPtr);
+
             }
         }
     }

@@ -71,6 +71,11 @@
    <property name="kind" value="glass"/>
   </properties>
  </tile>
+ <tile id="73">
+  <properties>
+   <property name="kind" value="ice"/>
+  </properties>
+ </tile>
  <tile id="100">
   <properties>
    <property name="kind" value="fines"/>
