@@ -7,6 +7,7 @@
 #include "../../Player.h"
 #include "../../character/PuniCat.h"
 #include "../../character/Fairy.h"
+#include "../../character/SolidRock.h"
 
 
 void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainScene, const std::string &objectType,
@@ -34,6 +35,10 @@ void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainSce
     else if (objectType=="punicat")
     {
         characterPool->Birth(new character::PuniCat(mainScene, matPos));
+    }
+    else if (objectType=="solid_rock")
+    {
+        characterPool->Birth(new character::SolidRock(mainScene, matPos));
     }
     else if (objectType=="test")
     {

@@ -221,8 +221,10 @@ namespace inGame
 
     bool FieldManager::CanMovableObjectMoveTo(const MatPos &currPos, EAngle goingAngle)
     {
-        return (CheckMoveTo(currPos, goingAngle).CanMove &&
-            !m_MineFlowerManager->IsMineFlowerMat(currPos + MatPos(Angle(goingAngle).ToXY())));
+        auto const nextPos = currPos + MatPos(Angle(goingAngle).ToXY());
+        return CheckMoveTo(currPos, goingAngle).CanMove &&
+            !m_MineFlowerManager->IsMineFlowerMat(nextPos) &&
+            !m_TileMap.GetElementAt(nextPos.GetVec())->IsIceFloor();
     }
 
 

@@ -87,6 +87,8 @@ namespace inGame
         void tackleToFieldObject(CoroTaskYield &yield, EAngle angle, const std::function<void()> &onTackleHit);
 
         void pushCatfish(CoroTaskYield &yield, EAngle &inputAngle, inGame::character::Catfish *catfish);
+
+        bool checkPushMovableObject(CoroTaskYield &yield, EAngle &inputAngle, character::MovableObjectLogic* movable);
     };
 
 

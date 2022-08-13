@@ -10,6 +10,7 @@
 #include "ZIndex.h"
 #include "PlayerMoveData.h"
 #include "character/Catfish.h"
+#include "character/SolidRock.h"
 
 using namespace boost::coroutines2;
 
@@ -84,6 +85,9 @@ namespace inGame
 
             auto collidedObject = checkingMove.CollidedObject;
 
+            if (auto solidRock = dynamic_cast<character::SolidRock*>(collidedObject))
+                checkPushMovableObject(yield, inputAngle, solidRock->GetMovable());
+
             if (auto catfish = dynamic_cast<character::Catfish*>(collidedObject))
                 pushCatfish(yield, inputAngle, catfish);
 
@@ -93,11 +97,8 @@ namespace inGame
 
     void Player::pushCatfish(CoroTaskYield &yield, EAngle &inputAngle, character::Catfish *catfish)
     {
-        if (!catfish->CanMove(inputAngle)) return;
-
-        tackleToFieldObject(yield, inputAngle, [&](){
-            catfish->ForceMove(inputAngle);
-        });
+        bool isPushed = checkPushMovableObject(yield, inputAngle, catfish->GetMovable());
+        if (!isPushed) return;
 
         waitFieldEvent(yield);
 
@@ -105,6 +106,18 @@ namespace inGame
         m_OnAction.get_subscriber().on_next(&action);
         waitFieldEvent(yield);
     }
+
+    bool Player::checkPushMovableObject(CoroTaskYield &yield, EAngle &inputAngle, character::MovableObjectLogic* movable)
+    {
+        if (!movable->CanMove(inputAngle)) return false;
+
+        tackleToFieldObject(yield, inputAngle, [&](){
+            movable->ForceMove(inputAngle);
+        });
+
+        return true;
+    }
+
 
 
     void Player::Update(IAppState *appState)

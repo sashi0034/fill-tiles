@@ -41,6 +41,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(sakura_32x32);
         REGISTER_RESOURCE_PNG(glass_floor_16x16);
         REGISTER_RESOURCE_PNG(ice_floor_16x16);
+        REGISTER_RESOURCE_PNG(solid_rock_16x16);
 
         explicit Image(IAppState* appState);
     private:

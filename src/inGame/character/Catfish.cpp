@@ -11,7 +11,8 @@ namespace inGame::character
     Catfish::Catfish(IMainScene *mainScene, const MatPos &matPos)
             : CharacterBase(mainScene->GetFieldManager()),
               m_Scene(mainScene),
-              m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->catfish_24x24.get())
+              m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->catfish_24x24.get()),
+              m_MovableObjectLogic(mainScene, &m_View)
     {
         const int pixelPerMat = FieldManager::PixelPerMat;
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, cellSrcSize});
@@ -36,39 +37,6 @@ namespace inGame::character
                 ->AddFrame(Vec2{4, 0}, 0.2);
     }
 
-
-    bool Catfish::CanMove(EAngle angle)
-    {
-        auto field =m_Scene->GetFieldManager();
-        const auto currPos = m_View.GetMatPos();
-
-        return field->CanMovableObjectMoveTo(currPos, angle);
-    }
-
-    void Catfish::ForceMove(EAngle angle)
-    {
-        LOG_ASSERT(CanMove(angle), "invalid move");
-
-        m_Scene->GetFieldManager()->GetCoroutine()->Start(
-                new CoroTaskCall([&](auto&& yield){ move(yield, angle);}));
-    }
-
-    void Catfish::move(CoroTaskYield &yield, EAngle angle)
-    {
-        auto eventInScope = m_Scene->GetFieldEventManager()->UseEvent();
-        eventInScope.StartFromHere();
-
-        yield();
-
-        constexpr double duration = 0.6;
-        auto animation = m_Scene->GetFieldManager()->GetAnimator()->TargetTo(m_View.GetModel())
-            ->AnimPosition(Angle(angle).ToXY().CastTo<double>() * FieldManager::PixelPerMat, duration)->SetRelative(true)
-            ->SetEase(EAnimEase::OutBack)
-            ->ToWeakPtr();
-
-        coroUtil::WaitForExpire(yield, animation);
-    }
-
     void Catfish::Update(IAppState *)
     {
         ZIndexCharacter(m_View).ApplyZ();
@@ -82,6 +50,11 @@ namespace inGame::character
     ParabolaAnimation* Catfish::JumpWhenEat()
     {
         return ParabolaAnimation::Create(m_Scene->GetEffectManager(), &m_View.GetView())->SetSpeedByPeekHeightAndTime(40.0, 0.5);
+    }
+
+    MovableObjectLogic *Catfish::GetMovable()
+    {
+        return &m_MovableObjectLogic;
     }
 
 } // inGame
