@@ -23,6 +23,11 @@ namespace inGame::character
         IMainScene* mainScene;
         CharacterViewModel m_View;
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
+
+        void subscribePlayer(const MatPos &matPos, const Player *player);
+        TextureAnimationWeakPtr m_Animation{};
+
+        void resetAnimation();
     };
 
 } // inGame

@@ -11,12 +11,18 @@
 #include "../FieldManager.h"
 #include "../CharacterViewModel.h"
 
+namespace inGame{
+    class SwitchAcornManager;
+}
+
+
 namespace inGame::character
 {
     enum class ESwitchAcornKind
     {
         Red = 0,
         Blue,
+        Max
     };
 
     class SwitchAcorn : public CharacterBase
@@ -24,11 +30,17 @@ namespace inGame::character
         DEF_WEAK_GET(SwitchAcorn);
     public:
         SwitchAcorn(IMainScene *mainScene, const MatPos &matPos, ESwitchAcornKind kind);
-        const ESwitchAcornKind SwitchKind;
     private:
+        const ESwitchAcornKind selfKind;
         IMainScene *mainScene;
         CharacterViewModel m_View;
+        MatPos initialPos;
         static const inline Vec2<int> cellMatSize = Vec2<int>{1, 1};
+
+        TextureAnimationWeakPtr m_TextureAnimation{};
+
+        void onSwitch(ESwitchAcornKind nextKind);
+        SwitchAcornManager* getAcornManager();
     };
 
 } // inGame

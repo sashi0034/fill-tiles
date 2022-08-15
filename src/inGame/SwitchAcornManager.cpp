@@ -3,20 +3,38 @@
 //
 
 #include "SwitchAcornManager.h"
+#include "character/SwitchAcorn.h"
+
 
 namespace inGame
 {
+    using character::ESwitchAcornKind;
+
     SwitchAcornManager::SwitchAcornManager(IMainScene *mainScene)
     : mainScene(mainScene)
     {}
 
-    rx::observable<SwitchAcornEventArgs *> SwitchAcornManager::OnSwitch()
+    rx::observable<SwitchAcornEventArgs*> SwitchAcornManager::OnSwitch()
     {
         return m_OnSwitch.get_observable();
     }
 
-    rx::subscriber<SwitchAcornEventArgs *> SwitchAcornManager::SubscribeSwitch()
+//    rx::subscriber<SwitchAcornEventArgs *> SwitchAcornManager::SubscribeSwitch()
+//    {
+//        return m_OnSwitch.get_subscriber();
+//    }
+
+    character::ESwitchAcornKind SwitchAcornManager::GetCurrSwitch()
     {
-        return m_OnSwitch.get_subscriber();
+        return m_CurrSwitch;
     }
+
+    void SwitchAcornManager::GoNextSwitch(character::SwitchButton *pushedButton)
+    {
+        m_CurrSwitch = ESwitchAcornKind((int(m_CurrSwitch) + 1) % int(ESwitchAcornKind::Max));
+
+        auto next = SwitchAcornEventArgs{pushedButton, m_CurrSwitch};
+        m_OnSwitch.get_subscriber().on_next(&next);
+    }
+
 } // inGame

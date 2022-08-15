@@ -17,8 +17,8 @@ namespace inGame
     class IMainScene;
 
     struct SwitchAcornEventArgs{
-        character::SwitchButton* PushedButton;
-        character::ESwitchAcornKind NextActiveKind;
+        character::SwitchButton* PushedButton{};
+        character::ESwitchAcornKind NextActiveKind{};
     };
 
     class SwitchAcornManager
@@ -26,10 +26,13 @@ namespace inGame
     public:
         explicit SwitchAcornManager(IMainScene* mainScene);
         rx::observable<SwitchAcornEventArgs*> OnSwitch();
-        rx::subscriber<SwitchAcornEventArgs*> SubscribeSwitch();
+        //rx::subscriber<SwitchAcornEventArgs*> SubscribeSwitch();
+        character::ESwitchAcornKind GetCurrSwitch();
+        void GoNextSwitch(character::SwitchButton* pushedButton);
     private:
         IMainScene* const mainScene;
         rx::subject<SwitchAcornEventArgs*> m_OnSwitch{};
+        character::ESwitchAcornKind m_CurrSwitch{};
     };
 
 } // inGame
