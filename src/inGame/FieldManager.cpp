@@ -23,6 +23,8 @@ namespace inGame
         m_ParentalScene->GetScrollManager()->RegisterSprite(m_Texture);
 
         m_MineFlowerManager = std::make_unique<MineFlowerManager>(parentalScene);
+
+        m_SwitchAcornManager = std::make_unique<SwitchAcornManager>(parentalScene);
     }
 
     void FieldManager::Init()
@@ -217,6 +219,11 @@ namespace inGame
     MineFlowerManager *FieldManager::GetMineFlowerManager()
     {
         return m_MineFlowerManager.get();
+    }
+
+    SwitchAcornManager *FieldManager::GetSwitchAcornManager()
+    {
+        return m_SwitchAcornManager.get();
     }
 
     bool FieldManager::CanMovableObjectMoveTo(const MatPos &currPos, EAngle goingAngle)

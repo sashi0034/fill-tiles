@@ -15,6 +15,7 @@
 #include "rx.h"
 #include "../gameEngine/WeakCollection.h"
 #include "MineFlowerManager.h"
+#include "./SwitchAcornManager.h"
 
 namespace inGame
 {
@@ -48,6 +49,8 @@ namespace inGame
 
         virtual WeakCollection<character::CheckpointBlock> &GetCheckpointBlockList(field::ETileKind blockKind) = 0;
         virtual MineFlowerManager* GetMineFlowerManager() = 0;
+
+        virtual SwitchAcornManager* GetSwitchAcornManager() = 0;
     };
 
     class FieldManager : public IFieldManager, public ActorBase
@@ -84,6 +87,7 @@ namespace inGame
         Vec2<int> GetScreenMatSize() const;
 
         MineFlowerManager *GetMineFlowerManager() override;
+        SwitchAcornManager* GetSwitchAcornManager() override;
 
     private:
         void createRenderedTileMapToBuffer(IAppState *appState);
@@ -99,6 +103,7 @@ namespace inGame
         unique_ptr<Graph> m_BufferGraph;
         Vec2<int> m_BufferGraphSize{};
         unique_ptr<MineFlowerManager> m_MineFlowerManager{};
+        unique_ptr<SwitchAcornManager> m_SwitchAcornManager{};
 
         std::unordered_map<field::ETileKind, WeakCollection<character::CheckpointBlock>> m_CheckpointBlockList{};
 
