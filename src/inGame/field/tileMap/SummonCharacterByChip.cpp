@@ -10,6 +10,8 @@
 #include "../../character/BigTree.h"
 #include "../../character/CheckpointBlock.h"
 #include "../../character/GlassFloor.h"
+#include "../../character/SwitchButton.h"
+#include "../../character/SwitchAcorn.h"
 
 
 namespace inGame::field::tileMap
@@ -35,6 +37,15 @@ namespace inGame::field::tileMap
             case ETileKind::checkpoint_block_3:
             case ETileKind::checkpoint_block_4:
                 field->Birth(new character::CheckpointBlock(mainScene, matPos, kind));
+                break;
+            case ETileKind::switch_button:
+                field->Birth(new character::SwitchButton(mainScene, matPos));
+                break;
+            case ETileKind::switch_red:
+                field->Birth(new character::SwitchAcorn(mainScene, matPos, character::ESwitchAcornKind::Red));
+                break;
+            case ETileKind::switch_blue:
+                field->Birth(new character::SwitchAcorn(mainScene, matPos, character::ESwitchAcornKind::Blue));
                 break;
             default:
                 return false;

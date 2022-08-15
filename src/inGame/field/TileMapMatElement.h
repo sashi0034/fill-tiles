@@ -43,6 +43,9 @@ namespace inGame::field
         checkpoint_block_4,
         glass,
         ice,
+        switch_button,
+        switch_red,
+        switch_blue,
 
         max,
     };

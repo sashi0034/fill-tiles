@@ -27,9 +27,11 @@ namespace inGame
     {
     public:
         ZIndexBackGround(SpriteTexture *texture);
+        ZIndexBackGround& GoFront(int frontLargerIndex);
         void ApplyZ() override;
     private:
         SpriteTexture* m_Texture;
+        int m_Index;
     };
 
     class ZIndexCharacter : public ZIndex

@@ -14,7 +14,14 @@ namespace inGame{
 
     void ZIndexBackGround::ApplyZ()
     {
-        m_Texture->SetZ(baseBackGroundZ);
+        m_Texture->SetZ(baseBackGroundZ - m_Index);
+    }
+
+    ZIndexBackGround &ZIndexBackGround::GoFront(int frontLargerIndex)
+    {
+        assert(Range<int>(0, baseRange).IsBetween(frontLargerIndex));
+        m_Index = frontLargerIndex;
+        return *this;
     }
 
     ZIndexCharacter::ZIndexCharacter(CharacterViewModel &character)

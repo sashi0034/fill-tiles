@@ -76,6 +76,21 @@
    <property name="kind" value="ice"/>
   </properties>
  </tile>
+ <tile id="88">
+  <properties>
+   <property name="kind" value="switch_button"/>
+  </properties>
+ </tile>
+ <tile id="89">
+  <properties>
+   <property name="kind" value="switch_red"/>
+  </properties>
+ </tile>
+ <tile id="90">
+  <properties>
+   <property name="kind" value="switch_blue"/>
+  </properties>
+ </tile>
  <tile id="100">
   <properties>
    <property name="kind" value="fines"/>
