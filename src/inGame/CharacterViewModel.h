@@ -21,6 +21,7 @@ namespace inGame
         void SetModelPos(const MatPos& pos);
         void SetCollider(ISprRectColliderOwner *owner, IFieldManager *field, const Rect<int> &collider);
         MatPos GetMatPos() const;
+        Vec2<double> GetViewModelPos() const;
 
         SpriteTexture& GetModel();
         SpriteTexture& GetView();

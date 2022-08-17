@@ -47,4 +47,9 @@ namespace inGame
         return MatPos((pixelPos + FieldManager::MatPixelSize / 2) / FieldManager::PixelPerMat);
     }
 
+    Vec2<double> CharacterViewModel::GetViewModelPos() const
+    {
+        return m_View.GetPosition() + m_ViewModel.GetPosition();
+    }
+
 }

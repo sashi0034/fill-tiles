@@ -27,6 +27,16 @@ namespace inGame{
         return FieldEventInScope(this);
     }
 
+    FieldEventManager* FieldEventManager::AwaitIfEventExist(CoroTaskYield& yield)
+    {
+        while (IsRunning())
+        {
+            yield();
+        }
+
+        return this;
+    }
+
     FieldEventInScope::FieldEventInScope(IFieldEventManagerCountable *manager)
     : m_Manager(manager)
     {}

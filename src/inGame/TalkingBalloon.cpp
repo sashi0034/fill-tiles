@@ -77,7 +77,8 @@ namespace inGame{
 
             if (isInTag) continue;
 
-            if (i % 4 == 0) performAnimRotatingChar(yield, duration/10.0, currStr);
+            constexpr int guruGuruTemp = 5;
+            if (i % guruGuruTemp == 0) performAnimGuruGuruChar(yield, duration / 10.0, currStr);
 
             coroUtil::WaitForTime(yield, m_Text[i]!='>' ? duration/10.0 : duration);
         }
@@ -87,7 +88,7 @@ namespace inGame{
         getBelongingPool()->Destroy(this);
     }
 
-    void TalkingBalloon::performAnimRotatingChar(CoroTaskYield &yield, const double duration, std::string &currStr)
+    void TalkingBalloon::performAnimGuruGuruChar(CoroTaskYield &yield, const double duration, std::string &currStr)
     {
         currStr += " ";
 

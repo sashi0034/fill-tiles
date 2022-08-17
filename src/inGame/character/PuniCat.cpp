@@ -35,7 +35,7 @@ namespace inGame::character
 
     void PuniCat::subscribePlayerAction(IMainScene *mainScene, const Player *player)
     {
-        player->OnAction().subscribe([&, mainScene](auto&& action){
+        player->OnAction().subscribe([&, mainScene, this](auto&& action){
            if (auto actionDetail = dynamic_cast<PlayerActionPushCatfish*>(action))
            {
                auto actedCatfish = actionDetail->TouchedCatfish;

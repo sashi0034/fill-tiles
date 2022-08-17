@@ -5,6 +5,7 @@
 #ifndef FILL_TILES_FIELDEVENTMANAGER_H
 #define FILL_TILES_FIELDEVENTMANAGER_H
 
+#include "../gameEngine/gameEngine.h"
 
 namespace inGame
 {
@@ -32,6 +33,7 @@ namespace inGame
     public:
         [[nodiscard]] FieldEventInScope UseEvent();
         [[nodiscard]] bool IsRunning() const;
+        FieldEventManager* AwaitIfEventExist(CoroTaskYield& yield);
     private:
         void DecreaseEventCount() override;
         void IncreaseEventCount() override;

@@ -44,6 +44,9 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(solid_rock_16x16);
         REGISTER_RESOURCE_PNG(button_floor_16x16);
         REGISTER_RESOURCE_PNG(rb_acorn_16x16);
+        REGISTER_RESOURCE_PNG(egg_16x16);
+        REGISTER_RESOURCE_PNG(chick_16x16);
+        REGISTER_RESOURCE_PNG(chicken_32x32);
 
         explicit Image(IAppState* appState);
     private:
