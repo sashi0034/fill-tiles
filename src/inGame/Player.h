@@ -6,16 +6,18 @@
 #define FILL_TILES_PLAYER_H
 
 #include "ActorBase.h"
-#include "PlayerState.h"
+#include "player/PlayerState.h"
 #include "Angle.h"
 #include "FieldManager.h"
 #include "MainScene.h"
 #include "CharacterViewModel.h"
 #include "rx.h"
-#include "PlayerMoveData.h"
-#include "PlayerActionData.h"
+#include "player/PlayerMoveData.h"
+#include "player/PlayerActionData.h"
 #include "character/Catfish.h"
-#include "PlayerAnimation.h"
+#include "player/PlayerAnimation.h"
+
+using namespace inGame::player;
 
 namespace inGame
 {

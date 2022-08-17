@@ -8,7 +8,7 @@
 #include "GameRoot.h"
 #include "FieldManager.h"
 #include "ZIndex.h"
-#include "PlayerMoveData.h"
+#include "player/PlayerMoveData.h"
 #include "character/Catfish.h"
 #include "character/SolidRock.h"
 
@@ -17,7 +17,7 @@ using namespace boost::coroutines2;
 namespace inGame
 {
     Player::Player(IChildrenPool<ActorBase> *belonging, IMainScene *mainScene)
-            : ActorBase(belonging), m_State(inGame::EPlayerState::Walking), m_ParentalScene(mainScene), m_Field(mainScene->GetFieldManager())
+            : ActorBase(belonging), m_State(EPlayerState::Walking), m_ParentalScene(mainScene), m_Field(mainScene->GetFieldManager())
 {
         m_Image = mainScene->GetRoot()->RscImage->kisaragi_32x32.get();
 
@@ -297,7 +297,7 @@ namespace inGame
 
     void Player::Init()
     {
-        const double fps60 = 1.0 / 60;
+        constexpr double fps60 = 1.0 / 60;
 
         m_SubProcess.Birth(new ProcessTimer([&]() {
             auto scrollPos = m_ParentalScene->GetScrollManager()->CalcScrollToCenter(GetPos());

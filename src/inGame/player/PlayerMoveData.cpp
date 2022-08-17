@@ -4,7 +4,7 @@
 
 #include "PlayerMoveData.h"
 
-namespace inGame
+namespace inGame::player
 {
     PlayerMoveData::PlayerMoveData(const MatPos &beforePos, const MatPos &afterPos, const Angle &movingAngle,
                                    const bool isDash) : BeforePos(beforePos), AfterPos(afterPos),

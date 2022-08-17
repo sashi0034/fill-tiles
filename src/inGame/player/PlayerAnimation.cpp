@@ -3,10 +3,10 @@
 //
 
 #include "PlayerAnimation.h"
-#include "Player.h"
-#include "ParabolaAnimation.h"
+#include "../Player.h"
+#include "../ParabolaAnimation.h"
 
-namespace inGame
+namespace inGame::player
 {
     void PlayerAnimation::AnimWalk(EAngle angle, double frameSpeed)
     {

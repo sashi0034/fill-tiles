@@ -5,10 +5,10 @@
 #ifndef FILL_TILES_PLAYERMOVEDATA_H
 #define FILL_TILES_PLAYERMOVEDATA_H
 
-#include "MatPos.h"
-#include "Angle.h"
+#include "../MatPos.h"
+#include "../Angle.h"
 
-namespace inGame
+namespace inGame::player
 {
     struct PlayerMoveData
     {

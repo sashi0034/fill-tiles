@@ -4,7 +4,7 @@
 
 #include "PlayerActionData.h"
 
-namespace inGame
+namespace inGame::player
 {
     PlayerActionPushCatfish::PlayerActionPushCatfish(character::Catfish *const touchedCatfish) : TouchedCatfish(
             touchedCatfish)

@@ -5,14 +5,16 @@
 #ifndef FILL_TILES_PLAYERANIMATION_H
 #define FILL_TILES_PLAYERANIMATION_H
 
-#include "Angle.h"
-#include "../gameEngine/gameEngine.h"
+#include "../Angle.h"
+#include "../../gameEngine/gameEngine.h"
 
-namespace inGame
-{
+namespace inGame{
     class IMainScene;
     class CharacterViewModel;
+}
 
+namespace inGame::player
+{
     class PlayerAnimation
     {
     public:

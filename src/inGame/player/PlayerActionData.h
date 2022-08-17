@@ -5,12 +5,17 @@
 #ifndef FILL_TILES_PLAYERACTIONDATA_H
 #define FILL_TILES_PLAYERACTIONDATA_H
 
-namespace inGame
-{
+
+namespace inGame{
     namespace character
     {
         class Catfish;
     }
+}
+
+namespace inGame::player
+{
+
 
     class PlayerActionData
     {
