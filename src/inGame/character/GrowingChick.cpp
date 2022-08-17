@@ -112,32 +112,54 @@ namespace inGame::character
             // 入力があるまで待機
             if (inputAngle==EAngle::None) continue;
 
-            animMoveWhenChild(inputAngle);
-            moveByAngleSync(yield, inputAngle);
+            bool hasMoved = tryMoveByAngleSync(yield, inputAngle,
+                                              [inputAngle, this]() { animMoveWhenChild(inputAngle); });
+            if (!hasMoved) continue;
 
+            // 押されてる間歩き続ける
             while (true)
             {
-                EAngle newInputAngle = Player::GetInputAngle(appState->GetKeyboardState());
-                if (newInputAngle==EAngle::None) break;
-
-                // 画像を反転させる必要があるまで移動
-                if (isFlipViewByAngle(inputAngle) != isFlipViewByAngle(newInputAngle)) break;
-
-                inputAngle = newInputAngle;
-                moveByAngleSync(yield, inputAngle);
+                bool hasMovedAgain = moveIfNewInputIsSameOfBefore(yield, &inputAngle);
+                if (!hasMovedAgain) break;
             }
 
             animWaitWhenChild(inputAngle);
         }
     }
 
-    void GrowingChick::moveByAngleSync(CoroTaskYield &yield, EAngle inputAngle)
+    bool GrowingChick::moveIfNewInputIsSameOfBefore(CoroTaskYield &yield, EAngle *inputAngle)
     {
+        EAngle newInputAngle = Player::GetInputAngle(appState->GetKeyboardState());
+        if (newInputAngle==EAngle::None) return false;
+
+        // 画像をまた反転させる必要があるなら移動しない
+        if (isFlipViewByAngle(*inputAngle) != isFlipViewByAngle(newInputAngle)) return false;
+
+        *inputAngle = newInputAngle;
+        bool hasMoved = tryMoveByAngleSync(yield, *inputAngle, [](){});
+        if (!hasMoved) return false;
+
+        return true;
+    }
+
+    bool GrowingChick::tryMoveByAngleSync(CoroTaskYield &yield, EAngle inputAngle, const std::function<void()>& onStartAnim)
+    {
+        auto const field = m_Scene->GetFieldManager();
+
+        if (!field->CheckMoveTo(m_View.GetMatPos(), inputAngle).CanMove) return false;
+
+        onStartAnim();
+
         constexpr double moveTime = 0.5;
         auto moveAnim = animator->TargetTo(m_View.GetModel())
                 ->AnimPosition(Angle(inputAngle).ToXY().CastTo<double>() * pixelPerMat, moveTime)->SetRelative(true)
                 ->ToWeakPtr();
+
         coroUtil::WaitForExpire(yield, moveAnim);
+
+        field->GetMineFlowerManager()->CheckStepOnMine(m_View.GetMatPos());
+
+        return true;
     }
 
     void GrowingChick::animWaitWhenChild(EAngle angle)

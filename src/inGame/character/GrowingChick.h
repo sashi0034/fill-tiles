@@ -48,13 +48,15 @@ namespace inGame::character
         void animWaitWhenChild(EAngle angle);
         void animMoveWhenChild(EAngle angle);
 
-        void moveByAngleSync(CoroTaskYield &yield, EAngle inputAngle);
+        bool tryMoveByAngleSync(CoroTaskYield &yield, EAngle inputAngle, const std::function<void()>& onStartAnim);
 
         void flipViewByAngle(const EAngle &angle);
 
         bool isFlipViewByAngle(const EAngle &angle) const;
 
         void moveUntilConfirm(CoroTaskYield &yield);
+
+        bool moveIfNewInputIsSameOfBefore(CoroTaskYield &yield, EAngle *inputAngle);
     };
 
 } // inGame
