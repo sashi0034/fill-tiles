@@ -148,6 +148,7 @@ namespace inGame{
     {
         const auto app = self->m_MainScene->GetRoot()->GetAppState();
         auto eventInScope = self->m_MainScene->GetFieldEventManager()->UseEvent();
+        eventInScope.TakeScroll();
         eventInScope.StartFromHere();
 
         const auto field = self->m_MainScene->GetFieldManager();

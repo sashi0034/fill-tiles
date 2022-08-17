@@ -6,6 +6,7 @@
 #define FILL_TILES_FIELDEVENTMANAGER_H
 
 #include "../gameEngine/gameEngine.h"
+#include "IntCounter.h"
 
 namespace inGame
 {
@@ -14,8 +15,8 @@ namespace inGame
     class IFieldEventManagerCountable
     {
     public:
-        virtual void IncreaseEventCount() = 0;
-        virtual void DecreaseEventCount() = 0;
+        virtual IntCounter * GetEventCounter() = 0;
+        virtual IntCounter * GetTakingScrollCounter() = 0;
     };
 
     class FieldEventInScope
@@ -24,8 +25,10 @@ namespace inGame
         explicit FieldEventInScope(IFieldEventManagerCountable* manager);
         ~FieldEventInScope();
         void StartFromHere();
+        void TakeScroll();
         IFieldEventManagerCountable* m_Manager;
         bool m_IsStarted = false;
+        IntCounter* m_TakingScroll = nullptr;
     };
 
     class FieldEventManager final : private IFieldEventManagerCountable
@@ -41,12 +44,15 @@ namespace inGame
          */
         [[nodiscard("Hold this object until scope end.")]] FieldEventInScope UseEvent();
         [[nodiscard]] bool IsRunning() const;
+        [[nodiscard]] bool IsTakingScroll() const;
         FieldEventManager* AwaitIfEventExist(CoroTaskYield& yield);
-    private:
-        void DecreaseEventCount() override;
-        void IncreaseEventCount() override;
 
-        int m_RunningEventCount = 0;
+    private:
+        IntCounter * GetEventCounter() override;
+        IntCounter * GetTakingScrollCounter() override;
+    private:
+        IntCounter m_RunningEventCount{};
+        IntCounter m_TakingScrollCount{};
     };
 }
 

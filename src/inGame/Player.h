@@ -16,6 +16,7 @@
 #include "player/PlayerActionData.h"
 #include "character/Catfish.h"
 #include "player/PlayerAnimation.h"
+#include "player/PlayerScroll.h"
 
 using namespace inGame::player;
 
@@ -44,6 +45,7 @@ namespace inGame
         [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveFinish() const;
         [[nodiscard]] rx::observable<PlayerActionData*> OnAction() const;
         void ChangeStateToDead();
+        PlayerScroll* GetScroll();
 
         static EAngle GetInputAngle(const Uint8 *keyState);
         static bool IsPushingConfirm(const Uint8 *keyState);
@@ -55,12 +57,11 @@ namespace inGame
 
         void initAction();
 
-        void scrollByTracking(const Vec2<double> &trackingPos);
-
         static bool isDashing(const Uint8 *keyState);
 
         unique_ptr<CharacterViewModel> m_View{};
         unique_ptr<PlayerAnimation> m_AnimationLogic{};
+        unique_ptr<PlayerScroll> m_PlayerScroll{};
 
         Graph* m_Image;
 
@@ -74,7 +75,6 @@ namespace inGame
         rx::subject<PlayerMoveData*> m_OnMoveBegin{};
         rx::subject<PlayerMoveData*> m_OnMoveFinish{};
         rx::subject<PlayerActionData*> m_OnAction;
-        bool m_ShouldResetScroll = true;
 
         void changeStateToWalking(const PlayerWalkArgs& args);
 

@@ -93,7 +93,12 @@ namespace inGame::character
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, childCellSrcSize});
         setViewPos(childCellSrcSize);
 
+        auto const scroll = m_Scene->GetPlayer()->GetScroll();
+        scroll->ChangeFocus(&m_View.GetModel());
+
         moveUntilConfirm(yield);
+
+        scroll->ResetFocus();
     }
 
     void GrowingChick::moveUntilConfirm(CoroTaskYield &yield)

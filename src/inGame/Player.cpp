@@ -24,6 +24,9 @@ namespace inGame
         initViewModel();
 
         m_AnimationLogic = std::make_unique<PlayerAnimation>(m_ParentalScene, CellSize, m_PlayerAnimator, m_View.get());
+
+    m_PlayerScroll = std::make_unique<PlayerScroll>(
+                m_ParentalScene->GetFieldEventManager(), m_ParentalScene->GetScrollManager(), &m_View->GetModel());
         
         initAction();
     }
@@ -218,7 +221,7 @@ namespace inGame
     {
         LOG_INFO << "Player Position set to " << pos.ToString() << std::endl;
         m_View->GetModel().SetPosition(pos);
-        m_ShouldResetScroll = true;
+        m_PlayerScroll->RequestResetScroll();
     }
 
     void Player::setPos(Vec2<double> newPos)
@@ -270,26 +273,6 @@ namespace inGame
         return m_OnMoveFinish.get_observable();
     }
 
-    void Player::scrollByTracking(const Vec2<double> &trackingPos)
-    {
-        if (isRunningFieldEvent()) return;
-
-        auto scrollManager = m_ParentalScene->GetScrollManager();
-
-        if (m_ShouldResetScroll)
-        {
-            m_ShouldResetScroll = false;
-            scrollManager->SetScroll(trackingPos);
-            return;
-        }
-
-        auto currPos = scrollManager->GetScroll();
-
-        const double deltaMovingRate = 0.02;
-        auto newPos = currPos * (1 - deltaMovingRate ) + trackingPos * deltaMovingRate;
-
-        scrollManager->SetScroll(newPos);
-    }
 
     bool Player::isRunningFieldEvent()
     { return m_ParentalScene->GetFieldEventManager()->IsRunning(); }
@@ -300,12 +283,7 @@ namespace inGame
         constexpr double fps60 = 1.0 / 60;
 
         m_SubProcess.Birth(new ProcessTimer([&]() {
-            auto scrollPos = m_ParentalScene->GetScrollManager()->CalcScrollToCenter(GetPos());
-            scrollPos = m_ParentalScene->GetScrollManager()->MakePosInFieldRange(scrollPos);
-//            constexpr int overhangByWalk = 60;
-//            if (m_State.GetState()==EPlayerState::Walking)
-//                scrollPos = scrollPos - Angle(m_Angle).ToXY().CastTo<double>() * overhangByWalk;
-            scrollByTracking(scrollPos);
+            m_PlayerScroll->UpdateFixedly();
             return EProcessStatus::Running;
         }, fps60));
 
@@ -343,6 +321,10 @@ namespace inGame
         m_AnimationLogic->PerformDead(yield, appState);
     }
 
+    PlayerScroll *Player::GetScroll()
+    {
+        return m_PlayerScroll.get();
+    }
 
 
 }
