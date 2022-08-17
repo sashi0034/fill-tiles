@@ -43,6 +43,9 @@ namespace inGame
         [[nodiscard]] rx::observable<PlayerActionData*> OnAction() const;
         void ChangeStateToDead();
 
+        static EAngle GetInputAngle(const Uint8 *keyState);
+        static bool IsPushingConfirm(const Uint8 *keyState);
+
         static inline const Vec2<int> CellSize{32, 32};
     private:
         void setPos(Vec2<double> newPos);
@@ -71,7 +74,6 @@ namespace inGame
         rx::subject<PlayerActionData*> m_OnAction;
         bool m_ShouldResetScroll = true;
 
-        static EAngle getInputAngle(const Uint8 *keyState);
         void changeStateToWalking(const PlayerWalkArgs& args);
 
         CoroTask wait(CoroTaskYield &yield, IAppState *appState);

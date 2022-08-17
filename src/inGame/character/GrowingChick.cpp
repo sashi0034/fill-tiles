@@ -82,6 +82,7 @@ namespace inGame::character
 
         m_Growth = growth::Child;
 
+        // 卵の殻を割る演出
         effect::TextureScrapping::Produce(effect::TextureScrappingArgs{
                 m_Scene->GetEffectManager(),
                 m_View.GetViewModelPos(),
@@ -92,15 +93,86 @@ namespace inGame::character
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, childCellSrcSize});
         setViewPos(childCellSrcSize);
 
+        moveUntilConfirm(yield);
+    }
+
+    void GrowingChick::moveUntilConfirm(CoroTaskYield &yield)
+    {
+        while (true)
+        {
+            yield();
+
+            const auto keyState = appState->GetKeyboardState();
+
+            const bool isConfirm = Player::IsPushingConfirm(keyState);
+            if (isConfirm) break;
+
+            auto inputAngle = Player::GetInputAngle(keyState);
+
+            // 入力があるまで待機
+            if (inputAngle==EAngle::None) continue;
+
+            animMoveWhenChild(inputAngle);
+            moveByAngleSync(yield, inputAngle);
+
+            while (true)
+            {
+                EAngle newInputAngle = Player::GetInputAngle(appState->GetKeyboardState());
+                if (newInputAngle==EAngle::None) break;
+
+                // 画像を反転させる必要があるまで移動
+                if (isFlipViewByAngle(inputAngle) != isFlipViewByAngle(newInputAngle)) break;
+
+                inputAngle = newInputAngle;
+                moveByAngleSync(yield, inputAngle);
+            }
+
+            animWaitWhenChild(inputAngle);
+        }
+    }
+
+    void GrowingChick::moveByAngleSync(CoroTaskYield &yield, EAngle inputAngle)
+    {
+        constexpr double moveTime = 0.5;
+        auto moveAnim = animator->TargetTo(m_View.GetModel())
+                ->AnimPosition(Angle(inputAngle).ToXY().CastTo<double>() * pixelPerMat, moveTime)->SetRelative(true)
+                ->ToWeakPtr();
+        coroUtil::WaitForExpire(yield, moveAnim);
+    }
+
+    void GrowingChick::animWaitWhenChild(EAngle angle)
+    {
         constexpr double duration = 0.2;
         animator->Destroy(m_AnimationRef);
         m_AnimationRef = animator->TargetTo(m_View.GetView())
-                ->AnimGraph(childCellSrcSize)->SetFrameLoopEndless(true)
+                ->AnimGraph(childCellSrcSize)->SetFrameLoopEndless(true)->SetCanFlip(false)
                 ->AddFrame(Vec2{0, 0}, duration)
                 ->AddFrame(Vec2{1, 0}, duration)
                 ->AddFrame(Vec2{2, 0}, duration)
                 ->ToWeakPtr();
 
+        flipViewByAngle(angle);
+    }
+
+    void GrowingChick::flipViewByAngle(const EAngle &angle)
+    { m_View.GetView().SetFlip(isFlipViewByAngle(angle)); }
+
+    bool GrowingChick::isFlipViewByAngle(const EAngle &angle) const
+    { return (angle == EAngle::Left || angle == EAngle::Down); }
+
+    void GrowingChick::animMoveWhenChild(EAngle angle)
+    {
+        constexpr double duration = 0.2;
+        animator->Destroy(m_AnimationRef);
+        m_AnimationRef = animator->TargetTo(m_View.GetView())
+                ->AnimGraph(childCellSrcSize)->SetFrameLoopEndless(true)->SetCanFlip(false)
+                ->AddFrame(Vec2{0, 1}, duration)
+                ->AddFrame(Vec2{1, 1}, duration)
+                ->AddFrame(Vec2{2, 1}, duration)
+                ->AddFrame(Vec2{3, 1}, duration)
+                ->ToWeakPtr();
+
+        flipViewByAngle(angle);
     }
 
 

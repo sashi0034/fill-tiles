@@ -31,7 +31,15 @@ namespace inGame
     class FieldEventManager final : private IFieldEventManagerCountable
     {
     public:
-        [[nodiscard]] FieldEventInScope UseEvent();
+
+        /**
+         * フィールド上でcoroutine非同期イベントを発生させるときは、イベントスコープの冒頭で以下のように使用します。
+         * ```
+         * auto eventInScope = instance()->AwaitIfEventExist(yield)->UseEvent();
+         * eventInScope.StartFromHere();
+         * ```
+         */
+        [[nodiscard("Hold this object until scope end.")]] FieldEventInScope UseEvent();
         [[nodiscard]] bool IsRunning() const;
         FieldEventManager* AwaitIfEventExist(CoroTaskYield& yield);
     private:

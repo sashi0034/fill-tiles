@@ -31,6 +31,7 @@ namespace inGame::character
         CharacterViewModel m_View;
         TextureAnimationWeakPtr m_AnimationRef{};
         EGrowingChickGrowth m_Growth = EGrowingChickGrowth::Egg;
+        IAppState* appState = m_Scene->GetRoot()->GetAppState();
 
         void subscribePlayerMove(IMainScene *mainScene, const Player *player);
 
@@ -43,6 +44,17 @@ namespace inGame::character
         void startChildProcess(CoroTaskYield& yield);
 
         void setViewPos(const Vec2<int>& cellSize);
+
+        void animWaitWhenChild(EAngle angle);
+        void animMoveWhenChild(EAngle angle);
+
+        void moveByAngleSync(CoroTaskYield &yield, EAngle inputAngle);
+
+        void flipViewByAngle(const EAngle &angle);
+
+        bool isFlipViewByAngle(const EAngle &angle) const;
+
+        void moveUntilConfirm(CoroTaskYield &yield);
     };
 
 } // inGame

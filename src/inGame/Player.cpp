@@ -69,7 +69,7 @@ namespace inGame
     {
         EAngle goingAngle = EAngle::None;
         auto keyState = appState->GetKeyboardState();
-        auto inputAngle = getInputAngle(keyState);
+        auto inputAngle = GetInputAngle(keyState);
 
         if (inputAngle!=EAngle::None)
         {
@@ -200,7 +200,7 @@ namespace inGame
         }
 
         // 引き続き歩行
-        if (this->getInputAngle(appState->GetKeyboardState())==this->m_Angle && isDash== isDashing(appState->GetKeyboardState()))
+        if (this->GetInputAngle(appState->GetKeyboardState()) == this->m_Angle && isDash == isDashing(appState->GetKeyboardState()))
         {
             bool canRestartChangeAnim = args.IsFromOnIce;
             changeStateToWalking(PlayerWalkArgs{appState, goingAngle, canRestartChangeAnim, isDash, false});
@@ -233,13 +233,18 @@ namespace inGame
     }
     
 
-    EAngle Player::getInputAngle(const Uint8 *keyState)
+    EAngle Player::GetInputAngle(const Uint8 *keyState)
     {
         if (keyState[SDL_Scancode::SDL_SCANCODE_W]) return EAngle::Up;
         if (keyState[SDL_Scancode::SDL_SCANCODE_A]) return EAngle::Left;
         if (keyState[SDL_Scancode::SDL_SCANCODE_S]) return EAngle::Down;
         if (keyState[SDL_Scancode::SDL_SCANCODE_D]) return EAngle::Right;
         return EAngle::None;
+    }
+
+    bool Player::IsPushingConfirm(const Uint8 *keyState)
+    {
+        return keyState[SDL_Scancode::SDL_SCANCODE_SPACE];
     }
 
     void Player::changeStateToWalking(const PlayerWalkArgs& args)
