@@ -19,9 +19,9 @@ namespace inGame::character
               m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->egg_16x16.get())
     {
 
-        m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, childCellSrcSize});
-
         m_View.SetModelPos(matPos);
+
+        m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, childCellSrcSize});
 
         setViewPos(eggCellSrcSize);
 
@@ -80,6 +80,22 @@ namespace inGame::character
 
         yield();
 
+        becomeChild();
+
+        auto const scroll = m_Scene->GetPlayer()->GetScroll();
+        scroll->ChangeFocus(&m_View.GetModel());
+
+        coroUtil::WaitForTime(yield, 1.5);
+
+        moveUntilConfirm(yield);
+
+        scroll->ResetFocus();
+
+        becomeAdult();
+    }
+
+    void GrowingChick::becomeChild()
+    {
         m_Growth = growth::Child;
 
         // 卵の殻を割る演出
@@ -92,13 +108,7 @@ namespace inGame::character
         m_View.GetView().SetGraph(m_Scene->GetRoot()->RscImage->chick_16x16.get());
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, childCellSrcSize});
         setViewPos(childCellSrcSize);
-
-        auto const scroll = m_Scene->GetPlayer()->GetScroll();
-        scroll->ChangeFocus(&m_View.GetModel());
-
-        moveUntilConfirm(yield);
-
-        scroll->ResetFocus();
+        animWaitWhenChild(EAngle::Down);
     }
 
     void GrowingChick::moveUntilConfirm(CoroTaskYield &yield)
@@ -200,6 +210,26 @@ namespace inGame::character
                 ->ToWeakPtr();
 
         flipViewByAngle(angle);
+    }
+
+    void GrowingChick::becomeAdult()
+    {
+        m_Growth = growth::Adult;
+
+        m_View.GetView().SetGraph(m_Scene->GetRoot()->RscImage->chicken_32x32.get());
+
+        m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, adultCellSrcSize});
+
+        setViewPos(adultCellSrcSize);
+
+        constexpr double duration = 0.3;
+        animator->Destroy(m_AnimationRef);
+        m_AnimationRef = animator->TargetTo(m_View.GetView())
+                ->AnimGraph(adultCellSrcSize)->SetFrameLoopEndless(true)->SetCanFlip(false)
+                ->AddFrame(Vec2{0, 0}, duration)
+                ->AddFrame(Vec2{1, 0}, duration)
+                ->AddFrame(Vec2{2, 0}, duration)
+                ->ToWeakPtr();
     }
 
 

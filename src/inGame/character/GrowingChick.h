@@ -57,6 +57,10 @@ namespace inGame::character
         void moveUntilConfirm(CoroTaskYield &yield);
 
         bool moveIfNewInputIsSameOfBefore(CoroTaskYield &yield, EAngle *inputAngle);
+
+        void becomeAdult();
+
+        void becomeChild();
     };
 
 } // inGame
