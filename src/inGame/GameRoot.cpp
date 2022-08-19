@@ -55,6 +55,11 @@ namespace inGame{
     {
         return &m_ChildrenPool;
     }
+
+    NineAnchor* GameRoot::GetAnchor()
+    {
+        return &m_Anchor;
+    }
 }
 
 

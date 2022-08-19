@@ -17,6 +17,7 @@ namespace inGame::effect
         Vec2<double> Pos;
         Rect<int> SrcRect;
         Graph* const SrcGraph;
+        const int ScrapSize = 8;
     };
 
     class TextureScrapping : public ActorBase

@@ -19,7 +19,7 @@ namespace inGame::effect
         auto const srcRect = args.SrcRect;
         auto const srcGraph = args.SrcGraph;
 
-        constexpr int stepSize = 8;
+        const int stepSize = args.ScrapSize;
 
         auto&& lua = args.EffectManagerRef->GetRoot()->GetLua()->GetState();
         double focalLength = lua[className]["FocalLength"].get_or(0.0);

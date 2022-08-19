@@ -9,6 +9,7 @@
 #include "../MainScene.h"
 #include "../MatPos.h"
 #include "../CharacterViewModel.h"
+#include "../TextPassage.h"
 
 namespace inGame::character
 {
@@ -26,12 +27,14 @@ namespace inGame::character
 
         void Update(IAppState *app) override;
     private:
+        static const inline std::string className = "GrowingChick";
         IMainScene* m_Scene;
         ITextureAnimator* animator = m_Scene->GetFieldManager()->GetAnimator();
         CharacterViewModel m_View;
         TextureAnimationWeakPtr m_AnimationRef{};
         EGrowingChickGrowth m_Growth = EGrowingChickGrowth::Egg;
         IAppState* appState = m_Scene->GetRoot()->GetAppState();
+        LuaEngine* lua = m_Scene->GetRoot()->GetLua();
 
         void subscribePlayerMove(IMainScene *mainScene, const Player *player);
 
@@ -61,6 +64,13 @@ namespace inGame::character
         void becomeAdult();
 
         void becomeChild();
+
+
+        void performAnimJumpUpWhenBorn(CoroTaskYield &yield);
+
+        unique_ptr<TextPassage> createManualText(IMainScene *mainScene) const;
+
+        void initManualText(unique_ptr<TextPassage> &manualText);
     };
 
 } // inGame

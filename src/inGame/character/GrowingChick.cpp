@@ -36,6 +36,12 @@ namespace inGame::character
         }
     }
 
+    unique_ptr<TextPassage> GrowingChick::createManualText(IMainScene *mainScene) const
+    { return std::make_unique<TextPassage>(
+            mainScene->GetRoot()->GetAppState(), mainScene->GetRoot()->RscFont->KHDotAkihabara32px.get(),
+            Rgba(255, 255, 255),
+            Rgba(16, 16, 16)); }
+
     void GrowingChick::setViewPos(const Vec2<int>& cellSize)
     {
         m_View.GetView().SetPosition(
@@ -73,25 +79,51 @@ namespace inGame::character
         });
     }
 
+    // イベント発生時の一連の処理
     void GrowingChick::startChildProcess(CoroTaskYield &yield)
     {
         auto eventInScope = m_Scene->GetFieldEventManager()->AwaitIfEventExist(yield)->UseEvent();
         eventInScope.StartFromHere();
 
-        yield();
+        auto manualText = createManualText(m_Scene);
+        initManualText(manualText);
 
         becomeChild();
 
         auto const scroll = m_Scene->GetPlayer()->GetScroll();
         scroll->ChangeFocus(&m_View.GetModel());
 
-        coroUtil::WaitForTime(yield, 1.5);
+        performAnimJumpUpWhenBorn(yield);
 
         moveUntilConfirm(yield);
 
         scroll->ResetFocus();
 
         becomeAdult();
+    }
+
+    void GrowingChick::initManualText(unique_ptr<TextPassage> &manualText)
+    {
+        manualText->SetZIndex(10);
+        manualText->SetAlignment(ETextHorizontalAlign::Center, ETextVerticalAlign::Center);
+        manualText->SetPositionParent(m_Scene->GetRoot()->GetAnchor()->GetOf(ENineAnchorX::Center, ENineAnchorY::Bottom));
+        double margin = lua->GetState()[className]["ManualTextMargin"];
+        manualText->SetPos(Vec2<double>{0, -margin});
+        std::string content = lua->GetState()[className]["ManualTextContent"];
+        manualText->UpdateTextAndView(content);
+    }
+
+    void GrowingChick::performAnimJumpUpWhenBorn(CoroTaskYield &yield)
+    {
+        // 生まれて飛び跳ねる
+        ParabolaAnimation::Create(m_Scene->GetEffectManager(), &m_View.GetView())
+            ->SetSpeedByPeekHeightAndTime(8, 0.2)
+            ->AwaitForReturnToStart(yield)
+            ->Forget();
+        ParabolaAnimation::Create(m_Scene->GetEffectManager(), &m_View.GetView())
+                ->SetSpeedByPeekHeightAndTime(4, 0.2)
+                ->AwaitForReturnToStart(yield)
+                ->Forget();
     }
 
     void GrowingChick::becomeChild()
@@ -103,7 +135,8 @@ namespace inGame::character
                 m_Scene->GetEffectManager(),
                 m_View.GetViewModelPos(),
                 m_View.GetView().GetSrcRect(),
-                m_View.GetView().GetGraph()});
+                m_View.GetView().GetGraph(),
+                4});
 
         m_View.GetView().SetGraph(m_Scene->GetRoot()->RscImage->chick_16x16.get());
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, childCellSrcSize});

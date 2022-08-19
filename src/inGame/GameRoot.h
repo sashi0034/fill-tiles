@@ -9,6 +9,7 @@
 #include "resource/Image.h"
 #include "resource/Font.h"
 #include "LuaEngine.h"
+#include "./NineAnchor.h"
 
 namespace inGame
 {
@@ -32,12 +33,14 @@ namespace inGame
         TextureAnimator& GetTextureAnimator();
         LuaEngine* GetLua();
         IChildrenPool<ActorBase>* GetChildren();
+        NineAnchor* GetAnchor();
     private:
         SpriteTexture m_Spr = SpriteTexture::Create();
         ChildrenPool<ActorBase> m_ChildrenPool{};
         TextureAnimator m_TextureAnimator{};
         IAppState* m_AppState;
         LuaEngine m_LuaEngine{this};
+        NineAnchor m_Anchor{};
         void createSelfSpr();
     };
 }
