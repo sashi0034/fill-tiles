@@ -107,8 +107,10 @@ namespace inGame::character
         manualText->SetZIndex(10);
         manualText->SetAlignment(ETextHorizontalAlign::Center, ETextVerticalAlign::Center);
         manualText->SetPositionParent(m_Scene->GetRoot()->GetAnchor()->GetOf(ENineAnchorX::Center, ENineAnchorY::Bottom));
+
         double margin = lua->GetState()[className]["ManualTextMargin"];
         manualText->SetPos(Vec2<double>{0, -margin});
+
         std::string content = lua->GetState()[className]["ManualTextContent"];
         manualText->UpdateTextAndView(content);
     }

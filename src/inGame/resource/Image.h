@@ -47,6 +47,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(egg_16x16);
         REGISTER_RESOURCE_PNG(chick_16x16);
         REGISTER_RESOURCE_PNG(chicken_32x32);
+        REGISTER_RESOURCE_PNG(warp_tile_16x16);
 
         explicit Image(IAppState* appState);
     private:

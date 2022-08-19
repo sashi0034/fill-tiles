@@ -9,6 +9,7 @@
 #include "../../character/Fairy.h"
 #include "../../character/SolidRock.h"
 #include "../../character/GrowingChick.h"
+#include "../../character/WarpTile.h"
 
 
 void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainScene, const std::string &objectType,
@@ -44,6 +45,10 @@ void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainSce
     else if (objectType=="chick")
     {
         characterPool->Birth(new character::GrowingChick(mainScene, matPos));
+    }
+    else if (objectType=="warp")
+    {
+        characterPool->Birth(new character::WarpTile(mainScene, matPos));
     }
     else if (objectType=="test")
     {
