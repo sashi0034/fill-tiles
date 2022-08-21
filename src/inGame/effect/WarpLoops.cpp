@@ -4,6 +4,7 @@
 
 #include "WarpLoops.h"
 #include "../ZIndex.h"
+#include <functional>
 
 namespace inGame::effect
 {
@@ -48,8 +49,8 @@ namespace inGame::effect
 
         lua->GetState()[className]["Update"](
                 m_Lifetime,
-                [&](double alpha){m_Texture.SetBlend(GraphBlend(alpha));},
-                [&](double x, double y){m_Texture.SetPosition(initialPos + Vec2{x, y});},
+                std::function([&](double alpha){m_Texture.SetBlend(GraphBlend(alpha));}),
+                std::function([&](double x, double y){m_Texture.SetPosition(initialPos + Vec2{x, y});}),
                 [&](){getBelongingPool()->Destroy(this);}
         );
     }
