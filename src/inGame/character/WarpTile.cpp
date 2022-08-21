@@ -5,6 +5,9 @@
 #include "WarpTile.h"
 #include "../ZIndex.h"
 #include "../Player.h"
+#include "../effect/WarpLoops.h"
+
+using namespace inGame;
 
 namespace inGame::character
 {
@@ -29,6 +32,7 @@ namespace inGame::character
             subscribePlayer(matPos, player);
         }
 
+        effect::WarpLoops::Produce(mainScene->GetEffectManager(), matPos.ToPixelPos() + FieldManager::MatPixelSize.CastTo<double>() / 2.0 );
     }
 
     void WarpTile::subscribePlayer(const MatPos &matPos, Player *const player)

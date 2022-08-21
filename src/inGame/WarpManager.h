@@ -20,7 +20,7 @@ namespace inGame
         void AddTile(character::WarpTile* tile);
         character::WarpTile* GetNext(character::WarpTile* tile);
     private:
-        // todo: WeakPtrに変える
+        // todo: 念のためWeakPtrに変える
         std::vector<character::WarpTile*> setList{};
     };
 
