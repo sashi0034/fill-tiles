@@ -10,6 +10,7 @@
 #include "../MainScene.h"
 #include "../FieldManager.h"
 #include "../CharacterViewModel.h"
+#include "../WarpManager.h"
 
 namespace inGame::character
 {
@@ -17,10 +18,14 @@ namespace inGame::character
     class WarpTile : public CharacterBase
     {
     public:
-        WarpTile(IMainScene *mainScene, const MatPos &matPos);
-        CharacterViewModel m_View;
+        WarpTile(IMainScene *mainScene, const MatPos &matPos, char key);
+        const MatPos Pos;
     private:
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
+        CharacterViewModel m_View;
+        WarpTileSet* m_Warp;
+
+        void subscribePlayer(const MatPos &matPos, Player *const player);
     };
 
 } // inGame

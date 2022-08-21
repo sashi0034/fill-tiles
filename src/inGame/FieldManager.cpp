@@ -243,6 +243,11 @@ namespace inGame
         if (player!= nullptr) player->SetPos(pos.CastTo<double>());
     }
 
+    WarpManager *FieldManager::GetWarpManager()
+    {
+        return &m_WarpManager;
+    }
+
 
     FieldCheckMoveResult::FieldCheckMoveResult(const bool canMove, ISprRectColliderOwner *const collidedObject)
             : CanMove(canMove), CollidedObject(collidedObject)

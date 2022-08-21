@@ -16,6 +16,7 @@
 #include "../gameEngine/WeakCollection.h"
 #include "MineFlowerManager.h"
 #include "./SwitchAcornManager.h"
+#include "WarpManager.h"
 
 namespace inGame
 {
@@ -51,6 +52,7 @@ namespace inGame
         virtual MineFlowerManager* GetMineFlowerManager() = 0;
 
         virtual SwitchAcornManager* GetSwitchAcornManager() = 0;
+        virtual WarpManager* GetWarpManager() = 0;
     };
 
     class FieldManager : public IFieldManager, public ActorBase
@@ -88,7 +90,7 @@ namespace inGame
 
         MineFlowerManager *GetMineFlowerManager() override;
         SwitchAcornManager* GetSwitchAcornManager() override;
-
+        WarpManager* GetWarpManager() override;
     private:
         void createRenderedTileMapToBuffer(IAppState *appState);
         void renderChip(const field::TilePropertyChip *chip, field::FieldRenderer &fieldRenderer, SDL_Renderer *sdlRenderer,
@@ -101,6 +103,7 @@ namespace inGame
         SprRectColliderManager m_DynamicCharacterCollider{};
         CoroutineManager m_CoroutineManager{};
         unique_ptr<Graph> m_BufferGraph;
+        WarpManager m_WarpManager{};
         Vec2<int> m_BufferGraphSize{};
         unique_ptr<MineFlowerManager> m_MineFlowerManager{};
         unique_ptr<SwitchAcornManager> m_SwitchAcornManager{};

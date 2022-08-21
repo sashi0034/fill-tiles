@@ -48,7 +48,8 @@ void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainSce
     }
     else if (objectType=="warp")
     {
-        characterPool->Birth(new character::WarpTile(mainScene, matPos));
+        assert(objectProperty["key"].length()==1);
+        characterPool->Birth(new character::WarpTile(mainScene, matPos, objectProperty["key"][0]));
     }
     else if (objectType=="test")
     {
