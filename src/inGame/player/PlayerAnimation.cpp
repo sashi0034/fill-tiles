@@ -101,4 +101,24 @@ namespace inGame::player
                                      CharacterViewModel *const view) : mainScene(mainScene), cellSize(cellSize),
                                                                        animator(animator), view(view)
     {}
+
+
+    void PlayerAnimation::PerformWarp(CoroTaskYield &yield, const MatPos &, const MatPos &endPos)
+    {
+        auto eventInScope = mainScene->GetFieldEventManager()->UseEvent();
+        eventInScope.TakeScroll();
+        eventInScope.StartFromHere();
+
+        auto const field = mainScene->GetFieldManager();
+
+        // スクロール
+        const auto scrollPos = mainScene->GetScrollManager()->CalcScrollToCenter(endPos.ToPixelPos());
+        auto animation = field->GetAnimator()->TargetTo(*mainScene->GetScrollManager()->GetSprite())
+                ->AnimPosition(scrollPos, 2.0)->SetEase(EAnimEase::InBack)->ToWeakPtr();
+
+        // スクロールが終わるまで待機
+        coroUtil::WaitForExpire(yield, animation);
+
+        view->GetModel().SetPosition(endPos.ToPixelPos());
+    }
 } // inGame

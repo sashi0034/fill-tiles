@@ -326,5 +326,17 @@ namespace inGame
         return m_PlayerScroll.get();
     }
 
+    void Player::ChangeStateToWarp(const MatPos& startPos, const MatPos& endPos)
+    {
+        m_State.ChangeState(EPlayerState::Warping,
+                            new CoroTaskCall([this, startPos, endPos](auto&& yield) {
+                                performWarp(std::forward<decltype(yield)>(yield), startPos, endPos); }));
+    }
+
+    CoroTask Player::performWarp(CoroTaskYield &yield, MatPos startPos, MatPos endPos)
+    {
+        m_AnimationLogic->PerformWarp(yield, startPos, endPos);
+    }
+
 
 }

@@ -171,7 +171,6 @@ namespace inGame{
         // チェックポイントのブロックがあるところまで画面をスクロール
         auto animation = field->GetAnimator()->TargetTo(*self->m_MainScene->GetScrollManager()->GetSprite())
                 ->AnimPosition(scrollPos, 2.0)->ToWeakPtr();
-        coroUtil::WaitForExpire(yield, animation);
 
         // スクロールが終わるまで待機
         coroUtil::WaitForExpire(yield, animation);

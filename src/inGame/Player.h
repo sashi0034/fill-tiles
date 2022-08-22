@@ -45,6 +45,7 @@ namespace inGame
         [[nodiscard]] rx::observable<PlayerMoveData*> OnMoveFinish() const;
         [[nodiscard]] rx::observable<PlayerActionData*> OnAction() const;
         void ChangeStateToDead();
+        void ChangeStateToWarp(const MatPos& startPos, const MatPos& endPos);
         PlayerScroll* GetScroll();
 
         static EAngle GetInputAngle(const Uint8 *keyState);
@@ -81,6 +82,7 @@ namespace inGame
         CoroTask wait(CoroTaskYield &yield, IAppState *appState);
         CoroTask walk(CoroTaskYield &yield, PlayerWalkArgs args);
         CoroTask performDead(CoroTaskYield& yield, IAppState* appState);
+        CoroTask performWarp(CoroTaskYield &yield, MatPos startPos, MatPos endPos);
 
         EAngle tryWalkOrActionByInput(CoroTaskYield &yield, const IAppState *appState);
 

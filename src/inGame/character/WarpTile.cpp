@@ -41,7 +41,7 @@ namespace inGame::character
             if (data->AfterPos==matPos)
             {
                 auto&& nextWarp = m_Warp->GetNext(this);
-                player->SetPos(nextWarp->Pos.ToPixelPos());
+                player->ChangeStateToWarp(this->Pos, nextWarp->Pos);
             }
         });
     }

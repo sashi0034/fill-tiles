@@ -7,6 +7,7 @@
 
 #include "../Angle.h"
 #include "../../gameEngine/gameEngine.h"
+#include "../MatPos.h"
 
 namespace inGame{
     class IMainScene;
@@ -24,8 +25,9 @@ namespace inGame::player
         void AnimWalk(EAngle angle, double frameSpeed);
         void AnimWait(EAngle angle);
         void PerformDead(CoroTaskYield& yield, IAppState* appState);
+        void PerformWarp(CoroTaskYield& yield, const MatPos& startPos, const MatPos& endPos);
     private:
-        IMainScene* mainScene;
+        IMainScene* const mainScene;
         const Vec2<int> cellSize;
         TextureAnimator& animator;
         CharacterViewModel* const view;

@@ -15,6 +15,7 @@ namespace inGame::player
         Waiting,
         Walking,
         Dead,
+        Warping,
     };
 
     class PlayerState
