@@ -111,14 +111,34 @@ namespace inGame::player
 
         auto const field = mainScene->GetFieldManager();
 
-        // スクロール
-        const auto scrollPos = mainScene->GetScrollManager()->CalcScrollToCenter(endPos.ToPixelPos());
-        auto animation = field->GetAnimator()->TargetTo(*mainScene->GetScrollManager()->GetSprite())
-                ->AnimPosition(scrollPos, 2.0)->SetEase(EAnimEase::InBack)->ToWeakPtr();
+        constexpr double risingDuration = 1.0;
+        constexpr double risingHeight = 80.0;
+        constexpr double guruGuruTime = 0.05;
 
-        // スクロールが終わるまで待機
-        coroUtil::WaitForExpire(yield, animation);
+        animator.Release();
+
+        // ぐるぐる
+        animator.TargetTo(view->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
+                ->AddFrame(Vec2{0, 0}, guruGuruTime)
+                ->AddFrame(Vec2{0, 1}, guruGuruTime)
+                ->AddFrame(Vec2{0, 2}, guruGuruTime)
+                ->AddFrameFlipped(Vec2{0, 1}, guruGuruTime);
+
+        // プレイヤー上昇
+        animator.TargetTo(view->GetView())->AnimPosition(Vec2{0.0, -risingHeight}, risingDuration)->SetRelative(true);
+        coroUtil::WaitForTime(yield, risingDuration);
+
+        // 画面スクロール
+        const auto scrollPos = mainScene->GetScrollManager()->CalcScrollToCenter(endPos.ToPixelPos());
+        auto scrollAnim = field->GetAnimator()->TargetTo(*mainScene->GetScrollManager()->GetSprite())
+                ->AnimPosition(scrollPos, 1.0)->SetEase(EAnimEase::InBack)->ToWeakPtr();
+        coroUtil::WaitForExpire(yield, scrollAnim);
 
         view->GetModel().SetPosition(endPos.ToPixelPos());
+
+        // プレイヤー上昇
+        animator.TargetTo(view->GetView())->AnimPosition(Vec2{0.0, risingHeight}, risingDuration)->SetRelative(true);
+        coroUtil::WaitForTime(yield, risingDuration);
+
     }
 } // inGame
