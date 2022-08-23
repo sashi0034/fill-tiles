@@ -19,21 +19,21 @@ namespace gameEngine::textureAnimator::textureAnimation
 
     bool VirtualDelay::UpdateAnimation(double deltaSecond)
     {
-        if (m_Time>m_DelayTime) return false;
+        if (m_Time > m_DelayTime) return false;
 
         m_Time += deltaSecond;
-        if (m_Time>m_DelayTime){
-           m_Process();
-           return false;
+        if (m_Time > m_DelayTime)
+        {
+            m_Process();
+            return false;
         }
 
         return true;
     }
 
 
-
     Position::Position(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endPos, double endTime)
-    : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
+            : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
         m_EndPos = endPos;
     }
@@ -55,7 +55,7 @@ namespace gameEngine::textureAnimator::textureAnimation
         return !m_Easer.IsDead();
     }
 
-    TextureAnimationEaser * Position::GetEaser()
+    TextureAnimationEaser *Position::GetEaser()
     {
         return &m_Easer;
     }
@@ -63,11 +63,7 @@ namespace gameEngine::textureAnimator::textureAnimation
     Rotation::Rotation(const WeakPtr<SpriteTexture> &targetTexture, double endDeg, double endTime)
             : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
-        if (auto texture = targetTexture.GetPtr())
-        {
-            m_StartDeg = texture->GetRotationDeg();
-            m_EndDeg = endDeg;
-        }
+        m_EndDeg = endDeg;
     }
 
     void Rotation::Start()
@@ -92,11 +88,7 @@ namespace gameEngine::textureAnimator::textureAnimation
     Scale::Scale(const WeakPtr<SpriteTexture> &targetTexture, const Vec2<double> &endScale, double endTime)
             : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
     {
-        if (auto texture = targetTexture.GetPtr())
-        {
-            m_StartScale = texture->GetScale();
-            m_EndScale = endScale;
-        }
+        m_EndScale = endScale;
     }
 
     void Scale::Start()
@@ -119,6 +111,35 @@ namespace gameEngine::textureAnimator::textureAnimation
     }
 
 
+    Blend::Blend(const WeakPtr<SpriteTexture> &targetTexture, int endBlendPal, double endTime)
+            : m_Texture(targetTexture), m_Easer(TextureAnimationEaser(targetTexture, endTime))
+    {
+        m_EndBlendPal = endBlendPal;
+    }
+
+    void Blend::Start()
+    {
+        if (auto texture = m_Texture.GetPtr())
+            m_StartBlend = texture->GetBlend();
+    }
+
+    bool Blend::UpdateAnimation(double deltaSecond)
+    {
+        m_Easer.Update(deltaSecond);
+        if (auto texture = m_Texture.GetPtr())
+            texture->SetBlend(GraphBlend{
+                    m_StartBlend.GetMode(),
+                    m_Easer.CalcProgressValue<int>(m_StartBlend.GetPal(), m_EndBlendPal)
+            });
+        return !m_Easer.IsDead();
+    }
+
+    TextureAnimationEaser *Blend::GetEaser()
+    {
+        return &m_Easer;
+    }
+
+
     Graph::Graph(const WeakPtr<SpriteTexture> &targetTexture, Vec2<int> cellSize)
         : m_Texture(targetTexture)
     {
@@ -135,7 +156,7 @@ namespace gameEngine::textureAnimator::textureAnimation
         if (m_FrameList.empty()) return false;
         if (!m_IsLoopEndless && m_LoopCount >= m_LoopMax) return false;
 
-        if (m_CurrentFrameTime==0) updateTexture();
+        if (m_CurrentFrameTime == 0) updateTexture();
 
         m_CurrentFrameTime += deltaSecond;
         double currFrameTimeMax = m_FrameList[m_CurrentFrameIndex].Duration;
@@ -159,7 +180,7 @@ namespace gameEngine::textureAnimator::textureAnimation
         m_CanFlip = canFlip;
     }
 
-    void Graph::AddFrame(Vec2<int>& cellPos, double duration, bool isFlip)
+    void Graph::AddFrame(Vec2<int> &cellPos, double duration, bool isFlip)
     {
         assert(!isFlip || (isFlip && m_CanFlip));
         m_FrameList.push_back(FrameElement{cellPos, duration, isFlip});
@@ -173,7 +194,7 @@ namespace gameEngine::textureAnimator::textureAnimation
             const auto currCellPos = currFrame.CellPos;
             const auto currSrcXY =
                     m_CellSrcStart
-                    + Vec2<int>{m_CellSize.X * currCellPos.X, m_CellSize.Y *currCellPos.Y};
+                    + Vec2<int>{m_CellSize.X * currCellPos.X, m_CellSize.Y * currCellPos.Y};
             const auto currSrcRect = Rect<int>{currSrcXY.X, currSrcXY.Y, m_CellSize.X, m_CellSize.Y};
             texture->SetSrcRect(currSrcRect);
 
@@ -186,8 +207,9 @@ namespace gameEngine::textureAnimator::textureAnimation
         m_CurrentFrameTime = 0;
         m_CurrentFrameIndex++;
         const int frameSize = m_FrameList.size();
-        if (m_CurrentFrameIndex>=frameSize) stepToNextLoop();
+        if (m_CurrentFrameIndex >= frameSize) stepToNextLoop();
     }
+
     void Graph::stepToNextLoop()
     {
         m_CurrentFrameIndex = 0;

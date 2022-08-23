@@ -37,7 +37,7 @@ namespace gameEngine::textureAnimator
 
         void stepNextLoop();
     public:
-        template<typename T> T CalcProgressValue(T& startValue, T& globalEndValue){
+        template<typename T> T CalcProgressValue(const T& startValue, const T& globalEndValue){
             T endValue = globalEndValue;
             if (m_IsRelative) endValue = endValue + startValue;
             T ret = startValue * (1.0-m_ProgressRatio) + endValue * m_ProgressRatio;

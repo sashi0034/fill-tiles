@@ -113,19 +113,21 @@ namespace inGame::player
 
         constexpr double risingDuration = 1.0;
         constexpr double risingHeight = 80.0;
-        constexpr double guruGuruTime = 0.05;
+        constexpr double fadeDuration = 0.3;
+        constexpr double guruGuruDuration = 0.05;
 
         animator.Release();
 
         // ぐるぐる
         animator.TargetTo(view->GetView())->AnimGraph(cellSize)->SetFrameLoopEndless(true)
-                ->AddFrame(Vec2{0, 0}, guruGuruTime)
-                ->AddFrame(Vec2{0, 1}, guruGuruTime)
-                ->AddFrame(Vec2{0, 2}, guruGuruTime)
-                ->AddFrameFlipped(Vec2{0, 1}, guruGuruTime);
+                ->AddFrame(Vec2{0, 0}, guruGuruDuration)
+                ->AddFrame(Vec2{0, 1}, guruGuruDuration)
+                ->AddFrame(Vec2{0, 2}, guruGuruDuration)
+                ->AddFrameFlipped(Vec2{0, 1}, guruGuruDuration);
 
         // プレイヤー上昇
         animator.TargetTo(view->GetView())->AnimPosition(Vec2{0.0, -risingHeight}, risingDuration)->SetRelative(true);
+        animator.TargetTo(view->GetView())->VirtualDelay([](){}, risingDuration - fadeDuration)->Then()->AnimBlend(0, fadeDuration);
         coroUtil::WaitForTime(yield, risingDuration);
 
         // 画面スクロール
@@ -138,6 +140,7 @@ namespace inGame::player
 
         // プレイヤー上昇
         animator.TargetTo(view->GetView())->AnimPosition(Vec2{0.0, risingHeight}, risingDuration)->SetRelative(true);
+        animator.TargetTo(view->GetView())->AnimBlend(255, fadeDuration);
         coroUtil::WaitForTime(yield, risingDuration);
 
     }

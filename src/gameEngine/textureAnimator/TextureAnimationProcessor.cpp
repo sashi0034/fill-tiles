@@ -207,6 +207,18 @@ namespace gameEngine::textureAnimator
         return this->GetWeakPtr().ToUpCasted<ITextureAnimationEaseProperty>().ToUpCasted<ITextureAnimationPointer>();
     }
 
+    ITextureAnimationEaseProperty *TextureAnimationProcessor::AnimBlend(int endBlendPal, double duration)
+    {
+        auto nextAnimation =  new TextureAnimationProcessor(m_TargetTexture, m_ParentalPool, &m_SelfWeakPtr);
+        nextAnimation->m_AnimationProcess = std::make_unique<textureAnimation::Blend>(
+                m_TargetTexture, endBlendPal, duration);
+
+        m_ParentalPool->Birth(nextAnimation);
+        m_NextAnimation = nextAnimation->GetWeakPtr();
+        return nextAnimation;
+
+    }
+
 }
 
 

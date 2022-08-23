@@ -84,6 +84,22 @@ namespace gameEngine::textureAnimator::textureAnimation
         TextureAnimationEaser m_Easer;
     };
 
+    class Blend final: public EaseAbleAnimationBase
+    {
+    public:
+        Blend(const WeakPtr<SpriteTexture> &targetTexture, int endBlendPal, double endTime);
+        void Start() override;
+        bool UpdateAnimation(double deltaSecond) override;
+        TextureAnimationEaser * GetEaser() override;
+        ~Blend() override = default;
+    private:
+        WeakPtr<SpriteTexture> m_Texture;
+        GraphBlend m_StartBlend{};
+        int m_EndBlendPal;
+        TextureAnimationEaser m_Easer;
+    };
+
+
     class Graph final: public AnimationBase
     {
     public:
