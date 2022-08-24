@@ -1,0 +1,27 @@
+//
+// Created by sashi0034 on 2022/08/25.
+//
+
+#ifndef FILL_TILES_TITLEBACKGROUND_H
+#define FILL_TILES_TITLEBACKGROUND_H
+
+#include "../ActorBase.h"
+
+namespace inGame::title
+{
+    class MenuScene;
+
+    class TitleBackground : public ActorBase
+    {
+    public:
+        TitleBackground(MenuScene* menuScene);
+    private:
+        MenuScene* const menuScene;
+        Graph* const _bgChip;
+        SpriteTexture _texture = SpriteTexture::Create();
+        void render(IAppState* app);
+    };
+
+} // inGame
+
+#endif //FILL_TILES_TITLEBACKGROUND_H

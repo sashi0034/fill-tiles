@@ -3,7 +3,10 @@
 //
 
 
-// フィールドデバッグシーン
+// メインシーンデバッグ
+//#define INGAME_DEBUG_MAINSCENE  1
+
+// フィールドデバッグ
 //#define INGAME_DEBUG_FIELDVIEW
 
 // エフェクトテスト

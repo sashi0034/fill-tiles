@@ -51,7 +51,8 @@ namespace gameEngine
 
         int w, h;
         SDL_GetWindowSize(m_Window, &w, &h);
-        m_ScreenSize = Vec2{w/m_PixelPerUnit, h/m_PixelPerUnit};
+        m_RealScreenSize = Vec2{w, h};
+        m_ScreenSize = m_RealScreenSize / m_PixelPerUnit;
 
         m_KeyboardState = SDL_GetKeyboardState(NULL);
         m_Time->Update(true);
@@ -113,6 +114,11 @@ namespace gameEngine
     const IMouseState *AppState::GetMouseState() const
     {
         return &m_Mouse;
+    }
+
+    Vec2<int> AppState::GetRealScreenSize() const
+    {
+        return m_RealScreenSize;
     }
 
 }

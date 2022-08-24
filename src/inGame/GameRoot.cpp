@@ -8,6 +8,7 @@
 #include "MainScene.h"
 #include "test/FieldViewDebugScene.h"
 #include "../debug.h"
+#include "title/MenuScene.h"
 
 namespace inGame{
     GameRoot::GameRoot(IAppState *appState)
@@ -16,10 +17,13 @@ namespace inGame{
       m_AppState(appState)
     {
         createSelfSpr();
+
 #ifdef INGAME_DEBUG_FIELDVIEW
         m_ChildrenPool.Birth(new FieldViewDebugScene(&m_ChildrenPool, this, Vec2{0.0, 0.0}));
-#else
+#elif INGAME_DEBUG_MAINSCENE
         m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this, 1));
+#else
+        m_ChildrenPool.Birth(new title::MenuScene(&m_ChildrenPool, this));
 #endif
     }
 
