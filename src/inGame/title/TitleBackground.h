@@ -15,10 +15,14 @@ namespace inGame::title
     {
     public:
         TitleBackground(MenuScene* menuScene);
+        void Update(IAppState *appState) override;
     private:
         MenuScene* const menuScene;
         Graph* const _bgChip;
+        constexpr static int bgChipSize = 64;
         SpriteTexture _texture = SpriteTexture::Create();
+        double _offsetY = 0;
+
         void render(IAppState* app);
     };
 

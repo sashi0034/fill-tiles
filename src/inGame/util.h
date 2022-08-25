@@ -7,13 +7,14 @@
 
 #include "../gameEngine/gameEngine.h"
 
+#include "./pixel.h"
 
 namespace inGame
 {
     namespace util
     {
         Vec2<double> GetTextureCentralPos(SpriteTexture& texture);
-        void SetTextureByCenter(SpriteTexture& texture, const Vec2<double>& pos);
+        void SetTextureByCenter(SpriteTexture& texture, const Vec2<double>& pos, int pixelPerUnit=pixel::PixelPerUnit);
     }
 }
 

@@ -4,6 +4,7 @@
 
 #include "MenuScene.h"
 #include "TitleBackground.h"
+#include "./StageContainer.h"
 
 namespace inGame::title
 {
@@ -13,6 +14,7 @@ namespace inGame::title
     {
         m_ChildrenPool.Birth(new TitleBackground(this));
 
+        m_ChildrenPool.Birth(new StageContainer(this));
 
         m_ChildrenPool.ProcessEach([&](auto& child){ child.Init();});
     }

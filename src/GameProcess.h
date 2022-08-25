@@ -6,10 +6,11 @@
 #define FILL_TILES_GAMEPROCESS_H
 
 #include "debug.h"
+#include "inGame/pixel.h"
 
 class GameProcess {
 private:
-    static const int pixelPerUnit = 3;
+    static const int pixelPerUnit = inGame::pixel::PixelPerUnit;
     static const int screenWidth = 416;
     static const int screenHeight = 240;
 public:

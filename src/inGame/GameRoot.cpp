@@ -19,7 +19,7 @@ namespace inGame{
         createSelfSpr();
 
 #ifdef INGAME_DEBUG_FIELDVIEW
-        m_ChildrenPool.Birth(new FieldViewDebugScene(&m_ChildrenPool, this, Vec2{0.0, 0.0}));
+        m_ChildrenPool.Birth(new field::FieldViewDebugScene(&m_ChildrenPool, this, Vec2{0.0, 0.0}));
 #elif INGAME_DEBUG_MAINSCENE
         m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this, 1));
 #else

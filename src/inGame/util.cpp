@@ -6,10 +6,11 @@
 
 namespace inGame
 {
-    void util::SetTextureByCenter(SpriteTexture &texture, const Vec2<double> &pos)
+    void util::SetTextureByCenter(SpriteTexture &texture, const Vec2<double> &pos, int pixelPerUnit)
     {
         const auto size = texture.GetSrcRect().GetSize().CastTo<double>();
-        texture.SetPosition(pos - size / 2.0);
+        const double unitRate = double(pixelPerUnit) / pixel::PixelPerUnit;
+        texture.SetPosition(pos - size * unitRate / 2.0);
     }
 
     Vec2<double> util::GetTextureCentralPos(SpriteTexture &texture)

@@ -17,6 +17,7 @@
 #include "MineFlowerManager.h"
 #include "./SwitchAcornManager.h"
 #include "WarpManager.h"
+#include "pixel.h"
 
 namespace inGame
 {
@@ -83,7 +84,7 @@ namespace inGame
 
         field::ITileMap* GetTileMap() override;
 
-        static inline const int PixelPerMat = 16;
+        static inline const int PixelPerMat = pixel::PixelPerMat;
         static inline const Vec2<int> MatPixelSize = {PixelPerMat, PixelPerMat};
         static inline const Vec2<double> CharacterPadding{0, -PixelPerMat/4};
         Vec2<int> GetScreenMatSize() const;
