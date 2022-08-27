@@ -6,6 +6,7 @@
 #define FILL_TILES_STAGECONTAINER_H
 
 #include "./StageView.h"
+#include "StageClearInfoView.h"
 #include "../pixel.h"
 
 
@@ -20,6 +21,7 @@ namespace inGame::title
     private:
         MenuScene* const _sceneRef;
         std::vector<unique_ptr<StageView>> _viewList;
+        unique_ptr<StageClearInfoView> _infoView;
         SpriteTexture _emptySpr = SpriteTexture::Create();
         static constexpr int viewOffsetX = 880 / pixel::PixelPerUnit;
 

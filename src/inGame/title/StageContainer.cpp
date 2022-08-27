@@ -19,6 +19,10 @@ namespace inGame::title
         {
             createNewView(i, sceneRef, imageDir);
         }
+
+        _infoView = std::make_unique<StageClearInfoView>(StageClearInfoViewArgs{
+            sceneRef
+        });
     }
 
     void StageContainer::createNewView(int index, MenuScene *const sceneRef, const std::string &imageDir)
