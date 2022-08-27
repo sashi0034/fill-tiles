@@ -9,8 +9,8 @@
 
 namespace inGame{
 
-    TalkingBalloon::TalkingBalloon(IMainScene *scene, const std::string &text, const Vec2<double> &pos)
-        : ActorBase(scene->GetEffectManager()->GetChildren()),
+    TalkingBalloon::TalkingBalloon(IMainScene *scene, const std::string &text, const Vec2<double> &pos) :
+          ActorBase(scene->GetEffectManager()->GetChildren()),
           m_Scene(scene),
           m_Text(text),
           m_TextPassage(scene->GetRoot()->GetAppState(),

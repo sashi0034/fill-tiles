@@ -23,14 +23,17 @@ namespace inGame::title
 
     void StageContainer::createNewView(int index, MenuScene *const sceneRef, const std::string &imageDir)
     {
-        std::stringstream ss{};
-        ss << imageDir << "field_" << index / 10 << index % 10 << ".png";
+        std::stringstream screenshotPath{};
+        std::stringstream stageIndexText{};
+        stageIndexText << index / 10 << index % 10;
+        screenshotPath << imageDir << "field_" << stageIndexText.str() << ".png";
 
         _viewList.emplace_back(std::make_unique<StageView>(StageViewArgs{
-            sceneRef,
-            _emptySpr,
-            Vec2<double>((index - 1) * viewOffsetX, 0),
-            ss.str()
+                index,
+                sceneRef,
+                _emptySpr,
+                Vec2<double>((index - 1) * viewOffsetX, 0),
+                screenshotPath.str()
         }));
     }
 
