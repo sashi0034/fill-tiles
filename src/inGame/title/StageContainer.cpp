@@ -26,18 +26,12 @@ namespace inGame::title
         std::stringstream ss{};
         ss << imageDir << "field_" << index / 10 << index % 10 << ".png";
 
-        auto screenShot = std::make_unique<ScreenshotView>(
-                sceneRef,
-                Vec2<double>((index - 1) * viewOffsetX, 0),
-                ss.str(),
-                _emptySpr
-        );
-
-        _viewList.emplace_back(std::make_unique<StageView>(index, screenShot));
+        _viewList.emplace_back(std::make_unique<StageView>(StageViewArgs{
+            sceneRef,
+            _emptySpr,
+            Vec2<double>((index - 1) * viewOffsetX, 0),
+            ss.str()
+        }));
     }
 
-    StageView::StageView(const int numStage, unique_ptr<ScreenshotView> &screenshot) :
-        NumStage(numStage),
-        Screenshot(std::move(screenshot))
-    {}
 } // inGame

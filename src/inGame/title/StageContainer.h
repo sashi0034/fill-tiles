@@ -5,18 +5,13 @@
 #ifndef FILL_TILES_STAGECONTAINER_H
 #define FILL_TILES_STAGECONTAINER_H
 
-#include "./ScreenshotView.h"
+#include "./StageView.h"
 #include "../pixel.h"
 
 
 namespace inGame::title
 {
-    struct StageView
-    {
-        const int NumStage;
-        const unique_ptr<ScreenshotView> Screenshot;
-        StageView(int numStage, unique_ptr<ScreenshotView> &screenshot);
-    };
+
 
     class StageContainer : public ActorBase
     {
