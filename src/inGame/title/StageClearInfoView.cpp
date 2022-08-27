@@ -9,7 +9,7 @@
 namespace inGame::title
 {
     static const inline Vec2<double> bgSize = Vec2<double>{160.0, 48.0};
-    constexpr double centerY = -24;
+    constexpr double centerY = -28;
 
     StageClearInfoView::StageClearInfoView(const StageClearInfoViewArgs &args)
     {

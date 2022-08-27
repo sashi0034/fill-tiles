@@ -63,8 +63,8 @@ namespace inGame
                                         const Vec2<int> &renderingChipEndPoint,
                                         SDL_Renderer *const sdlRenderer, SDL_Texture *renderingTarget)
     {
-        SDL_SetRenderTarget(sdlRenderer, renderingTarget);
-        SDL_RenderClear(sdlRenderer);
+        auto renderChange = TempRenderTargetChanger(sdlRenderer);
+        renderChange.ChangeInScope(renderingTarget)->RenderClear();
 
         for (int chipY = renderingChipStartingPoint.Y; chipY<=renderingChipEndPoint.Y; ++chipY)
             for (int chipX = renderingChipStartingPoint.X; chipX<=renderingChipEndPoint.X; ++chipX)
@@ -89,8 +89,6 @@ namespace inGame
                 for (const auto chip : chipList)
                     renderChip(chip, fieldRenderer, sdlRenderer, renderingPos, renderingSize);
             }
-
-        SDL_SetRenderTarget(sdlRenderer, nullptr);
     }
 
     void

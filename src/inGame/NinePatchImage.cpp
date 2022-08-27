@@ -57,8 +57,8 @@ namespace inGame
 
     void NinePatchImage::renderUnsafely(SDL_Renderer *renderer, SDL_Texture *renderingTarget) const
     {
-        SDL_SetRenderTarget(renderer, renderingTarget);
-        SDL_RenderClear(renderer);
+        auto renderChange = TempRenderTargetChanger(renderer);
+        renderChange.ChangeInScope(renderingTarget)->RenderClear();
 
         for (int x=0; x<3; ++x)
         {
@@ -78,8 +78,6 @@ namespace inGame
                 SDL_RenderCopy(renderer, m_SrcGraph->GetSdlTexture(), &srcRect, &destRect);
             }
         }
-
-        SDL_SetRenderTarget(renderer, nullptr);
     }
 
     SpriteTexture &NinePatchImage::GetSprite()

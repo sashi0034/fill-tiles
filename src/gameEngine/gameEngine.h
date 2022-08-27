@@ -32,6 +32,7 @@
 #include "ProcessTimer.h"
 #include "WeakCollection.h"
 #include "TextureText.h"
+#include "TempRenderTargetChanger.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

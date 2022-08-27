@@ -13,12 +13,14 @@ namespace gameEngine
     AppState::AppState()
     {}
 
-    AppState::AppState(const Vec2<int> &screenSize, const int pixelPerUnit, SDL_Window* window)
-        : m_ScreenSize(screenSize), m_PixelPerUnit(pixelPerUnit)
+    AppState::AppState(const Vec2<int> &screenSize, const int pixelPerUnit, SDL_Window* window) :
+        m_ScreenSize(screenSize),
+        m_PixelPerUnit(pixelPerUnit)
     {
         m_Time = std::make_unique<Time>();
         m_Window = window;
         m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        resetRenderingBuffer(screenSize * m_PixelPerUnit);
     }
 
     int AppState::GetPixelPerUnit() const
@@ -49,21 +51,46 @@ namespace gameEngine
     {
         pollEvent();
 
-        int w, h;
-        SDL_GetWindowSize(m_Window, &w, &h);
-        m_RealScreenSize = Vec2{w, h};
-        m_ScreenSize = m_RealScreenSize / m_PixelPerUnit;
+        checkChangeWindowSize();
 
         m_KeyboardState = SDL_GetKeyboardState(NULL);
         m_Time->Update(true);
         SpriteTexture::UpdateAll(this);
     }
 
+    constexpr int maxPixelInScreen = 1600 * 900;
+
+    void AppState::checkChangeWindowSize()
+    {
+        int w, h;
+        SDL_GetWindowSize(m_Window, &w, &h);
+        if (m_LiteralRealScreenSize.X == w && m_LiteralRealScreenSize.Y == h) return;
+
+        m_LiteralRealScreenSize = Vec2{w, h};;
+
+        // 解像度が最大値を超えないようにする
+        const double smallerRate = std::sqrt(
+                std::min(1.0, double(maxPixelInScreen) / (w * h)));
+
+        m_RealScreenSize = Vec2{int(w * smallerRate), int(h * smallerRate)};
+
+        resetRenderingBuffer(m_RealScreenSize);
+
+        m_ScreenSize = m_RealScreenSize / m_PixelPerUnit;
+    }
+
     void AppState::RenderFrame()
     {
+        SDL_SetRenderTarget(m_Renderer, m_RenderingBuffer->GetSdlTexture());
         SDL_RenderClear(m_Renderer);
 
         SpriteTexture::RenderAll(this);
+
+        SDL_SetRenderTarget(m_Renderer, nullptr);
+        SDL_RenderClear(m_Renderer);
+
+        auto destRect = SDL_Rect{0, 0, m_LiteralRealScreenSize.X, m_LiteralRealScreenSize.Y};
+        SDL_RenderCopy(m_Renderer, m_RenderingBuffer->GetSdlTexture(), nullptr, &destRect);
 
         SDL_RenderPresent(m_Renderer);
     }
@@ -119,6 +146,17 @@ namespace gameEngine
     Vec2<int> AppState::GetRealScreenSize() const
     {
         return m_RealScreenSize;
+    }
+
+    void AppState::resetRenderingBuffer(const Vec2<int> &newSize)
+    {
+        // 解像度調整で拡大するときに、ぼかしを加える
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+
+        SDL_Texture *renderingTarget = SDL_CreateTexture(m_Renderer, SDL_PIXELFORMAT_RGBA8888,
+                                                         SDL_TEXTUREACCESS_TARGET, newSize.X, newSize.Y);
+        m_RenderingBuffer = std::make_unique<Graph>(renderingTarget);
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
     }
 
 }

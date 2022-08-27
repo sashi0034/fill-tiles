@@ -10,6 +10,7 @@
 #include "Time.h"
 #include "Vec2.h"
 #include "MouseState.h"
+#include "Graph.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -45,6 +46,7 @@ namespace gameEngine
     private:
         Vec2<int> m_ScreenSize{};
         Vec2<int> m_RealScreenSize{};
+        Vec2<int> m_LiteralRealScreenSize{};
         const int m_PixelPerUnit=0;
         unique_ptr<Time> m_Time{};
         SDL_Window* m_Window{};
@@ -54,6 +56,9 @@ namespace gameEngine
         void pollEvent();
         void processEvent(SDL_Event &e);
         MouseState m_Mouse{};
+        unique_ptr<Graph> m_RenderingBuffer{};
+        void resetRenderingBuffer(const Vec2<int> &newSize);
+
     public:
         [[nodiscard]] int GetPixelPerUnit() const override;
         [[nodiscard]] Vec2<int> GetScreenSize() const override;
@@ -63,6 +68,8 @@ namespace gameEngine
         [[nodiscard]] SDL_Renderer* GetRenderer() const override;
         [[nodiscard]] const Uint8* GetKeyboardState() const override;
         const IMouseState *GetMouseState() const override;
+
+        void checkChangeWindowSize();
     };
 }
 
