@@ -29,11 +29,13 @@ namespace inGame::title
         const unique_ptr<ScreenshotView> _screenshot;
         SpriteTexture _tenthsIndexSpr = SpriteTexture::Create();
         SpriteTexture _onesIndexSpr = SpriteTexture::Create();
+        SpriteTexture _crownSpr = SpriteTexture::Create();
 
         static unique_ptr<ScreenshotView> createScreenshot(const StageViewArgs &args);
         void initIndexSprites(const StageViewArgs &args);
 
         void initIndexSpr(const StageViewArgs &args, SpriteTexture &spr, int index, double modifierX) const;
+        void initCrown(const StageViewArgs &args);
     };
 
 } // inGame

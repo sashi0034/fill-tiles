@@ -17,6 +17,7 @@ namespace inGame::title
             _screenshot(createScreenshot(args))
     {
         initIndexSprites(args);
+        initCrown(args);
     }
 
     unique_ptr<ScreenshotView> StageView::createScreenshot(const StageViewArgs &args)
@@ -36,16 +37,29 @@ namespace inGame::title
         initIndexSpr(args, _onesIndexSpr, args.NumStageIndex%10, 1);
     }
 
+    constexpr double headerCenterY = -88;
+
     void StageView::initIndexSpr(const StageViewArgs &args, SpriteTexture &spr, int index, double modifierX) const
     {
         constexpr double space = 16;
-        constexpr double centerY = -88;
         constexpr int cellSize = 32;
 
         spr.SetGraph(args.SceneRef->RootRef->RscImage->numbers_32x32.get());
         spr.SetSrcRect(Rect<int>{Vec2{cellSize * index, 0}, Vec2{cellSize, cellSize}});
-        util::SetTextureByCenter(spr, args.CenterPos + Vec2<double>{modifierX * space, centerY});
+        util::SetTextureByCenter(spr, args.CenterPos + Vec2<double>{modifierX * space, headerCenterY});
         spr.SetPositionParent(args.ParentSpr);
+        spr.SetZ(zIndex::Screenshot-1);
+    }
+
+    void StageView::initCrown(const StageViewArgs &args)
+    {
+        auto&& image =args.SceneRef->RootRef->RscImage->crown.get();
+        _crownSpr.SetGraph(image);
+        _crownSpr.SetSrcRect(Rect{Vec2{0, 0}, image->GetSize()});
+        constexpr double padY = -4;
+        util::SetTextureByCenter(_crownSpr, args.CenterPos + Vec2<double>{0, headerCenterY + padY});
+        _crownSpr.SetPositionParent(args.ParentSpr);
+        _crownSpr.SetZ(zIndex::Screenshot);
     }
 
 } // inGame
