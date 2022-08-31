@@ -20,13 +20,13 @@ add_subdirectory(Lua)
 
 # Set Cmake modules
 set(Boost_NO_BOOST_CMAKE ON)
-set(BOOST_ROOT "/home/sashi/boost_1_79_0")
+set(BOOST_ROOT $ENV{HOME}/boost_1_79_0)
 set(Boost_INCLUDE_DIR ${BOOST_ROOT}/include)
 set(Boost_LIBRARY_DIR ${BOOST_ROOT}/lib)
 find_package(Boost COMPONENTS context REQUIRED)
 
-set(cpplinq_INCLUDE_DIR "/home/sashi/RxCpp-4.1.1/Ix/CPP/src")
-set(RxCpp_INCLUDE_DIR "/home/sashi/RxCpp-4.1.1/Rx/v2/src")
+set(cpplinq_INCLUDE_DIR $ENV{HOME}/RxCpp-4.1.1/Ix/CPP/src)
+set(RxCpp_INCLUDE_DIR $ENV{HOME}/RxCpp-4.1.1/Rx/v2/src)
 
 
 # Add all cpp source files under the src directory

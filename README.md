@@ -1,12 +1,22 @@
 # fill-tiles
 ゲーム (SD2)
 
-## Debug
-**(後で追記)**
-- RxCpp-4.1.1
-- boost_1_79_0
+C++20
+
+## Debug Build
+以下のライブラリをホームディレクトリ直下に置きます。
+- `RxCpp-4.1.1`
+- `boost_1_79_0`
+
+### 準備
 ```
+mkdir ./cmake-build-debug
 cd ./cmake-build-debug
+ln -s ../assets
+```
+
+### ビルド
+```
 cmake ..
 make
 ```
