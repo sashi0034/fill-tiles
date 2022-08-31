@@ -17,6 +17,7 @@
 #include "character/Catfish.h"
 #include "player/PlayerAnimation.h"
 #include "player/PlayerScroll.h"
+#include "player/input.h"
 
 using namespace inGame::player;
 
@@ -47,9 +48,6 @@ namespace inGame
         void ChangeStateToDead();
         void ChangeStateToWarp(const MatPos& startPos, const MatPos& endPos);
         PlayerScroll* GetScroll();
-
-        static EAngle GetInputAngle(const Uint8 *keyState);
-        static bool IsPushingConfirm(const Uint8 *keyState);
 
         static inline const Vec2<int> CellSize{32, 32};
     private:

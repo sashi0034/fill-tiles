@@ -154,10 +154,10 @@ namespace inGame::character
 
             const auto keyState = appState->GetKeyboardState();
 
-            const bool isConfirm = Player::IsPushingConfirm(keyState);
+            const bool isConfirm = input::IsPushingConfirm(keyState);
             if (isConfirm) break;
 
-            auto inputAngle = Player::GetInputAngle(keyState);
+            auto inputAngle = input::GetInputAngle(keyState);
 
             // 入力があるまで待機
             if (inputAngle==EAngle::None) continue;
@@ -179,7 +179,7 @@ namespace inGame::character
 
     bool GrowingChick::moveIfNewInputIsSameOfBefore(CoroTaskYield &yield, EAngle *inputAngle)
     {
-        EAngle newInputAngle = Player::GetInputAngle(appState->GetKeyboardState());
+        EAngle newInputAngle = input::GetInputAngle(appState->GetKeyboardState());
         if (newInputAngle==EAngle::None) return false;
 
         // 画像をまた反転させる必要があるなら移動しない
