@@ -11,12 +11,13 @@
 #include "RemainingMineUi.h"
 #include "./test/EffectTest.h"
 #include "../debug.h"
+#include "test/FieldViewTest.h"
 
 
 namespace inGame{
-    MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root, int initialLevel)
-            : ActorBase(parent),
-            InitialLevel(initialLevel),
+    MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root, const MainSceneResetInfo &resetInfo):
+            ActorBase(parent),
+            InitialLevel(resetInfo.InitialLevel),
             m_Root(root)
     {
         m_ScrollManager = std::make_unique<ScrollManager>(this);
@@ -33,6 +34,11 @@ namespace inGame{
 #ifdef INGAME_DEBUG_EFFECTTEST
         m_ChildrenPool.Birth(new test::EffectTest(this, &m_ChildrenPool));
 #endif
+#ifdef INGAME_DEBUG_FIELDVIEW
+        m_ChildrenPool.Birth(new test::FieldViewTest(this, &m_ChildrenPool));
+#endif
+
+        m_ScrollManager->SetScroll(resetInfo.ScrollPos);
 
         initAfterBirth();
     }
@@ -53,7 +59,7 @@ namespace inGame{
 
         m_TextureAnimator.Update(appState->GetTime().GetDeltaSec());
 
-        if (m_CanReset) resetScene();
+        if (m_NextResetInfo.get()!= nullptr) resetScene();
     }
 
     GameRoot *MainScene::GetRoot()
@@ -96,20 +102,23 @@ namespace inGame{
         return this;
     }
 
-    void MainScene::RequestResetScene(int level)
+    void MainScene::RequestResetScene(MainSceneResetInfo resetInfo)
     {
-        m_CanReset = true;
-        m_ResetLevel = level;
+        m_NextResetInfo = unique_ptr<MainSceneResetInfo>(new MainSceneResetInfo(resetInfo));
     }
 
     void MainScene::resetScene()
     {
         auto const gameRoot = m_Root;
-        int nextLevel = m_ResetLevel;
+        auto const resetInfo = std::move(m_NextResetInfo);
         gameRoot->GetChildren()->Destroy(this);
-        gameRoot->GetChildren()->Birth(new MainScene(gameRoot->GetChildren(), gameRoot, nextLevel));
+        gameRoot->GetChildren()->Birth(new MainScene(gameRoot->GetChildren(), gameRoot, *resetInfo));
     }
 
+    MainSceneResetInfo MainSceneResetInfo::FromLevel(int level)
+    {
+        return MainSceneResetInfo{level, Vec2{0.0, 0.0}};
+    }
 }
 
 

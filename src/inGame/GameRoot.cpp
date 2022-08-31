@@ -6,7 +6,6 @@
 
 #include <memory>
 #include "MainScene.h"
-#include "test/FieldViewDebugScene.h"
 #include "../debug.h"
 #include "title/MenuScene.h"
 
@@ -18,10 +17,8 @@ namespace inGame{
     {
         createSelfSpr();
 
-#ifdef INGAME_DEBUG_FIELDVIEW
-        m_ChildrenPool.Birth(new field::FieldViewDebugScene(&m_ChildrenPool, this, Vec2{0.0, 0.0}));
-#elif INGAME_DEBUG_MAINSCENE
-        m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this, 1));
+#ifdef INGAME_DEBUG_MAINSCENE
+        m_ChildrenPool.Birth(new MainScene(&m_ChildrenPool, this, MainSceneResetInfo::FromLevel(1)));
 #else
         m_ChildrenPool.Birth(new title::MenuScene(&m_ChildrenPool, this));
 #endif

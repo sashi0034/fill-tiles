@@ -12,8 +12,6 @@ namespace inGame::player
 
     void PlayerScroll::scrollByTracking(const Vec2<double> &trackingPos)
     {
-        if (fieldEvent->IsTakingScroll()) return;
-
         if (m_ShouldResetScroll)
         {
             m_ShouldResetScroll = false;
@@ -31,6 +29,10 @@ namespace inGame::player
 
     void PlayerScroll::UpdateFixedly()
     {
+        if (fieldEvent->IsTakingScroll()) return;
+
+        if (m_FocusingSprite== nullptr) return;
+
         auto scrollPos = scrollManager->CalcScrollToCenter(m_FocusingSprite->GetPosition());
         scrollPos = scrollManager->MakePosInFieldRange(scrollPos);
 //            constexpr int overhangByWalk = 60;

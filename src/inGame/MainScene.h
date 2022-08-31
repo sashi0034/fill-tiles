@@ -13,12 +13,21 @@
 #include "ScrollManager.h"
 #include "FieldEventManager.h"
 #include "EffectManager.h"
+#include "../debug.h"
 
 namespace inGame
 {
     class GameRoot;
     class Player;
     class MainScene;
+
+    struct MainSceneResetInfo
+    {
+        const int InitialLevel;
+        const Vec2<double> ScrollPos;
+
+        static MainSceneResetInfo FromLevel(int level);
+    };
 
     class IMainScene
     {
@@ -35,7 +44,7 @@ namespace inGame
     class MainScene: public ActorBase, public IMainScene
     {
     public:
-        explicit MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root, int initialLevel);
+        explicit MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root, const MainSceneResetInfo &resetInfo);
         ~MainScene();
 
         Player *GetPlayer() override;
@@ -46,7 +55,7 @@ namespace inGame
         ScrollManager *GetScrollManager() override;
         FieldEventManager *GetFieldEventManager() override;
         EffectManager* GetEffectManager() override;
-        void RequestResetScene(int level);
+        void RequestResetScene(MainSceneResetInfo resetInfo);
         MainScene *ToSuper() override;
 
         const int InitialLevel;
@@ -63,8 +72,7 @@ namespace inGame
         unique_ptr<ScrollManager> m_ScrollManager{};
         EffectManager* m_EffectManager;
 
-        bool m_CanReset = false;
-        int m_ResetLevel = 0;
+        unique_ptr<MainSceneResetInfo> m_NextResetInfo{};
     };
 }
 
