@@ -66,6 +66,11 @@ namespace gameEngine
             return Vec2<U>{static_cast<U>(this->X), static_cast<U>(this->Y)};
         }
 
+        T CalcMagnitude() const
+        {
+            return this->X * this->X + this->Y * this->Y;
+        }
+
         std::string ToString() const
         {
             std::stringstream stream{};

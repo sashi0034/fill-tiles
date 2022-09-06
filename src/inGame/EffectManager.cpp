@@ -43,4 +43,9 @@ namespace inGame
     {
         return m_Root;
     }
+
+    Vec2<double> EffectManager::GetParentalPos() const
+    {
+        return m_ParentalPos->GetPosition();
+    }
 } // inGame

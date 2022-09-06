@@ -248,6 +248,24 @@ namespace gameEngine
         m_UpdateProcess = process;
     }
 
+    void SpriteTexture::CopyVisuallyFrom(SpriteTexture& origin)
+    {
+        auto&& clone = *this;
+        
+        clone.SetPosition(origin.GetPosition());
+        clone.SetZ(origin.GetZ());
+        if (auto ptr = origin.GetPositionParent().GetPtr()) clone.SetPositionParent(*ptr);
+        clone.SetSrcRect(origin.GetSrcRect());
+        clone.SetGraph(origin.GetGraph());
+        clone.SetSrcRect(origin.GetSrcRect());
+        clone.SetFlip(origin.GetFlip());
+        clone.SetRotationDeg(origin.GetRotationDeg());
+        clone.SetScale(origin.GetScale());
+        clone.SetBlend(origin.GetBlend());
+        clone.SetVisible(origin.GetVisible());
+        if (auto ptr = origin.GetVisibilityParent().GetPtr()) clone.SetVisibilityParent(*ptr);
+    }
+
 
 
 }

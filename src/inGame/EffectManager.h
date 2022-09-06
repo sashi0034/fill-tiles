@@ -19,6 +19,7 @@ namespace inGame
         CoroutineManager* GetCoroutineManager();
         IChildrenPool<ActorBase> * GetChildren();
         void ApplyParentalPos(SpriteTexture &target);
+        Vec2<double> GetParentalPos() const;
         [[nodiscard]] GameRoot* GetRoot() const;
     private:
         ChildrenPool<ActorBase> m_Children{};

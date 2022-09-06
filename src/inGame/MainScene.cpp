@@ -12,6 +12,7 @@
 #include "./test/EffectTest.h"
 #include "../debug.h"
 #include "test/FieldViewTest.h"
+#include "effect/SpiritualController.h"
 
 
 namespace inGame{
@@ -37,6 +38,7 @@ namespace inGame{
 #ifdef INGAME_DEBUG_FIELDVIEW
         m_ChildrenPool.Birth(new test::FieldViewTest(this, &m_ChildrenPool));
 #endif
+        effect::SpiritualController::Produce(m_EffectManager);
 
         m_ScrollManager->SetScroll(resetInfo.ScrollPos);
 

@@ -51,6 +51,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(title_bg_chip);
         REGISTER_RESOURCE_PNG(numbers_32x32);
         REGISTER_RESOURCE_PNG(crown);
+        REGISTER_RESOURCE_PNG(spirit_64x64);
 
         explicit Image(IAppState* appState);
     private:

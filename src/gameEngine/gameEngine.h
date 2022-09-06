@@ -33,6 +33,7 @@
 #include "WeakCollection.h"
 #include "TextureText.h"
 #include "TempRenderTargetChanger.h"
+#include "Random.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

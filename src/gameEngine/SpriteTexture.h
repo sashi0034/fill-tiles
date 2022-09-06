@@ -90,6 +90,8 @@ namespace gameEngine
         Vec2<double> GetParentalGlobalPosition();
         bool GetParentalVisibility();
 
+        void CopyVisuallyFrom(SpriteTexture& origin);
+
         static void RenderAll(IAppState* appState);
         static void UpdateAll(IAppState* appState);
     };

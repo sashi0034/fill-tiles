@@ -93,6 +93,10 @@ namespace gameEngine
             currentProcessingIndex = 0;
             collectGarbage(garbage);
         }
+        int Count()
+        {
+            return m_Pool.size();
+        }
         void Release()
         {
             m_Pool = std::vector<unique_ptr<T>>{};
