@@ -249,7 +249,7 @@ namespace inGame::field
             if (treeLayer.first != "object") continue;
 
             const auto treeObject = treeLayer.second.get_child("");
-            const std::string objectType = treeObject.get<std::string>("<xmlattr>.type");
+            const std::string objectType = treeObject.get<std::string>("<xmlattr>.class");
             const std::string objectName = treeObject.get<std::string>("<xmlattr>.name");
             const int objectX = boost::lexical_cast<int>(treeObject.get<std::string>("<xmlattr>.x"));
             const int objectY = boost::lexical_cast<int>(treeObject.get<std::string>("<xmlattr>.y"));

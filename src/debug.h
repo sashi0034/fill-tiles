@@ -9,6 +9,9 @@
 // フィールドデバッグ
 #define INGAME_DEBUG_FIELDVIEW
 
+// デバッグマップ番号
+#define INGAME_DEBUG_MAP_INDEX 1
+
 // エフェクトテスト
 #define INGAME_DEBUG_EFFECTTEST
 

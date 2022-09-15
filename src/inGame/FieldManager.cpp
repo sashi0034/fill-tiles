@@ -29,7 +29,7 @@ namespace inGame
 
     void FieldManager::Init()
     {
-        m_TileMap.LoadMapFile("field_00.tmx");
+        m_TileMap.LoadMapFile(getCurrentMapFileName());
 
         createRenderedTileMapToBuffer(m_ParentalScene->GetRoot()->GetAppState());
         m_Texture.SetGraph(m_BufferGraph.get());
@@ -38,6 +38,25 @@ namespace inGame
         m_MineFlowerManager->Init();
 
         initFieldByLevel(m_MineFlowerManager->GetCurrMineFlowerClass()->GetClassLevel());
+    }
+
+    std::string FieldManager::getCurrentMapFileName()
+    {
+        const std::string head{"field_"};
+        const std::string extension{".tmx"};
+
+        int index = 0;
+#if INGAME_DEBUG_MAP_INDEX
+        index = INGAME_DEBUG_MAP_INDEX;
+#else
+        index = 0;
+#endif
+        std::stringstream stream;
+        stream << head << index / 10 << index % 10 << extension;
+
+        auto result = stream.str();
+        LOG_INFO << "loading map target: " << result << std::endl;
+        return result;
     }
 
 
