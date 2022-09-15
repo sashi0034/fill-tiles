@@ -52,22 +52,21 @@ namespace inGame{
     CoroTask TalkingBalloon::startAppear(CoroTaskYield &yield)
     {
         yield();
-        constexpr double duration = 0.3;
+        constexpr double duration = 0.5;
 
         auto scaling = m_Scene->GetEffectManager()->GetAnimator()->TargetTo(m_Background->GetSprite())
                 ->AnimScale(Vec2{1.0, 1.0}, duration)->SetEase(EAnimEase::OutBack)->ToWeakPtr();
         coroUtil::WaitForExpire(yield, scaling);
 
-        std::string currStr{};
-
-        sol::table multiByteChar = m_Scene->GetRoot()->GetLua()->GetState()["MultiByteChar"];
-        int textLength = multiByteChar["Length"](m_Text);
+        sol::table multiByteCharFunc = m_Scene->GetRoot()->GetLua()->GetState()["MultiByteChar"];
+        int textLength = multiByteCharFunc["Length"](m_Text);
 
         bool isInTag = false;
+        std::string currStr{};
 
-        for (int i=0; i<textLength; ++i)
+        for (int i=1; i<=textLength; ++i)
         {
-            std::string nextStr = multiByteChar["GetAt"](m_Text, i);
+            std::string nextStr = multiByteCharFunc["GetAt"](m_Text, i);
 
             if (!isInTag && nextStr=="<") isInTag = true;
             if (isInTag && nextStr==">") isInTag = false;
@@ -77,22 +76,23 @@ namespace inGame{
 
             if (isInTag) continue;
 
-            constexpr int guruGuruTemp = 5;
-            if (i % guruGuruTemp == 0) performAnimGuruGuruChar(yield, duration / 10.0, currStr);
-
             coroUtil::WaitForTime(yield, m_Text[i]!='>' ? duration/10.0 : duration);
         }
 
-        coroUtil::WaitForTime(yield, duration * 7);
+        performAnimGuruGuruChar(yield, duration / 4.0, currStr, 1);
+        performAnimGuruGuruChar(yield, duration / 2.0, currStr, 1);
+
+        coroUtil::WaitForTime(yield, duration);
 
         getBelongingPool()->Destroy(this);
     }
 
-    void TalkingBalloon::performAnimGuruGuruChar(CoroTaskYield &yield, const double duration, std::string &currStr)
+    void
+    TalkingBalloon::performAnimGuruGuruChar(CoroTaskYield &yield, const double duration, std::string &currStr, int numGruGru)
     {
         currStr += " ";
 
-        for (int count=0; count < 4; count++)
+        for (int count=0; count < 4 * numGruGru; count++)
         {
             char animChar = ' ';
             switch (count % 4)

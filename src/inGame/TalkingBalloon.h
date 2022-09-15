@@ -34,7 +34,8 @@ namespace inGame
 
         CoroTask startAppear(CoroTaskYield &yield);
 
-        void performAnimGuruGuruChar(CoroTaskYield &yield, const double duration, std::string &currStr);
+        void performAnimGuruGuruChar(CoroTaskYield &yield, const double duration, std::string &currStr,
+                                     int numGruGru);
     };
 }
 
