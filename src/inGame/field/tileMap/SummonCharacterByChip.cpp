@@ -12,6 +12,7 @@
 #include "../../character/GlassFloor.h"
 #include "../../character/SwitchButton.h"
 #include "../../character/SwitchAcorn.h"
+#include "../../character/Carrot.h"
 
 
 namespace inGame::field::tileMap
@@ -46,6 +47,9 @@ namespace inGame::field::tileMap
                 break;
             case ETileKind::switch_blue:
                 field->Birth(new character::SwitchAcorn(mainScene, matPos, character::ESwitchAcornKind::Blue));
+                break;
+            case ETileKind::carrot:
+                field->Birth(new character::Carrot(mainScene, matPos));
                 break;
             default:
                 return false;

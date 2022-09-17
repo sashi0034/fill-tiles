@@ -7,9 +7,9 @@
 
 namespace inGame::character{
 
-    BigTree::BigTree(IMainScene *mainScene, const MatPos &matPos)
-            : CharacterBase(mainScene->GetFieldManager())
-            , m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->tree_48x48.get())
+    BigTree::BigTree(IMainScene *mainScene, const MatPos &matPos) :
+            CharacterBase(mainScene->GetFieldManager()),
+            m_View(mainScene->GetScrollManager(), mainScene->GetRoot()->RscImage->tree_48x48.get())
     {
         m_View.GetView().SetSrcRect(Rect{Vec2<int>{0, 0}, cellMatSize * FieldManager::PixelPerMat});;
 

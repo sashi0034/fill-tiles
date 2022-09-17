@@ -46,6 +46,7 @@ namespace inGame::field
         switch_button,
         switch_red,
         switch_blue,
+        carrot,
 
         max,
     };

@@ -66,6 +66,11 @@
    <property name="kind" value="big_tree"/>
   </properties>
  </tile>
+ <tile id="67">
+  <properties>
+   <property name="kind" value="carrot"/>
+  </properties>
+ </tile>
  <tile id="72">
   <properties>
    <property name="kind" value="glass"/>

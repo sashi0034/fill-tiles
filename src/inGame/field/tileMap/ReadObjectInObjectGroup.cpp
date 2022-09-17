@@ -10,6 +10,7 @@
 #include "../../character/SolidRock.h"
 #include "../../character/GrowingChick.h"
 #include "../../character/WarpTile.h"
+#include "../../character/WinTile.h"
 
 
 void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainScene, const std::string &objectType,
@@ -50,6 +51,10 @@ void inGame::field::tileMap::ReadObjectInObjectGroup(inGame::IMainScene *mainSce
     {
         assert(objectProperty["key"].length()==1);
         characterPool->Birth(new character::WarpTile(mainScene, matPos, objectProperty["key"][0]));
+    }
+    else if (objectType=="win")
+    {
+        characterPool->Birth(new character::WinTile(mainScene, matPos));
     }
     else if (objectType=="test")
     {
