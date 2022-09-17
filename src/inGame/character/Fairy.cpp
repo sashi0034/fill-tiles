@@ -56,12 +56,24 @@ namespace inGame::character
         player->OnMoveBegin().subscribe([&, selfMatPos, message, mainScene](PlayerMoveData *moveData) {
             m_View.GetView().SetFlip(moveData->AfterPos.GetVec().X > selfMatPos.GetVec().X);
 
+            constexpr int awayDistance = 6;
             constexpr int talkAbleDistance = 3;
-            bool isJustInTalkAbleRange = moveData->IsJustInRange(selfMatPos, talkAbleDistance);
 
-            // プレイヤーが近づいたら会話を表示させる
-            if (m_TalkingRef.IsNull() && isJustInTalkAbleRange)
-                m_TalkingRef = TalkingBalloon::Create(mainScene, message, selfMatPos)->GetWeakPtr();
+            // プレイヤーが離れていたらフラグをつける
+            if (!m_AwayFromPlayerFlag.GetFlagWithoutTake() && moveData->AfterPos.CalcManhattan(selfMatPos) >= awayDistance)
+                m_AwayFromPlayerFlag.PutPoll();
+
+            // プレイヤーが近づいていなかったら中止
+            if (moveData->AfterPos.CalcManhattan(selfMatPos) > talkAbleDistance) return;
+
+            // プレイヤーが離れていたフラグがなかったら中止
+            if (!m_AwayFromPlayerFlag.TakePoll()) return;
+
+            // 表示した会話が残っていたら中止
+            if (!m_TalkingRef.IsNull()) return;
+
+            // 会話を発生
+            m_TalkingRef = TalkingBalloon::Create(mainScene, message, selfMatPos)->GetWeakPtr();
         });
     }
 }

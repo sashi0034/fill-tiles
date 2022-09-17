@@ -11,6 +11,7 @@
 #include "../MainScene.h"
 #include "../FieldManager.h"
 #include "../CharacterViewModel.h"
+#include "../PollFlag.h"
 
 namespace inGame{
     class TalkingBalloon;
@@ -25,6 +26,7 @@ namespace inGame::character
     private:
         CharacterViewModel m_View;
         WeakPtr<TalkingBalloon> m_TalkingRef;
+        PollFlag m_AwayFromPlayerFlag{true};
         static const inline Vec2<int>cellMatSize = Vec2<int>{1, 1};
         static const inline Vec2<int>cellSrcSize = Vec2<int>{24, 24};
 
