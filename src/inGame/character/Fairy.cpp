@@ -56,7 +56,7 @@ namespace inGame::character
         player->OnMoveBegin().subscribe([&, selfMatPos, message, mainScene](PlayerMoveData *moveData) {
             m_View.GetView().SetFlip(moveData->AfterPos.GetVec().X > selfMatPos.GetVec().X);
 
-            constexpr int awayDistance = 6;
+            constexpr int awayDistance = 9;
             constexpr int talkAbleDistance = 3;
 
             // プレイヤーが離れていたらフラグをつける

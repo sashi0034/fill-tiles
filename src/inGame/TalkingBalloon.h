@@ -16,7 +16,7 @@ namespace inGame
 {
     class TalkingBalloon : public ActorBase
     {
-    DEF_WEAK_GET(TalkingBalloon);
+        DEF_WEAK_GET(TalkingBalloon);
     public:
         static TalkingBalloon* Create(IMainScene *scene, const std::string &text, const MatPos &pos);
     private:

@@ -53,4 +53,9 @@ namespace gameEngine::renderingProcess
     {
         RenderSprite(appState, renderingSpr, 2);
     }
+
+    std::function<void(IAppState*)> WrapRenderSpriteDotByDot(SpriteTexture *renderingSpr)
+    {
+        return {[renderingSpr](IAppState* app){ RenderSpriteDotByDot(app, renderingSpr);}};
+    }
 }

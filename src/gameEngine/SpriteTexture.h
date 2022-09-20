@@ -44,11 +44,11 @@ namespace gameEngine
         static void collectGarbageInSpriteTexturePool(std::vector<int> &garbageIndexes);
 
         SpriteTexture();
-        SpriteTexture(Graph *graph, Rect<int> &srcRect);
+        SpriteTexture(Graph *graph, const Rect<int> &srcRect);
     public:
         static SpriteTexture Create();
         static SpriteTexture Create(Graph *graph);
-        static SpriteTexture Create(Graph *graph, Rect<int> &srcRect);
+        static SpriteTexture Create(Graph *graph, const Rect<int> &srcRect);
 
         void SetPosition(const Vec2<double>& pos);
         [[nodiscard]] Vec2<double> GetPosition() const;

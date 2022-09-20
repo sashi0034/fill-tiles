@@ -54,6 +54,7 @@ namespace inGame::resource
         REGISTER_RESOURCE_PNG(spirit_64x64);
         REGISTER_RESOURCE_PNG(carrot_16x32);
         REGISTER_RESOURCE_PNG(win_24x24);
+        REGISTER_RESOURCE_PNG(clear_label);
 
         explicit Image(IAppState* appState);
     private:

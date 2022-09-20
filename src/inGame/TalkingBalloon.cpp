@@ -90,7 +90,8 @@ namespace inGame{
     void
     TalkingBalloon::performAnimGuruGuruChar(CoroTaskYield &yield, const double duration, std::string &currStr, int numGruGru)
     {
-        currStr += " ";
+        const std::string tempSpace = "  ";
+        currStr += tempSpace;
 
         for (int count=0; count < 4 * numGruGru; count++)
         {
@@ -112,7 +113,11 @@ namespace inGame{
             coroUtil::WaitForTime(yield, duration);
         }
 
-        currStr.pop_back();
+        for (int i = 0; i < int(tempSpace.size()); ++i)
+        {
+            currStr.pop_back();
+        }
+
         m_TextPassage.UpdateTextAndView(currStr);
     }
 

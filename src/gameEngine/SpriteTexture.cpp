@@ -11,7 +11,7 @@ namespace gameEngine
 {
     std::vector<WeakPtr<SpriteTexture>> SpriteTexture::spriteTexturePool = {};
 
-    SpriteTexture::SpriteTexture(Graph *graph, Rect<int> &srcRect)
+    SpriteTexture::SpriteTexture(Graph *graph, const Rect<int> &srcRect)
     {
         m_Graph = graph;
         m_SrcRect = srcRect;
@@ -33,7 +33,7 @@ namespace gameEngine
         return Create(graph, srcRect);
     }
 
-    SpriteTexture SpriteTexture::Create(Graph *graph, Rect<int> &srcRect)
+    SpriteTexture SpriteTexture::Create(Graph *graph, const Rect<int> &srcRect)
     {
         auto product = SpriteTexture(graph, srcRect);
 

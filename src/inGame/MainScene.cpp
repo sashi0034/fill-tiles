@@ -13,7 +13,7 @@
 #include "../debug.h"
 #include "test/FieldViewTest.h"
 #include "effect/SpiritualController.h"
-
+#include "StageClearEvent.h"
 
 namespace inGame{
     MainScene::MainScene(IChildrenPool<ActorBase> *parent, GameRoot *root, const MainSceneResetInfo &resetInfo):
@@ -82,6 +82,10 @@ namespace inGame{
     void MainScene::initAfterBirth()
     {
         m_ChildrenPool.ProcessEach([&](auto& child){ child.Init();});
+
+#ifdef INGAME_DEBUG_IMMEDIATE_CLEAREVENT
+        StageClearEvent::Start(StageClearEventArgs{this});
+#endif
     }
 
     Player *MainScene::GetPlayer()
