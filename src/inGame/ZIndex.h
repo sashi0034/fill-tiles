@@ -31,7 +31,7 @@ namespace inGame
         void ApplyZ() override;
     private:
         SpriteTexture* m_Texture;
-        int m_Index;
+        int m_Index{};
     };
 
     class ZIndexCharacter : public ZIndex
