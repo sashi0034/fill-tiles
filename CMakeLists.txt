@@ -30,7 +30,7 @@ set(RxCpp_INCLUDE_DIR $ENV{HOME}/RxCpp-4.1.1/Rx/v2/src)
 
 
 # Add all cpp source files under the src directory
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "assets/src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add all headers files under the include directory

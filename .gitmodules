@@ -1,3 +1,7 @@
 [submodule "Lua"]
 	path = Lua
 	url = https://github.com/walterschell/Lua
+
+[submodule "assets"]
+	path = assets
+	url = https://github.com/sashi0034/fill-tiles-assets
